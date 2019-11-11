@@ -1,0 +1,16 @@
+/node_modules
+/public/hot
+/public/storage
+/public/assets/webpack
+/storage/*.key
+/vendor
+.env
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+gkc_*
+.framgia-ci-reports
+.framgia-ci-result.temp.yml
