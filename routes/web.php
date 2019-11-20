@@ -15,6 +15,11 @@ Route::get('/', function () {
     return view('home');
 });
 
+Auth::routes([
+  'register' => false,
+  'verify' => false,
+]);
+
 Route::namespace('Auth')->group(function () {
     Route::get('/redirect', 'SocialAuthGoogleController@redirect');
     Route::get('/callback', 'SocialAuthGoogleController@callback');
