@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('home');
 });
+
+Route::namespace('Auth')->group(function () {
+    Route::get('/redirect', 'SocialAuthGoogleController@redirect');
+    Route::get('/callback', 'SocialAuthGoogleController@callback');
+});
