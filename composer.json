@@ -12,6 +12,7 @@
         "bensampo/laravel-enum": "^1.27",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
+        "laravel/socialite": "^4.3",
         "laravel/tinker": "^1.0"
     },
     "require-dev": {
