@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Enums\WebhookStatus;
 
 class CreateWebhooksTable extends Migration
 {
@@ -17,9 +18,10 @@ class CreateWebhooksTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('bot_id')->unsigned();
-            $table->string('token');
-            $table->enum('status', ['easy', 'hard']);
-            $table->text('description');
+            $table->string('name', 200);
+            $table->string('token')->unique();
+            $table->integer('status')->default(WebhookStatus::Enabled);
+            $table->text('description')->nullable();
             $table->bigInteger('room_id');
             $table->string('room_name', 100);
             $table->timestamps();
