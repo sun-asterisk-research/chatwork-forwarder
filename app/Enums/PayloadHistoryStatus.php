@@ -11,6 +11,6 @@ use BenSampo\Enum\Enum;
  */
 final class PayloadHistoryStatus extends Enum
 {
-    const Success = 0;
-    const Failed = 1;
+    const SUCCESS = 0;
+    const FAILED = 1;
 }

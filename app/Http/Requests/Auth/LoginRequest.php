@@ -25,7 +25,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => 'required|email|max:100',
-            'password' => 'required|min:8|max:20'
+            'password' => 'required|min:8|max:20',
         ];
     }
 
@@ -33,7 +33,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'email.required' => 'Please enter email',
-            'email.email'  => 'Email must be formatted as local-part@domain',
+            'email.email' => 'Email must be formatted as local-part@domain',
             'email.max' => 'Email is too long (maximum is 100 characters)',
             'password.required' => 'Please enter password',
             'password.min' => 'Password is too short (minimum is 8 characters)',

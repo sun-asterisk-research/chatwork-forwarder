@@ -11,6 +11,6 @@ use BenSampo\Enum\Enum;
  */
 final class WebhookStatus extends Enum
 {
-    const Enabled = 0;
-    const Disabled = 1;
+    const ENABLED = 0;
+    const DISABLED = 1;
 }
