@@ -38,6 +38,7 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <!-- Load and execute javascript code used only in this page -->
     <script src="{{ asset('js/tablesDatatables.js') }}"></script>
+    @yield('script')
     <script>
         $(function() {
             TablesDatatables.init();

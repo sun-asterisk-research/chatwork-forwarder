@@ -12,17 +12,19 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+	return view('home');
 });
 
 Auth::routes([
-  'register' => false,
-  'verify' => false,
+	'register' => false,
+	'verify' => false,
 ]);
 
 Route::namespace('Auth')->group(function () {
-    Route::get('/redirect', 'SocialAuthGoogleController@redirect');
-    Route::get('/callback', 'SocialAuthGoogleController@callback');
+	Route::get('/redirect', 'SocialAuthGoogleController@redirect');
+	Route::get('/callback', 'SocialAuthGoogleController@callback');
 });
 
 Route::resource('bots', 'BotController')->only('index')->middleware('auth');
+Route::resource('users', 'UserController')->middleware('auth');
+Route::get('/list/users', 'UserController@getList')->middleware('auth');
