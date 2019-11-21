@@ -32,6 +32,7 @@ test:
   #rocketeer:
   #  image: framgiaciteam/deployer:2.0
   #  run: rocketeer deploy --on=staging --no-interaction --branch=master
+  #
 cache:
   composer:
     folder: vendor
