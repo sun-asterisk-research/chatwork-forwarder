@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Webhook;
+use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Repositories\Eloquents\WebhookRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(BaseRepositoryInterface::class, WebhookRepository::class);
     }
 
     /**

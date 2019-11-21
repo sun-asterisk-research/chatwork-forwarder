@@ -28,3 +28,4 @@ Route::namespace('Auth')->group(function () {
 Route::resource('bots', 'BotController')->only('index')->middleware('auth');
 Route::resource('users', 'UserController')->middleware('auth');
 Route::get('/list/users', 'UserController@getList')->middleware('auth');
+Route::resource('webhooks', 'WebhooksController')->only('index')->middleware('auth');

@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bot::class);
     }
+    
+    public function webhooks()
+    {
+        return $this->hasMany(Webhook::class);
+    }
 }
