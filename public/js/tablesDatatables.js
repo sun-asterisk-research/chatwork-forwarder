@@ -19,9 +19,10 @@ var TablesDatatables = function () {
             });
 
             $('#bot-datatable').dataTable({
+                order: [],
                 columnDefs: [{orderable: false, targets: [2]}],
-                pageLength: 15,
-                lengthMenu: [[15, 50, 100, -1], [15, 50, 100, 'All']]
+                pageLength: 10,
+                lengthMenu: [[10, 20, 50, -1], [10, 20, 50, 'All']]
             });
 
             /* Add placeholder attribute to the search input */

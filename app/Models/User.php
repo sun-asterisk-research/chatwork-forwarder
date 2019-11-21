@@ -43,6 +43,6 @@ class User extends Authenticatable
 
     public function bots()
     {
-        return $this->hasMany('App\Models\Bot');
+        return $this->hasMany(Bot::class);
     }
 }
