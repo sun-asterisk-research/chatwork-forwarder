@@ -20,7 +20,7 @@ class CreateWebhooksTable extends Migration
             $table->bigInteger('bot_id')->unsigned();
             $table->string('name', 200);
             $table->string('token')->unique();
-            $table->integer('status')->default(WebhookStatus::Enabled);
+            $table->integer('status')->default(WebhookStatus::ENABLED);
             $table->text('description')->nullable();
             $table->bigInteger('room_id');
             $table->string('room_name', 100);
