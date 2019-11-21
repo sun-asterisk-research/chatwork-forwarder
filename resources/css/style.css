@@ -5,3 +5,14 @@
 .webhook-description {
     max-width: 350px !important;
 }
+
+.required::after {
+  color: red;
+  content: "*";
+  font-size: 15px;
+}
+
+.btn-pull-right {
+  margin-left: 85%;
+  margin-bottom: 5px;
+}
