@@ -18,6 +18,12 @@ var TablesDatatables = function () {
                 lengthMenu: [[10, 20, 30, -1], [10, 20, 30, 'All']]
             });
 
+            $('#bot-datatable').dataTable({
+                columnDefs: [{orderable: false, targets: [2]}],
+                pageLength: 15,
+                lengthMenu: [[15, 50, 100, -1], [15, 50, 100, 'All']]
+            });
+
             /* Add placeholder attribute to the search input */
             $('.dataTables_filter input').attr('placeholder', 'Search');
         }

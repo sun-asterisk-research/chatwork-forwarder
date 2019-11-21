@@ -35,7 +35,8 @@
                     <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-table sidebar-nav-icon"></i> <span class="sidebar-nav-mini-hide">Tables</span></a>
                     <ul>
                         <li>
-                            <a href="page_tables_datatables.html" class=" active">Datatables</a>
+                            <a href="/" class="active">Datatables</a>
+                            <a href="/bots">Bots</a>
                         </li>
                     </ul>
                 </li>
