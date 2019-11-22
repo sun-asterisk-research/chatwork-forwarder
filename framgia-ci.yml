@@ -3,11 +3,11 @@ build:
   general_test:
     image: framgiaciteam/laravel-workspace:latest
     services:
-      mysql_test:
+      mysql:
         image: mysql:8
         environment:
-          MYSQL_DATABASE: homestead_test
-          MYSQL_USER: homestead_test
+          MYSQL_DATABASE: homestead
+          MYSQL_USER: homestead
           MYSQL_PASSWORD: secret
           MYSQL_ROOT_PASSWORD: root
     prepare:
@@ -15,8 +15,8 @@ build:
       - composer install
       - php artisan config:clear
       - php artisan key:generate
-      - framgia-ci test-connect mysql_test 3306 10
-      - php artisan migrate --database=mysql_test --seed
+      - framgia-ci test-connect mysql 3306 10
+      - php artisan migrate --database=mysql --seed
       - framgia-ci run --logs
 test:
   phpcs:
