@@ -15,8 +15,8 @@ build:
       - composer install
       - php artisan config:clear
       - php artisan key:generate
-      - framgia-ci test-connect mysql_test 3306 10
-      - php artisan migrate --database=mysql_test --seed
+      - framgia-ci test-connect mysql 3306 10
+      - php artisan migrate --seed
       - framgia-ci run --logs
 test:
   phpcs:
