@@ -24,3 +24,5 @@ Route::namespace('Auth')->group(function () {
     Route::get('/redirect', 'SocialAuthGoogleController@redirect');
     Route::get('/callback', 'SocialAuthGoogleController@callback');
 });
+
+Route::resource('bots', 'BotController')->only('index')->middleware('auth');
