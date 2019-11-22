@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth.app')
 <link rel="stylesheet" href="{{ mix('/css/login.css') }}">
 @section('content')
 <div class="container">
@@ -27,7 +27,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                    
+
                     <label>
                       <input type="checkbox" checked="checked" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ __('Remember Me') }}
                     </label>

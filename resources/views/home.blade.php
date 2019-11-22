@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layouts.app')
 @section('content')
 <!-- Datatables Header -->
 <div class="content-header">
