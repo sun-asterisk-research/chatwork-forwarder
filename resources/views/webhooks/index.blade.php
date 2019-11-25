@@ -1,6 +1,6 @@
 <?php use App\Enums\WebhookStatus; ?>
 
-@extends('layout.app')
+@extends('layouts.app')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 @section('content')
@@ -14,6 +14,7 @@
 <div class="block full">
     <div class="block-title">
         <h2><strong>Webhooks list</strong></h2>
+        <a href="{{ route('webhooks.create') }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
     </div>
 
     <div class="table-responsive">

@@ -36,6 +36,7 @@
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/plugins.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ mix('/js/custom.js') }}"></script>
     <!-- Load and execute javascript code used only in this page -->
     <script src="{{ asset('js/tablesDatatables.js') }}"></script>
     @yield('script')
@@ -44,6 +45,7 @@
             TablesDatatables.init();
         });
     </script>
+    @yield('js')
 </body>
 
 </html>

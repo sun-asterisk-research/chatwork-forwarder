@@ -14,7 +14,9 @@
         "laravel/framework": "5.8.*",
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^1.0",
-        "yajra/laravel-datatables-oracle": "^9.7"
+        "yajra/laravel-datatables-oracle": "^9.7",
+        "laravelcollective/html": "^5.8.0",
+        "sun-asterisk/chatwork-php": "^0.1.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

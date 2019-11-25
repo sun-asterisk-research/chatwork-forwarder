@@ -42,4 +42,3 @@
 </div>
 <!-- END Datatables Content -->
 @endsection
-<script src="{{ mix('/js/custom.js') }}"></script>
