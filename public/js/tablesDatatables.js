@@ -24,6 +24,12 @@ var TablesDatatables = function () {
                 pageLength: 10,
                 lengthMenu: [[10, 20, 50, -1], [10, 20, 50, 'All']]
             });
+            
+            $('#webhook-datatable').dataTable({
+                columnDefs: [{ orderable: false, targets: [1, 3, 5] }],
+                pageLength: 10,
+                lengthMenu: [[10, 20, 50, -1], [10, 20, 50, 'All']]
+            });
 
             /* Add placeholder attribute to the search input */
             $('.dataTables_filter input').attr('placeholder', 'Search');

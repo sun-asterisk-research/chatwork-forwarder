@@ -1,10 +1,10 @@
 project_type: php
 build:
   general_test:
-    image: framgiaciteam/laravel-workspace:latest
+    image: framgiaciteam/laravel-workspace:7.3
     services:
       mysql:
-        image: mysql:8
+        image: mysql:5.7
         environment:
           MYSQL_DATABASE: homestead
           MYSQL_USER: homestead
@@ -16,6 +16,7 @@ build:
       - php artisan config:clear
       - php artisan key:generate
       - framgia-ci test-connect mysql 3306 10
+      - composer dump-autoload
       - php artisan migrate --database=mysql --seed
       - framgia-ci run --logs
 test:
