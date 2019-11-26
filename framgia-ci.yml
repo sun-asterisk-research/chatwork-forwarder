@@ -13,6 +13,8 @@ build:
     prepare:
       - cp .env.example .env
       - composer install
+      - yarn install
+      - yarn dev
       - php artisan config:clear
       - php artisan key:generate
       - framgia-ci test-connect mysql 3306 10
@@ -28,7 +30,7 @@ test:
     command:
       - php -dzend_extension=xdebug.so vendor/bin/phpunit
         --coverage-clover=.framgia-ci-reports/coverage-clover.xml
-        --coverage-html=.framgia-ci-reports/coverage
+        --coverage-html=.framgia-ci-reports/coverage || cat storage/logs/laravel-2019-11-26.log
 #deploy:
   #rocketeer:
   #  image: framgiaciteam/deployer:2.0
@@ -36,4 +38,5 @@ test:
 cache:
   composer:
     folder: vendor
-    file: composer.lock
+  nodejs:
+    folder: node_modules
