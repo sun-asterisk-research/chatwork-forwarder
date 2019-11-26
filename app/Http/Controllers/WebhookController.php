@@ -98,4 +98,20 @@ class WebhookController extends Controller
     {
         //
     }
+
+    public function enable($id)
+    {
+        $webhook = Auth::user()->webhooks->find($id);
+        $webhook->status = WebhookStatus::ENABLED;
+        $webhook->save();
+        return 'This webhook successfully enabled';
+    }
+
+    public function disable($id)
+    {
+        $webhook = Auth::user()->webhooks->find($id);
+        $webhook->status = WebhookStatus::DISABLED;
+        $webhook->save();
+        return 'This webhook successfully disabled';
+    }
 }

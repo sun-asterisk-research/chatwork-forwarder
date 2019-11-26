@@ -25,24 +25,29 @@
                     <th class="webhook-description">Description</th>
                     <th>Chatwork Room</th>
                     <th>Chatwork Room ID</th>
-                    <th class="text-center">Status</th>
+                    <th>Status</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($webhooks as $webhook)
-                    <tr>
+                    <tr class="item-{{ $webhook->id }}">
                         <td>{{ $webhook->name }}</td>
                         <td class="webhook-description">{{ $webhook->description }}</td>
                         <td>{{ $webhook->room_name }}</td>
                         <td>{{ $webhook->room_id }}</td>
-                        <td class="text-center">{{ $webhook->status == WebhookStatus::ENABLED ? 'Enabled' : 'Disabled' }}</td>
+                        <td class="pl-20 webhook-status">{{ $webhook->status == WebhookStatus::ENABLED ? 'Enabled' : 'Disabled' }}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                            <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-                            <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
                                 <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></a>
                             </div>
+                            @if($webhook->status == WebhookStatus::ENABLED)
+                                <button class="btn btn-xs btn-danger btn-disable-wh" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
+                            @else
+                                <button class="btn btn-xs btn-success btn-enable-wh" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -53,3 +58,50 @@
 <!-- END Datatables Content -->
 @endsection
 <script src="{{ mix('/js/custom.js') }}"></script>
+
+<!-- Modal -->
+<div class="modal fade" id="enableModal" tabindex="-1" role="dialog" aria-labelledby="enableModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <input type="hidden" name="id">
+        <h4 class="modal-title" id="enableModalLabel">Enable webhook: <span class="webhook-name"></span></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="model-content">Are you sure you want to enable this webhook?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-confirm-enable">Enable</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="disableModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <input type="hidden" name="id">
+        <h4 class="modal-title" id="disableModalLabel">Disable webhook: <span class="webhook-name"></span></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="model-content">Are you sure you want to disable this webhook?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger btn-confirm-disable">Disable</button>
+      </div>
+    </div>
+  </div>
+</div>
+@section('js')
+    <script src="{{ asset('/js/webhook.js') }}"></script>
+@endsection

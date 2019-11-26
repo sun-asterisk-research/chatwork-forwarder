@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/themes.css') }}">
+    <link href="{{ asset('css/toastr.css') }}" rel="stylesheet">
     <script src="{{ asset('js/modernizr-2.7.1-respond-1.4.2.min.js') }}"></script>
 </head>
 
@@ -37,6 +38,7 @@
     <script src="{{ asset('js/plugins.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ mix('/js/custom.js') }}"></script>
+    <script src="{{ asset('js/toastr.min.js') }}"></script>
     <!-- Load and execute javascript code used only in this page -->
     <script src="{{ asset('js/tablesDatatables.js') }}"></script>
     @yield('script')

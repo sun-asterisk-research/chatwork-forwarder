@@ -26,4 +26,55 @@ $(document).ready(function () {
         room_id = $(this).find(':selected').attr('cw-room-id');
         $('#cw_room_id').val(room_id);
     });
+
+    $('body').on('click', '.btn-enable-wh', function() {
+        var webhook_id = $(this).data('id');
+        var webhook_name = $(this).data('name');
+        $('#enableModal .webhook-name').text(webhook_name);
+        $('#enableModal input').val(webhook_id);
+        $('#enableModal').modal('show');
+    });
+
+    $('body').on('click', '.btn-disable-wh', function() {
+        var webhook_id = $(this).data('id');
+        var webhook_name = $(this).data('name');
+        $('#disableModal .webhook-name').text(webhook_name);
+        $('#disableModal input').val(webhook_id);
+        $('#disableModal').modal('show');
+    });
+
+    $('body').on('click', '.btn-confirm-enable', function() {
+        updateWebhookStatus('#enableModal', 'enable', 'success');
+    });
+
+    $('body').on('click', '.btn-confirm-disable', function() {
+        updateWebhookStatus('#disableModal', 'disable', 'danger');
+    });
+
+    function updateWebhookStatus(modal_id, status, current_btn_class) {
+        let webhook_id = $(modal_id + ' input').val();
+        let item = $('.item-' + webhook_id);
+        let opposite_status = (status == 'enable') ? 'disable' : 'enable';
+        let opposite_btn_class = (current_btn_class == 'success') ? 'danger' : 'success';
+        
+        $.ajax({
+            type: 'GET',
+            url: '/webhooks/' + status + '/' + webhook_id,
+            success: function(data) {
+                $(modal_id).modal('toggle');
+                var button = item.find('button');
+                $(button).css('text-transform', 'capitalize');
+                $(button).text(opposite_status);
+                $(button).removeClass(`btn-${current_btn_class}`);
+                $(button).removeClass(`btn-${status}-wh`);
+                $(button).addClass(`btn-${opposite_btn_class}`);
+                $(button).addClass(`btn-${opposite_status}-wh`);
+                $(item).find('td.webhook-status').text(status).css('text-transform', 'capitalize');
+                toastr.success(data, 'Update Successfully', {timeOut: 3000, showEasing: 'linear'});
+            },
+            error: function() {
+                toastr.error('Something went wrong. Please try again!', 'Update Failed', {timeOut: 3000});
+            }
+        })
+    }
 });
