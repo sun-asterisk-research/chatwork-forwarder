@@ -6,7 +6,7 @@ use App\Enums\WebhookStatus;
 use App\Http\Requests\WebhookCreateRequest;
 use App\Models\Bot;
 use App\Models\Webhook;
-use App\Repositories\Eloquents\WebhookRepository as WebhookRepository;
+use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Auth;

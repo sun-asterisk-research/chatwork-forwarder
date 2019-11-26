@@ -1,9 +1,7 @@
 <?php
 namespace App\Repositories\Eloquents;
- 
-use App\Models\Webhook;
+
 use App\Repositories\Interfaces\BaseRepositoryInterface;
-use Auth;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {

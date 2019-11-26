@@ -10,6 +10,7 @@ use Auth;
 
 class LoginTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic unit test example.
      *
@@ -34,12 +35,12 @@ class LoginTest extends TestCase
         $user = factory(User::class)->create([
             'password' => bcrypt('12345678'),
         ]);
-        
+
         $response = $this->from('/login')->post('/login', [
             'email' => $user->email,
             'password' => 'invalid-password',
         ]);
-        
+
         $response->assertRedirect('/login');
         $response->assertSessionHasErrors('email');
         $this->assertTrue(session()->hasOldInput('email'));
@@ -53,13 +54,13 @@ class LoginTest extends TestCase
             'id' => random_int(1, 100),
             'password' => bcrypt($password = '12345678'),
         ]);
-        
+
         $response = $this->post('/login', [
             'email' => $user->email,
             'password' => $password,
             'remember' => 'on',
         ]);
-        
+
         $response->assertRedirect('/');
         $this->assertAuthenticatedAs($user);
     }
@@ -83,7 +84,7 @@ class LoginTest extends TestCase
         $user = factory(User::class)->create([
             'password' => bcrypt('12345678'),
         ]);
-        for ($i=0; $i < 7; $i++) { 
+        for ($i=0; $i < 7; $i++) {
             $response = $this->from('/login')->post('/login', [
                 'email' => $user->email,
                 'password' => 'invalid-password',

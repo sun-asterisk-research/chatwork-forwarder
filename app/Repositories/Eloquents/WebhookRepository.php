@@ -1,11 +1,12 @@
 <?php
 namespace App\Repositories\Eloquents;
- 
+
+use Auth;
 use App\Models\Webhook;
 use App\Repositories\Eloquents\BaseRepository;
-use Auth;
+use App\Repositories\Interfaces\WebhookRepositoryInterface;
 
-class WebhookRepository extends BaseRepository
+class WebhookRepository extends BaseRepository implements WebhookRepositoryInterface
 {
     public function getModel()
     {
