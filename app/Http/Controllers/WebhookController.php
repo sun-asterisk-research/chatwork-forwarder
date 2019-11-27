@@ -99,19 +99,20 @@ class WebhookController extends Controller
         //
     }
 
-    public function enable($id)
+    public function changeStatus(Request $request)
     {
-        $webhook = Auth::user()->webhooks->find($id);
-        $webhook->status = WebhookStatus::ENABLED;
-        $webhook->save();
-        return 'This webhook successfully enabled';
-    }
+        if ($request->status == WebhookStatus::ENABLED()->key) {
+            $status = WebhookStatus::ENABLED;
+        } else {
+            $status = WebhookStatus::DISABLED;
+        }
 
-    public function disable($id)
-    {
-        $webhook = Auth::user()->webhooks->find($id);
-        $webhook->status = WebhookStatus::DISABLED;
-        $webhook->save();
-        return 'This webhook successfully disabled';
+        $result = $this->webhookRepository->update($request->id, ['status' => $status]);
+        
+        if ($result) {
+            return 'This webhook was updated successfully';
+        }
+
+        return 'Updated failed. Something went wrong';
     }
 }

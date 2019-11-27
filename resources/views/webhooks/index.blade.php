@@ -44,9 +44,9 @@
                                 <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></a>
                             </div>
                             @if($webhook->status == WebhookStatus::ENABLED)
-                                <button class="btn btn-xs btn-danger btn-disable-wh" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
+                                <button class="btn btn-xs btn-danger btn-disabled-wh" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
                             @else
-                                <button class="btn btn-xs btn-success btn-enable-wh" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
+                                <button class="btn btn-xs btn-success btn-enabled-wh" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
                             @endif
                         </td>
                     </tr>

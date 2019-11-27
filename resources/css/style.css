@@ -13,8 +13,8 @@
 }
 
 .btn-pull-right {
-  margin-left: 85%;
-  margin-bottom: 5px;
+  margin-left: 85% !important;
+  margin-bottom: 5px !important;
 }
 
 .modal {
