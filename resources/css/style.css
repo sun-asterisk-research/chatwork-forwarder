@@ -30,7 +30,20 @@
 .model-content {
   text-align: center;
 }
+
 .float-right {
   float: right;
   margin: 10px;
+}
+
+.btn--link-primary {
+  color: #3990de;
+}
+
+.btn--link-danger {
+  color: #f6576a;
+}
+
+.font-weight-normal {
+  font-weight: 400!important;
 }

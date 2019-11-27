@@ -12,6 +12,7 @@ class AppServiceProvider extends ServiceProvider
     protected $repositories = [
         'WebhookRepository',
         'BotRepository',
+        'PayloadRepository',
     ];
 
     /**

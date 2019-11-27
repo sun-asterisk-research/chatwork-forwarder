@@ -34,5 +34,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('rooms', 'RoomController')->only([
         'index'
     ]);
+    Route::resource('webhooks.payloads', 'PayloadController')->only([
+        'create', 'store', 'edit'
+    ]);
 });
-
