@@ -13,9 +13,11 @@
     <div class="block-title">
         <h2><strong>List bots</strong></h2>
     </div>
+    @include('common.flash-message')
 
     <div class="table-responsive">
-        <table id="bot-datatable" class="table table-vcenter table-condensed table-bordered">
+        @include('bots.modal')
+        <table id="bot-datatable" class="table table-vcenter table-condensed table-bordered" data-toggle="dataTable" data-form="deleteForm">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -31,7 +33,18 @@
                         <td class="text-center">
                             <div class="btn-group">
                                 <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                                <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></a>
+                                {{ Form::open([
+                                    'method' => 'DELETE',
+                                    'route' => ['bots.destroy', $bot->id],
+                                    'style' => 'display:inline',
+                                    'class' => 'form-delete'
+                                ]) }}
+                                    {{ Form::button('<i class="fa fa-times"></i>' , [
+                                            'type' => 'submit',
+                                            'class' => 'btn btn-xs btn-danger',
+                                            'title' => 'Delete'
+                                    ]) }}
+                                {{ Form::close() }}
                             </div>
                         </td>
                     </tr>
@@ -41,4 +54,7 @@
     </div>
 </div>
 <!-- END Datatables Content -->
+@endsection
+@section('js')
+    <script src="{{ asset('/js/bot.js') }}"></script>
 @endsection
