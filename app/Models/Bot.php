@@ -10,4 +10,9 @@ class Bot extends Model
     {
         return $this->hasMany(Webhook::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

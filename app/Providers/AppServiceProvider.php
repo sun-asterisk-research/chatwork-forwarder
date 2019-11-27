@@ -10,7 +10,8 @@ use App\Repositories\Eloquents\WebhookRepository;
 class AppServiceProvider extends ServiceProvider
 {
     protected $repositories = [
-        'WebhookRepository'
+        'WebhookRepository',
+        'BotRepository',
     ];
 
     /**
