@@ -12,26 +12,28 @@
 */
 
 Route::get('/', function () {
-	return view('home');
+    return view('home');
 });
 
 Auth::routes([
-	'register' => false,
-	'verify' => false,
+    'register' => false,
+    'verify' => false,
 ]);
 
 Route::namespace('Auth')->group(function () {
-	Route::get('/redirect', 'SocialAuthGoogleController@redirect');
-	Route::get('/callback', 'SocialAuthGoogleController@callback');
+    Route::get('/redirect', 'SocialAuthGoogleController@redirect');
+    Route::get('/callback', 'SocialAuthGoogleController@callback');
 });
 
-Route::resource('bots', 'BotController')->only('index')->middleware('auth');
-Route::resource('users', 'UserController')->middleware('auth');
-Route::get('/list/users', 'UserController@getList')->middleware('auth');
-Route::resource('webhooks', 'WebhookController')->except([
-    'show', 'update', 'destroy'
-])->middleware('auth');
-Route::put('webhooks/change_status', 'WebhookController@changeStatus')->middleware('auth');
-Route::resource('rooms', 'RoomController')->only([
-    'index'
-]);
+Route::group(['middleware' => ['auth']], function () {
+    Route::resource('bots', 'BotController')->only('index', 'destroy');
+    Route::resource('users', 'UserController');
+    Route::get('/list/users', 'UserController@getList');
+    Route::resource('webhooks', 'WebhookController')->except([
+        'show', 'update', 'destroy'
+    ]);
+    Route::put('webhooks/change_status', 'WebhookController@changeStatus');
+    Route::resource('rooms', 'RoomController')->only([
+        'index'
+    ]);
+});
