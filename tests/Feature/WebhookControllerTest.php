@@ -78,4 +78,50 @@ class WebhookControllerTest extends TestCase
         $response->assertRedirect();
         $response->assertStatus(302);
     }
+
+    /**
+     * test user can change status webhook
+     * 
+     * @return  void
+     */
+    public function testAuthorizedUserCanChangeStatusWebhook()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $this->actingAs($webhook->user);
+
+        $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "DISABLED"]);
+
+        $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'status' => 0]);
+        $response->assertSee('This webhook was updated successfully');
+    }
+
+    /**
+     * test user change status webhook fail with incorrect id
+     * 
+     * @return  void
+     */
+    public function testChangeStatusWebhookFailFeature()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $this->actingAs($webhook->user);
+
+        $response = $this->put('webhooks/change_status', ['id' => -1, 'status' => "ENABLED"]);
+
+        $response->assertSee('Updated failed. Something went wrong');
+    }
+
+    /**
+     * test unauthorized user cannot change status webhook
+     * 
+     * @return  void
+     */
+    public function testUnauthorizedUserCannotChangeStatusWebhook()
+    {
+        $webhook = factory(Webhook::class)->create();
+
+        $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "ENABLED"]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect('login');
+    }
 }
