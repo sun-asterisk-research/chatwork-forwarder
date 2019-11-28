@@ -12,6 +12,7 @@
 <div class="block full">
     <div class="block-title">
         <h2><strong>List bots</strong></h2>
+        <a href="{{ route('bots.create') }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
     </div>
     @include('common.flash-message')
 
