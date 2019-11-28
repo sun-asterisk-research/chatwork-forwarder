@@ -30,3 +30,7 @@
 .model-content {
   text-align: center;
 }
+.float-right {
+  float: right;
+  margin: 10px;
+}

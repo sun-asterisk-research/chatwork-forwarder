@@ -38,6 +38,7 @@
                             <a href="/" class="active">Datatables</a>
                             <a href="/webhooks">Webhooks</a>
                             <a href="/bots">Bots</a>
+                            <a href="/users">Users</a>
                         </li>
                     </ul>
                 </li>

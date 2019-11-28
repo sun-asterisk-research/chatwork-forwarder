@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\WebhookStatus;
 use App\Http\Requests\WebhookCreateRequest;
+use App\Http\Requests\WebhookUpdateRequest;
 use App\Models\Bot;
 use App\Models\Webhook;
 use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Enums\UserType;
 use Auth;
 
 class WebhookController extends Controller
@@ -73,7 +75,12 @@ class WebhookController extends Controller
      */
     public function edit(Webhook $webhook)
     {
-        return view('webhooks.edit');
+        $this->authorize('update', $webhook);
+        $payloads = $webhook->payloads()->get();
+        $webhookStatuses = array_change_key_case(WebhookStatus::toArray());
+        $bots = Bot::pluck('id', 'name');
+
+        return view('webhooks.edit', compact('webhook', 'payloads', 'webhookStatuses', 'bots'));
     }
 
     /**
@@ -83,9 +90,16 @@ class WebhookController extends Controller
      * @param  \App\Models\Webhook  $webhook
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Webhook $webhook)
+    public function update(WebhookUpdateRequest $request)
     {
-        //
+        $data = $request->except('_token');
+        try {
+            $webhook = $this->webhookRepository->update($data['id'], $data);
+            return redirect()->route('webhooks.edit', $webhook)
+                             ->with('messageSuccess', 'This webhook successfully updated');
+        } catch (QueryException $exception) {
+            return redirect()->back()->with('messageFail', 'Update failed. Something went wrong')->withInput();
+        }
     }
 
     /**

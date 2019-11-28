@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Condition extends Model
 {
-    //
+    protected $fillable = [
+        'payload_id',
+        'condition',
+    ];
 }

@@ -39,8 +39,7 @@
                         <td class="pl-20 webhook-status">{{ $webhook->status == WebhookStatus::ENABLED ? 'Enabled' : 'Disabled' }}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
                                 <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></a>
                             </div>
                             @if($webhook->status == WebhookStatus::ENABLED)
