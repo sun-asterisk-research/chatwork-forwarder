@@ -14,6 +14,7 @@ yarn-error.log
 gkc_*
 .framgia-ci-reports
 .framgia-ci-result.temp.yml
-/public/css/*.css
+/public/css/login.css
+/public/css/style.css
 /public/js/custom.js
 /public/mix-manifest.json

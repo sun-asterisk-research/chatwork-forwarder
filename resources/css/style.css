@@ -13,6 +13,20 @@
 }
 
 .btn-pull-right {
-  margin-left: 85%;
-  margin-bottom: 5px;
+  margin-left: 85% !important;
+  margin-bottom: 5px !important;
+}
+
+.modal {
+  top: calc(50% - 100px);
+  left: calc(50% - 300px);
+}
+
+.modal-title {
+  font-weight: bold !important;
+  text-align: center;
+}
+
+.model-content {
+  text-align: center;
 }

@@ -31,6 +31,7 @@ Route::get('/list/users', 'UserController@getList')->middleware('auth');
 Route::resource('webhooks', 'WebhookController')->except([
     'show', 'update', 'destroy'
 ])->middleware('auth');
+Route::put('webhooks/change_status', 'WebhookController@changeStatus')->middleware('auth');
 Route::resource('rooms', 'RoomController')->only([
     'index'
 ]);

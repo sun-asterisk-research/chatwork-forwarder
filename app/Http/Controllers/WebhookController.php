@@ -98,4 +98,21 @@ class WebhookController extends Controller
     {
         //
     }
+
+    public function changeStatus(Request $request)
+    {
+        if ($request->status == WebhookStatus::ENABLED()->key) {
+            $status = WebhookStatus::ENABLED;
+        } else {
+            $status = WebhookStatus::DISABLED;
+        }
+
+        $result = $this->webhookRepository->update($request->id, ['status' => $status]);
+        
+        if ($result) {
+            return 'This webhook was updated successfully';
+        }
+
+        return 'Updated failed. Something went wrong';
+    }
 }
