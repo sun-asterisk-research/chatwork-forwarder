@@ -77,4 +77,45 @@ class WebhookRepositoryTest extends TestCase
         $create->once();
         $auth->times(3);
     }
+
+    /**
+     * test update webhook success with once attribute
+     * 
+     * @return void
+     */
+    public function testUpdateWebhookSuccessWithOnceAttribute()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $webhookRepository = new WebhookRepository;
+        $webhookRepository->update($webhook->id, ['name' => 'new name']);
+
+        $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'name' => 'new name']);
+    }
+
+    /**
+     * test update webhook success with multiple attributes
+     * 
+     * @return void
+     */
+    public function testUpdateWebhookSuccessWithMulAttributes()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $webhookRepository = new WebhookRepository;
+        $webhookRepository->update($webhook->id, ['name' => 'new name', 'status' => 0]);
+
+        $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'name' => 'new name', 'status' => 0]);
+    }
+
+    /**
+     * test update webhook fail with webhook not found
+     * 
+     * @return void
+     */
+    public function testUpdateWebhookFailWithWebhookNotFound()
+    {
+        $webhookRepository = new WebhookRepository;
+        $result = $webhookRepository->update(-1, ['name' => 'new name', 'status' => 0]);
+
+        $this->assertEquals(false, $result);
+    }
 }
