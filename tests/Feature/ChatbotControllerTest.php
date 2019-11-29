@@ -306,7 +306,7 @@ class ChatbotControllerTest extends TestCase
 
        $this->actingAs($user);
        $response = $this->delete(route('bots.destroy', $bot->id));
-       $this->assertDatabaseMissing('bots', ['name' => 'test remove bot']);
+       $this->assertDatabaseMissing('bots', ['id' => $bot->id, 'name' => 'test remove bot']);
        $response->assertRedirect('/bots');
        $response->assertStatus(302);
    }
@@ -324,8 +324,7 @@ class ChatbotControllerTest extends TestCase
        $this->actingAs($user);
        $response = $this->delete(route('bots.destroy', ($bot->id + 99)));
        $this->assertDatabaseHas('bots', ['name' => 'test remove bot fail']);
-       $response->assertRedirect('/bots');
-       $response->assertStatus(302);
+       $response->assertStatus(404);
    }
 
    /**
@@ -340,4 +339,52 @@ class ChatbotControllerTest extends TestCase
        $response->assertLocation('/login');
        $response->assertStatus(302);
    }
+
+    /**
+    * test remove bot permission denine
+    *
+    * @return void
+    */
+    public function testRemoveBotPermissionDenine()
+    {
+        $bot = factory(Bot::class)->create();
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user);
+        $response = $this->delete(route('bots.destroy', $bot->id));
+
+        $response->assertStatus(403);
+    }
+
+    /**
+    * test edit bot permission denine
+    *
+    * @return void
+    */
+    public function testEditBotPermissionDenine()
+    {
+        $bot = factory(Bot::class)->create();
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user);
+        $response = $this->get(route('bots.edit', $bot->id));
+
+        $response->assertStatus(403);
+    }
+
+    /**
+    * test update bot permission denine
+    *
+    * @return void
+    */
+    public function testUpdateBotPermissionDenine()
+    {
+        $bot = factory(Bot::class)->create();
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), ['name' => 'New Name']);
+
+        $response->assertStatus(403);
+    }
 }

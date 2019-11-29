@@ -25,10 +25,12 @@ class BotController extends Controller
         return view('bots.index', compact('bots'));
     }
 
-    public function destroy($id)
+    public function destroy(Bot $bot)
     {
+        $this->authorize('delete', $bot);
+
         try {
-            $this->botRepository->delete($id);
+            $this->botRepository->delete($bot->id);
 
             return redirect('/bots')->with('messageSuccess', __('message.bot.notification.delete.success'));
         } catch (Exception $exception) {
@@ -55,19 +57,20 @@ class BotController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(Bot $bot)
     {
-        $bot = Bot::findOrFail($id);
+        $this->authorize('update', $bot);
 
         return view('bots.edit', compact('bot'));
     }
 
-    public function update(BotUpdateRequest $request, $id)
+    public function update(BotUpdateRequest $request, Bot $bot)
     {
+        $this->authorize('update', $bot);
         $data = $request->except('_token');
 
         try {
-            $bot = $this->botRepository->update($id, $data);
+            $bot = $this->botRepository->update($bot->id, $data);
             return redirect()->route('bots.edit', $bot)
                              ->with('messageSuccess', 'This bot successfully updated');
         } catch (QueryException $exception) {
