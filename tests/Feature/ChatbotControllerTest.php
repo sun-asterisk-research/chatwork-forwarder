@@ -30,7 +30,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test user can see create bot form
-     * 
+     *
      * @return void
      */
     public function testUserCanSeeCreateBotForm()
@@ -47,7 +47,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test user unauthorized cannot see create bot form
-     * 
+     *
      * @return void
      */
     public function testUnauthorizedUserCannotSeeCreateBotForm()
@@ -63,7 +63,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test user authorized can create a new bot
-     * 
+     *
      * @return void
      */
     public function testUserCanCreateANewBot()
@@ -74,7 +74,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -84,7 +84,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot required name
-     * 
+     *
      * @return void
      */
     public function testBotRequireName()
@@ -95,7 +95,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -106,7 +106,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot unique name with a user
-     * 
+     *
      * @return void
      */
     public function testBotUniqueNameWithUser()
@@ -119,7 +119,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -130,7 +130,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot name have maximum length is 50 characters
-     * 
+     *
      * @return void
      */
     public function testBotNameMaximumLength()
@@ -143,7 +143,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -154,7 +154,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot required cw_id
-     * 
+     *
      * @return void
      */
     public function testBotRequiredCWId()
@@ -166,7 +166,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => NULL,
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -177,7 +177,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot unique cw_id with user
-     * 
+     *
      * @return void
      */
     public function testBotUniqueCWIdWithUser()
@@ -190,7 +190,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => $bot->cw_id,
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -201,7 +201,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot cw_id have maximum length is 50 characters
-     * 
+     *
      * @return void
      */
     public function testBotCWIdMaximumLength()
@@ -214,7 +214,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '131233234113123323411312332341131233234113123323412',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -225,7 +225,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot required bot_key
-     * 
+     *
      * @return void
      */
     public function testBotRequiredBotKey()
@@ -237,7 +237,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '12321',
             'bot_key' => NULL,
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -248,7 +248,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot unique bot_key with user
-     * 
+     *
      * @return void
      */
     public function testBotUniqueBotKeyWithUser()
@@ -261,7 +261,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '12321',
             'bot_key' => $bot->bot_key,
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -272,7 +272,7 @@ class ChatbotControllerTest extends TestCase
 
      /**
      * test bot bot_key have maximum length is 50 characters
-     * 
+     *
      * @return void
      */
     public function testBotKeyMaximumLength()
@@ -285,7 +285,7 @@ class ChatbotControllerTest extends TestCase
             'cw_id' => '12321',
             'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdwe',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
@@ -293,4 +293,51 @@ class ChatbotControllerTest extends TestCase
             ->assertStatus(302)
             ->assertSessionHasErrors('bot_key');
     }
+
+    /**
+    * test Feature remove bot successfully.
+    *
+    * @return void
+    */
+   public function testRemoveChatbotFeature()
+   {
+       $bot = factory(Bot::class)->create(['name' => 'test remove bot']);
+       $user = $bot->user;
+
+       $this->actingAs($user);
+       $response = $this->delete(route('bots.destroy', $bot->id));
+       $this->assertDatabaseMissing('bots', ['name' => 'test remove bot']);
+       $response->assertRedirect('/bots');
+       $response->assertStatus(302);
+   }
+
+   /**
+    * test Feature remove bot fail.
+    *
+    * @return void
+    */
+   public function testRemoveChatbotFailFeature()
+   {
+       $bot = factory(Bot::class)->create(['name' => 'test remove bot fail']);
+       $user = $bot->user;
+
+       $this->actingAs($user);
+       $response = $this->delete(route('bots.destroy', ($bot->id + 99)));
+       $this->assertDatabaseHas('bots', ['name' => 'test remove bot fail']);
+       $response->assertRedirect('/bots');
+       $response->assertStatus(302);
+   }
+
+   /**
+    * test Feature remove bot unauthorized
+    *
+    * @return void
+    */
+   public function testRemoveChatbotUnauthorizedFeature()
+   {
+       $response = $this->delete(route('bots.destroy', 1));
+
+       $response->assertLocation('/login');
+       $response->assertStatus(302);
+   }
 }
