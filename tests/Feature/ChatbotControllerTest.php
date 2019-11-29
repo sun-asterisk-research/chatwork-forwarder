@@ -372,19 +372,251 @@ class ChatbotControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /**
-    * test update bot permission denine
-    *
-    * @return void
-    */
-    public function testUpdateBotPermissionDenine()
+   /**
+     * test user can see edit bot form
+     * 
+     * @return void
+     */
+    public function testUserCanSeeEditBotForm()
     {
-        $bot = factory(Bot::class)->create();
         $user = factory(User::class)->create();
-
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot fail', 'user_id' => $user->id]);
         $this->actingAs($user);
-        $response = $this->put(route('bots.update', $bot->id), ['name' => 'New Name']);
+        $response = $this->get(route('bots.edit', $bot->id));
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('bots.edit');
+    }
 
-        $response->assertStatus(403);
+    /**
+     * test user unauthorized cannot see edit bot form
+     * 
+     * @return void
+     */
+    public function testUnauthorizedUserCannotSeeEditBotForm()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot fail', 'user_id' => $user->id]);
+        $response = $this->get(route('bots.edit', $bot->id));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect('login');
+    }
+
+     /**
+     * test user authorized can edit bot
+     * 
+     * @return void
+     */
+    public function testUserCanEditBot()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'Updated Bot',
+            'cw_id' => '123456789',
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response->assertRedirect('bots/' . $bot->id . '/edit');
+        $this->assertDatabaseHas('bots', ['id' => $bot->id, 'name' => 'Updated Bot', 'cw_id' => '123456789', 'bot_key' => 'asdg12asd3423adasdasd23sdasdas23']);
+    }
+
+     /**
+     * test bot required name
+     * 
+     * @return void
+     */
+    public function testUpdateBotRequireName()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => NULL,
+            'cw_id' => '123456789',
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+     /**
+     * test bot unique name with a user
+     * 
+     * @return void
+     */
+    public function testUpdateBotUniqueNameWithUser()
+    {
+        $user = factory(User::class)->create();
+        $bot_1 = factory(Bot::class)->create(['name' => 'Created Bot 1', 'user_id' => $user->id]);
+        $bot_2 = factory(Bot::class)->create(['name' => 'Created Bot 2', 'user_id' => $user->id]);
+        
+        $params = [
+            'name' => $bot_1->name,
+            'cw_id' => '131233',
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot_2->id), $params);
+
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    /**
+     * test bot name have maximum length is 50 characters
+     * 
+     * @return void
+     */
+    public function testUpdateBotNameMaximumLength()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'assdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkd1',
+            'cw_id' => '131233',
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+    /**
+     * test bot required cw_id
+     * 
+     * @return void
+     */
+    public function testUpdateBotRequiredCWId()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'asd',
+            'cw_id' => NULL,
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('cw_id');
+    }
+    /**
+     * test bot unique cw_id with user
+     * 
+     * @return void
+     */
+    public function testUpdateBotUniqueCWIdWithUser()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'asd',
+            'cw_id' => $bot->cw_id,
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('cw_id');
+    }
+    /**
+     * test bot cw_id have maximum length is 50 characters
+     * 
+     * @return void
+     */
+    public function testUpdateBotCWIdMaximumLength()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'asd',
+            'cw_id' => '131233234113123323411312332341131233234113123323412',
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('cw_id');
+    }
+    /**
+     * test bot required bot_key
+     * 
+     * @return void
+     */
+    public function testUpdateBotRequiredBotKey()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'asd',
+            'cw_id' => '12321',
+            'bot_key' => NULL,
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('bot_key');
+    }
+    /**
+     * test bot unique bot_key with user
+     * 
+     * @return void
+     */
+    public function testUpdateBotUniqueBotKeyWithUser()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'asd',
+            'cw_id' => '12321',
+            'bot_key' => $bot->bot_key,
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('bot_key');
+    }
+     /**
+     * test bot bot_key have maximum length is 50 characters
+     * 
+     * @return void
+     */
+    public function testUpdateBotKeyMaximumLength()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'asd',
+            'cw_id' => '12321',
+            'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdwe',
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('bot_key');
     }
 }

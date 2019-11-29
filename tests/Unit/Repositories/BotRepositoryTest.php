@@ -64,4 +64,25 @@ class BotRepositoryTest extends TestCase
         $this->assertDatabaseHas('bots', ['name' => 'Bot Name', 'user_id' => $user->id]);
     }
 
+    /**
+     * test update bot
+     *
+     * @return void
+     */
+    public function testUpdateBot()
+    {
+        $botRepository = new BotRepository;
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $attributes = [
+            'name' => 'Bot Name',
+            'cw_id' => '123123',
+            'bot_key' => 'asdad234saddr2sdfsasd',
+            'user_id' => $user->id
+        ];
+
+        $botRepository->update($bot->id, $attributes);
+
+        $this->assertDatabaseHas('bots', ['name' => 'Bot Name', 'user_id' => $user->id]);
+    }
 }
