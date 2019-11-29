@@ -7,6 +7,7 @@ use Auth;
 use App\Models\Bot;
 use App\Repositories\Interfaces\BotRepositoryInterface as BotRepository;
 use App\Http\Requests\BotCreateRequest;
+use App\Http\Requests\BotUpdateRequest;
 
 class BotController extends Controller
 {
@@ -54,8 +55,23 @@ class BotController extends Controller
         }
     }
 
-    public function edit(Bot $bot)
+    public function edit($id)
     {
-        return view('bots.edit');
+        $bot = Bot::findOrFail($id);
+
+        return view('bots.edit', compact('bot'));
+    }
+
+    public function update(BotUpdateRequest $request, $id)
+    {
+        $data = $request->except('_token');
+
+        try {
+            $bot = $this->botRepository->update($id, $data);
+            return redirect()->route('bots.edit', $bot)
+                             ->with('messageSuccess', 'This bot successfully updated');
+        } catch (QueryException $exception) {
+            return redirect()->back()->with('messageFail', 'Update failed. Something went wrong')->withInput();
+        }
     }
 }

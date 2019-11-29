@@ -4,8 +4,9 @@ namespace App\Http\Requests;
 
 use Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class BotCreateRequest extends FormRequest
+class BotUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +26,18 @@ class BotCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:50|unique:bots,name,NULL,id,user_id,' . Auth::id(),
-            'cw_id' => 'required|max:10|unique:bots,cw_id,NULL,id,user_id,' . Auth::id(),
-            'bot_key' => 'required|max:50|unique:bots,bot_key,NULL,id,user_id,' . Auth::id(),
+            'name' => 'required|max:50',
+            'name' => Rule::unique('bots')->ignore($this->id)->where(function ($query) {
+                return $query->where('user_id', \Auth::id());
+            }),
+            'cw_id' => 'required|max:10',
+            'cw_id' => Rule::unique('bots')->ignore($this->id)->where(function ($query) {
+                return $query->where('user_id', \Auth::id());
+            }),
+            'bot_key' => 'required|max:50',
+            'bot_key' => Rule::unique('bots')->ignore($this->id)->where(function ($query) {
+                return $query->where('user_id', \Auth::id());
+            }),
         ];
     }
 

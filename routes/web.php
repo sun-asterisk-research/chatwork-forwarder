@@ -26,7 +26,7 @@ Route::namespace('Auth')->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::resource('bots', 'BotController')->except('show', 'update');
+    Route::resource('bots', 'BotController')->except('show');
     Route::resource('users', 'UserController');
     Route::get('/list/users', 'UserController@getList');
     Route::resource('webhooks', 'WebhookController')->except([
