@@ -29,4 +29,9 @@ class Webhook extends Model
     {
         return $this->belongsTo(Bot::class);
     }
+
+    public function payloads()
+    {
+        return $this->hasMany(Payload::class);
+    }
 }
