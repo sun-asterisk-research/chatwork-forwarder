@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Mockery;
 use Auth;
 use App\Models\Bot;
+use App\Models\User;
 use Tests\TestCase;
 use App\Models\Webhook;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -123,5 +124,36 @@ class WebhookControllerTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect('login');
+    }
+
+    public function testUserCanSeeWebhook()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $this->actingAs($webhook->user);
+
+        $response = $this->get(route('webhooks.edit', ['webhook' => $webhook]));
+        $response->assertStatus(200);
+        $response->assertSee('webhook');
+        $response->assertSee('bots');
+        $response->assertViewHas('webhookStatuses');
+        $response->assertViewHas('payloads');
+    }
+
+    public function testUnauthenticateUserCannotSeeWebhook()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $response = $this->get(route('webhooks.edit', ['webhook' => $webhook]));
+        $response->assertStatus(302);
+        $response->assertRedirect('login');
+    }
+
+    public function testUnauthorizationUserCannotSeeWebhook()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $response = $this->get(route('webhooks.edit', ['webhook' => $webhook]));
+        $response->assertStatus(403);
     }
 }
