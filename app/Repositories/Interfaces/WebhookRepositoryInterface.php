@@ -9,4 +9,10 @@ interface WebhookRepositoryInterface
      * @return mixed
      */
     public function getAllByUser();
+
+    /**
+     * Get all webhooks by admin
+     * @return mixed
+     */
+    public function getAll();
 }

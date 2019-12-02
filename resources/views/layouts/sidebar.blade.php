@@ -36,9 +36,13 @@
                     <ul>
                         <li>
                             <a href="/" class="active">Datatables</a>
+                            @admin
+                            <a href="/admin/users">Users</a>
+                            <a href="/admin/webhooks">Webhooks</a>
+                            @else
                             <a href="/webhooks">Webhooks</a>
                             <a href="/bots">Bots</a>
-                            <a href="/users">Users</a>
+                            @endadmin
                         </li>
                     </ul>
                 </li>

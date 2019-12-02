@@ -26,9 +26,14 @@ Route::namespace('Auth')->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::resource('bots', 'BotController')->except('show');
-    Route::resource('users', 'UserController');
     Route::get('/list/users', 'UserController@getList');
+    Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
+        Route::resource('users', 'UserController');
+        Route::group(['namespace' => 'Admin'], function () {
+            Route::get('webhooks', 'WebhookController@index');
+        });
+    });
+    Route::resource('bots', 'BotController')->except('show');
     Route::put('webhooks/change_status', 'WebhookController@changeStatus');
     Route::resource('webhooks', 'WebhookController');
     Route::resource('rooms', 'RoomController')->only([

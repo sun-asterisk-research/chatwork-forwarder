@@ -10,7 +10,6 @@ use App\Models\Webhook;
 use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use App\Enums\UserType;
 use Auth;
 
 class WebhookController extends Controller
@@ -43,6 +42,7 @@ class WebhookController extends Controller
     {
         $webhookStatuses = array_change_key_case(WebhookStatus::toArray());
         $bots = Bot::pluck('id', 'name');
+
         return view('webhooks.create', compact('webhookStatuses', 'bots'));
     }
 
@@ -55,11 +55,12 @@ class WebhookController extends Controller
     public function store(WebhookCreateRequest $request)
     {
         $data = $request->except('_token');
-        $data['token'] = md5(Auth::id().''.time());
+        $data['token'] = md5(Auth::id() . '' . time());
         $data['user_id'] = Auth::id();
 
         try {
             $webhook = $this->webhookRepository->create($data);
+
             return redirect()->route('webhooks.edit', $webhook)
                              ->with('messageSuccess', 'This webhook successfully created');
         } catch (QueryException $exception) {
@@ -95,6 +96,7 @@ class WebhookController extends Controller
         $data = $request->except('_token');
         try {
             $webhook = $this->webhookRepository->update($data['id'], $data);
+
             return redirect()->route('webhooks.edit', $webhook)
                              ->with('messageSuccess', 'This webhook successfully updated');
         } catch (QueryException $exception) {
@@ -122,7 +124,7 @@ class WebhookController extends Controller
         }
 
         $result = $this->webhookRepository->update($request->id, ['status' => $status]);
-        
+
         if ($result) {
             return 'This webhook was updated successfully';
         }

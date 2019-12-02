@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Auth;
+use App\Enums\UserType;
 use App\Models\Webhook;
-use App\Repositories\Interfaces\BaseRepositoryInterface;
-use App\Repositories\Eloquents\WebhookRepository;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,6 +47,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Blade::if('admin', function () {
+            return Auth::user() && Auth::user()->role == UserType::ADMIN;
+        });
     }
 }

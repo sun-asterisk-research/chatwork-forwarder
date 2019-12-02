@@ -20,4 +20,12 @@ class WebhookRepository extends BaseRepository implements WebhookRepositoryInter
                             ->orderBy('webhooks.created_at', 'desc')
                             ->get();
     }
+
+    public function getAll()
+    {
+        return $this->model->with('user')
+                        ->orderBy('webhooks.status', 'desc')
+                        ->orderBy('webhooks.created_at', 'desc')
+                        ->get();
+    }
 }
