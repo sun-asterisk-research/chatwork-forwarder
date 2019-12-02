@@ -121,7 +121,9 @@
 					</div>
 				</div>
 				<div class="col-xs-2">
-					<a class="btn btn-sm btn-warning" href=""><i class="fa fa-pencil"></i> Edit</a>&nbsp
+					<a class="btn btn-sm btn-warning" href="{{ route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]) }} ">
+						<i class="fa fa-pencil"></i> Edit
+					</a>&nbsp
 
 					{{ Form::open([
 							'method' => 'DELETE',

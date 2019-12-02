@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PayloadCreateRequest;
+use App\Models\Condition;
 use App\Models\Payload;
 use App\Models\Webhook;
 use App\Repositories\Interfaces\PayloadRepositoryInterface as PayloadRepository;
@@ -60,7 +61,7 @@ class PayloadController extends Controller
                     $field = trim($conditions['fields'][$i]);
                     $operator = trim($conditions['operators'][$i]);
                     $value = trim($conditions['values'][$i]);
-                
+
                     if (!empty($field) && !empty($operator) && !empty($value)) {
                         $payload->conditions()->create([
                             'field' => $field,
@@ -88,7 +89,8 @@ class PayloadController extends Controller
      */
     public function edit(Webhook $webhook, Payload $payload)
     {
-        return view('payloads.edit');
+        $conditions = $payload->conditions()->get();
+        return view('payloads.edit', compact('payload', 'webhook', 'conditions'));
     }
 
     /**
@@ -98,9 +100,32 @@ class PayloadController extends Controller
      * @param  \App\Models\Payload  $payload
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Payload $payload)
+    public function update(Request $request, Webhook $webhook, Payload $payload)
     {
-        //
+        $conditions = $request->only('conditions');
+        $data = $request->only('content');
+        $ids = (array) $request->ids;
+        DB::beginTransaction();
+        try {
+            $payload = $this->payloadRepository->update($payload->id, $data);
+            $payload->conditions()->whereNotIn('id', $ids)->delete();
+            if ($conditions) {
+                foreach ($conditions['conditions'] as $condition) {
+                    if ($condition['id']) {
+                        Condition::whereId($condition['id'])->update($condition);
+                    } else {
+                        $payload->conditions()->create($condition);
+                    }
+                }
+            }
+
+            DB::commit();
+            $request->session()->flash('messageSuccess', 'This payload successfully updated');
+
+            return $payload->id;
+        } catch (QueryException $exception) {
+            DB::rollBack();
+        }
     }
 
     /**

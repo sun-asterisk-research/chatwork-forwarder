@@ -39,5 +39,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('rooms', 'RoomController')->only([
         'index'
     ]);
-    Route::resource('webhooks.payloads', 'PayloadController')->except(['show', 'update']);
+    Route::resource('webhooks.payloads', 'PayloadController')->except('show');
 });
