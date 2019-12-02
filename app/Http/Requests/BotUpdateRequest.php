@@ -26,18 +26,27 @@ class BotUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:50',
-            'name' => Rule::unique('bots')->ignore($this->id)->where(function ($query) {
-                return $query->where('user_id', \Auth::id());
-            }),
-            'cw_id' => 'required|max:10',
-            'cw_id' => Rule::unique('bots')->ignore($this->id)->where(function ($query) {
-                return $query->where('user_id', \Auth::id());
-            }),
-            'bot_key' => 'required|max:50',
-            'bot_key' => Rule::unique('bots')->ignore($this->id)->where(function ($query) {
-                return $query->where('user_id', \Auth::id());
-            }),
+            'name' => [
+                'required',
+                'max:50',
+                Rule::unique('bots')->ignore($this->id)->where(function ($query) {
+                    return $query->where('user_id', \Auth::id());
+                }),
+            ],
+            'cw_id' => [
+                'required',
+                'max:10',
+                Rule::unique('bots')->ignore($this->id)->where(function ($query) {
+                    return $query->where('user_id', \Auth::id());
+                }),
+            ],
+            'bot_key' => [
+                'required',
+                'max:50',
+                Rule::unique('bots')->ignore($this->id)->where(function ($query) {
+                    return $query->where('user_id', \Auth::id());
+                }),
+            ],
         ];
     }
 
