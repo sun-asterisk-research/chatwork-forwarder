@@ -13,6 +13,11 @@ function addFields() {
             flag = false;
             return false;
         }
+        if ($(this).val() == "") {
+            $(".error-value").html("Please enter value")
+            flag = false;
+            return false;
+        }
     });
     if (flag == true) {
         $(".error-field").html("");
@@ -74,6 +79,10 @@ function printErrorMsg(errors) {
     })
 }
 
+function getValues(items){
+    return items.map(function(){ return $(this).val(); }).get();
+}
+
 $(document).ready(function () {
     $("#submit").click(function (e) {
         e.preventDefault();
@@ -81,19 +90,9 @@ $(document).ready(function () {
         var _token = $('meta[name="csrf-token"]').attr('content');
         var content = $("textarea[name='content']").val();
         var webhook_id = $("input[name='webhook_id']").val();
-        var fields = $("input[name^='field[]']");
-        var operators = $("select[name^='operator[]']");
-        var values = $("input[name^='value[]']");
-        var conditions = [];
-
-        for (i = 0; i < fields.length; i++) {
-            field = $(fields[i]).val().trim();
-            operator = $(operators[i]).val().trim();
-            value = $(values[i]).val().trim();
-            if (field && operator && value) {
-                conditions.push("return '" + field + "' " + operator + " '" + value + "';");
-            }
-        }
+        var fields = getValues($("input[name^='field[]']"));
+        var operators = getValues($("select[name^='operator[]']"));
+        var values = getValues($("input[name^='value[]']"));
 
         $.ajax({
             url: "/webhooks/" + webhook_id + "/payloads",
@@ -101,7 +100,9 @@ $(document).ready(function () {
             data: {
                 _token: _token,
                 content: content,
-                conditions: conditions,
+                fields: fields,
+                operators: operators,
+                values: values,
             },
             success: function (id) {
                 window.location.replace("/webhooks/" + webhook_id + "/payloads/" + id + "/edit");

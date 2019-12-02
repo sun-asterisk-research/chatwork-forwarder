@@ -8,6 +8,8 @@ class Condition extends Model
 {
     protected $fillable = [
         'payload_id',
-        'condition',
+        'field',
+        'operator',
+        'value',
     ];
 }
