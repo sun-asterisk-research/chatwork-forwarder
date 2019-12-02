@@ -10,7 +10,7 @@ class Payload extends Model
         'webhook_id',
         'content',
     ];
-    
+
     public function webhook()
     {
         return $this->belongsTo(Webhook::class);

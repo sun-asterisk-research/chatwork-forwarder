@@ -84,7 +84,7 @@
 	<div class="block">
 		<div class="form-group row">
 			<div class="col-xs-12">
-				<a class="btn btn-sm btn-primary float-right" href=""><i class="fa fa-plus-circle"></i> Create</a>
+				<a class="btn btn-sm btn-primary float-right" href="{{ route('webhooks.payloads.create', $webhook->id) }}"><i class="fa fa-plus-circle"></i> Create</a>
 			</div>
 			<div class="col-xs-12">
 				<div class="col-xs-5">
