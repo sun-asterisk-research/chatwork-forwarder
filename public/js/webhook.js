@@ -56,9 +56,9 @@ $(document).ready(function () {
         let item = $('.item-' + webhook_id);
         let opposite_status = (status == 'enabled') ? 'disabled' : 'enabled';
         let opposite_btn_class = (current_btn_class == 'success') ? 'danger' : 'success';
-        
+
         $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}, 
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             type: 'PUT',
             url: '/webhooks/change_status',
             data: {
@@ -82,4 +82,13 @@ $(document).ready(function () {
             }
         })
     }
+
+    $('.payload-content').on('click', '.form-delete', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        $('#delete-confirm').modal({ backdrop: 'static', keyboard: false })
+            .on('click', '#delete-btn', function () {
+                $form.submit();
+            });
+    });
 });
