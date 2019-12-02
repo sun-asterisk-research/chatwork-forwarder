@@ -100,8 +100,15 @@ class PayloadController extends Controller
      * @param  \App\Models\Payload  $payload
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Payload $payload)
+    public function destroy(Webhook $webhook, Payload $payload)
     {
-        //
+        try {
+            $this->payloadRepository->delete($payload->id);
+
+            return redirect()->route('webhooks.edit', $webhook)
+                             ->with('messageSuccess', 'This payload successfully deleted');
+        } catch (Exception $exception) {
+            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+        }
     }
 }

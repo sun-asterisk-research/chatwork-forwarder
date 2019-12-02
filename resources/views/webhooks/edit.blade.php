@@ -81,7 +81,7 @@
 		</div>
 	</div>
 	{{ Form::close() }}
-	<div class="block">
+	<div class="block payload-content">
 		<div class="form-group row">
 			<div class="col-xs-12">
 				<a class="btn btn-sm btn-primary float-right" href="{{ route('webhooks.payloads.create', $webhook->id) }}"><i class="fa fa-plus-circle"></i> Create</a>
@@ -97,6 +97,7 @@
 					<label class="field-compulsory" for="cw_room_id">&nbsp &nbsp Action</label>
 				</div>
 			</div>
+			@include('webhooks.delete_confirm_modal')
 			@foreach($payloads as $key => $payload)
 			<div class="row">
 				<div class="col-xs-5">
@@ -118,7 +119,19 @@
 				</div>
 				<div class="col-xs-2">
 					<a class="btn btn-sm btn-warning" href=""><i class="fa fa-pencil"></i> Edit</a>&nbsp
-					<a class="btn btn-sm btn-danger" href=""><i class="fa fa-trash-o"></i> Delete</a>
+
+					{{ Form::open([
+							'method' => 'DELETE',
+							'route' => ['webhooks.payloads.destroy', 'webhook' => $webhook, 'payload' => $payload],
+							'style' => 'display:inline',
+							'class' => 'form-delete'
+					]) }}
+							{{ Form::button('<i class="fa fa-trash-o"> Delete</i>' , [
+											'type' => 'DELETE',
+											'class' => 'btn btn-sm btn-danger delete-btn',
+											'title' => 'Delete'
+							]) }}
+					{{ Form::close() }}
 				</div>
 			</div>
 			@endforeach
