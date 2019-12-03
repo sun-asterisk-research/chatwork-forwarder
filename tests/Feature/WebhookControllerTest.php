@@ -82,7 +82,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test user can change status webhook
-     * 
+     *
      * @return  void
      */
     public function testAuthorizedUserCanChangeStatusWebhook()
@@ -98,7 +98,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test user change status webhook fail with incorrect id
-     * 
+     *
      * @return  void
      */
     public function testChangeStatusWebhookFailFeature()
@@ -113,7 +113,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test unauthorized user cannot change status webhook
-     * 
+     *
      * @return  void
      */
     public function testUnauthorizedUserCannotChangeStatusWebhook()
@@ -156,4 +156,52 @@ class WebhookControllerTest extends TestCase
         $response = $this->get(route('webhooks.edit', ['webhook' => $webhook]));
         $response->assertStatus(403);
     }
+
+    /**
+    * test Feature remove webhook successfully.
+    *
+    * @return void
+    */
+   public function testRemoveWebhookFeature()
+   {
+       $user = factory(User::class)->create();
+       $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook success']);
+
+       $this->actingAs($user);
+       $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
+       $this->assertDatabaseMissing('webhooks', ['id' => $webhook->id, 'name' => 'test remove webhook success', 'deleted_at' => NULL]);
+       $response->assertRedirect(route('webhooks.index'));
+       $response->assertStatus(302);
+   }
+
+   /**
+    * test Feature remove webhook fail.
+    *
+    * @return void
+    */
+   public function testRemoveWebhookFailFeature()
+   {
+       $user = factory(User::class)->create();
+       $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook fail']);
+
+       $this->actingAs($user);
+       $response = $this->delete(route('webhooks.destroy', ['webhook_id' => ($webhook->id + 99)]));
+       $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
+       $response->assertStatus(404);
+   }
+
+   /**
+    * test Feature remove webhook unauthorized
+    *
+    * @return void
+    */
+   public function testRemoveWebhookUnauthorizedFeature()
+   {
+       $user = factory(User::class)->create();
+       $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+       $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
+
+       $response->assertLocation('/login');
+       $response->assertStatus(302);
+   }
 }

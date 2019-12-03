@@ -112,7 +112,12 @@ class WebhookController extends Controller
      */
     public function destroy(Webhook $webhook)
     {
-        //
+        try {
+            $this->webhookRepository->delete($webhook->id);
+            return redirect('/webhooks')->with('messageSuccess', 'This webhook successfully deleted');
+        } catch (Exception $exception) {
+            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+        }
     }
 
     public function changeStatus(Request $request)
