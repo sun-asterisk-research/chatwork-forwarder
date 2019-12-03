@@ -110,12 +110,15 @@
 				<div class="col-xs-5">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							@foreach($payload->conditions as $key => $condition)
-							<h4 class="panel-title">{{$condition->condition}}</h4><br>
-							@endforeach
+							@if($payload->conditions->isEmpty())
+								<h4 class="panel-title">No conditions</h4>
+							@else
+								@foreach($payload->conditions as $key => $condition)
+									<h4 class="panel-title">{{$condition->field}} {{$condition->operator}} {{$condition->value}}</h4><br>
+								@endforeach
+							@endif
 						</div>
 					</div>
-
 				</div>
 				<div class="col-xs-2">
 					<a class="btn btn-sm btn-warning" href=""><i class="fa fa-pencil"></i> Edit</a>&nbsp

@@ -54,11 +54,20 @@ class PayloadController extends Controller
         DB::beginTransaction();
         try {
             $payload = $this->payloadRepository->create($data);
-            $conditions = $request->only('conditions');
-
+            $conditions = $request->only('fields', 'operators', 'values');
             if ($conditions) {
-                foreach ($conditions['conditions'] as $condition) {
-                    $payload->conditions()->create(['condition' => $condition]);
+                for ($i = 0; $i < count($conditions['fields']); $i++) {
+                    $field = trim($conditions['fields'][$i]);
+                    $operator = trim($conditions['operators'][$i]);
+                    $value = trim($conditions['values'][$i]);
+                
+                    if (!empty($field) && !empty($operator) && !empty($value)) {
+                        $payload->conditions()->create([
+                            'field' => $field,
+                            'operator' => $operator,
+                            'value' => $value,
+                        ]);
+                    }
                 }
             }
 
