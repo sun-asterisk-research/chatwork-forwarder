@@ -10,7 +10,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class WebhookPolicy
 {
     use HandlesAuthorization;
-    
+
     /**
      * Determine whether the user can view any webhooks.
      *
@@ -45,6 +45,6 @@ class WebhookPolicy
      */
     public function delete(User $user, Webhook $webhook)
     {
-        //
+        return $user->id === $webhook->user_id;
     }
 }

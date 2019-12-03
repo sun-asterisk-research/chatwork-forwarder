@@ -89,6 +89,8 @@ class PayloadController extends Controller
      */
     public function edit(Webhook $webhook, Payload $payload)
     {
+        $this->authorize('update', [$payload, $webhook]);
+
         $conditions = $payload->conditions()->get();
         return view('payloads.edit', compact('payload', 'webhook', 'conditions'));
     }
@@ -102,6 +104,8 @@ class PayloadController extends Controller
      */
     public function update(Request $request, Webhook $webhook, Payload $payload)
     {
+        $this->authorize('update', [$payload, $webhook]);
+
         $conditions = $request->only('conditions');
         $data = $request->only('content');
         $ids = (array) $request->ids;
@@ -136,6 +140,8 @@ class PayloadController extends Controller
      */
     public function destroy(Webhook $webhook, Payload $payload)
     {
+        $this->authorize('delete', [$payload, $webhook]);
+
         try {
             $this->payloadRepository->delete($payload->id);
 

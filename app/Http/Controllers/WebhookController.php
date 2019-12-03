@@ -91,12 +91,13 @@ class WebhookController extends Controller
      * @param  \App\Models\Webhook  $webhook
      * @return \Illuminate\Http\Response
      */
-    public function update(WebhookUpdateRequest $request)
+    public function update(WebhookUpdateRequest $request, Webhook $webhook)
     {
+        $this->authorize('update', $webhook);
         $data = $request->except('_token');
-        try {
-            $webhook = $this->webhookRepository->update($data['id'], $data);
 
+        try {
+            $webhook = $this->webhookRepository->update($webhook->id, $data);
             return redirect()->route('webhooks.edit', $webhook)
                              ->with('messageSuccess', 'This webhook successfully updated');
         } catch (QueryException $exception) {
@@ -112,6 +113,8 @@ class WebhookController extends Controller
      */
     public function destroy(Webhook $webhook)
     {
+        $this->authorize('delete', $webhook);
+
         try {
             $this->webhookRepository->delete($webhook->id);
             return redirect('/webhooks')->with('messageSuccess', 'This webhook successfully deleted');
@@ -122,6 +125,9 @@ class WebhookController extends Controller
 
     public function changeStatus(Request $request)
     {
+        $webhook = $this->webhookRepository->find($request->id);
+        $this->authorize('update', $webhook);
+
         if ($request->status == WebhookStatus::ENABLED()->key) {
             $status = WebhookStatus::ENABLED;
         } else {

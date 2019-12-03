@@ -108,7 +108,22 @@ class WebhookControllerTest extends TestCase
 
         $response = $this->put('webhooks/change_status', ['id' => -1, 'status' => "ENABLED"]);
 
-        $response->assertSee('Updated failed. Something went wrong');
+        $response->assertStatus(403);
+    }
+
+    /**
+     * test user change status webhook fail with permission denied
+     *
+     * @return  void
+     */
+    public function testChangeStatusWebhookFailWithPermissionDeniedFeature()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "ENABLED"]);
+        $response->assertStatus(403);
     }
 
     /**

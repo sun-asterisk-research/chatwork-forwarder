@@ -62,6 +62,42 @@ class PayloadControllerTest extends TestCase
         $response->assertLocation('/login');
         $response->assertStatus(302);
     }
+    
+    /**
+    * test Feature remove Permision denied. Payload belong to another user
+    *
+    * @return void
+    */
+    public function testRemovePayloadFailPermissionDenied1Feature()
+    {
+        $user = factory(User::class)->create();
+        $another_user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $another_user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'payload of another user']);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload_id' => ($payload->id)]));
+        $this->assertDatabaseHas('payloads', ['content' => 'payload of another user']);
+        $response->assertStatus(403);
+    }
+
+    /**
+     * test Feature remove Permision denied. Payload belong to another webhook
+     *
+     * @return void
+    */
+    public function testRemovePayloadFailPermissionDenied2Feature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $another_webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $another_payload = factory(Payload::class)->create(['webhook_id' => $another_webhook->id, 'content' => 'payload of another webhook']);
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload_id' => ($another_payload->id)]));
+        $this->assertDatabaseHas('payloads', ['content' => 'payload of another webhook']);
+        $response->assertStatus(403);
+    }
 
     /**
      * test Feature show create payload view successfully
