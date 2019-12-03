@@ -16,9 +16,18 @@
         <h2><strong>Webhooks list</strong></h2>
         <a href="{{ route('webhooks.create') }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
     </div>
-
     <div class="table-responsive">
-        <table id="webhook-datatable" class="table table-vcenter table-condensed table-bordered">
+        {{ Form::open(['method' => 'GET', 'route' => 'admin.webhooks.index', 'class' => 'form-inline my-2 my-lg-0 float-right', 'role' => 'search'])  }}
+        <div class="input-group">
+            <input type="text" type="submit" hidden class="form-control" name="search" placeholder="search" value="{{ request('search') }}">
+            <div class="input-group-btn">
+                <button class="btn btn-default" style="height: 34px;" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+        {{ Form::close() }}
+        <table  class="table table-vcenter table-condensed table-bordered">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -54,6 +63,7 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="pagination-wrapper"> {{ $webhooks->appends(['search' => Request::get('search')])->render() }} </div>
     </div>
 </div>
 <!-- END Datatables Content -->

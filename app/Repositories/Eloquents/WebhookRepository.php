@@ -21,11 +21,16 @@ class WebhookRepository extends BaseRepository implements WebhookRepositoryInter
                             ->get();
     }
 
-    public function getAll()
+    public function getAllAndSearch($perPage, $keyword)
     {
-        return $this->model->with('user')
+        $query = $this->model->with('user')
                         ->orderBy('webhooks.status', 'desc')
-                        ->orderBy('webhooks.created_at', 'desc')
-                        ->get();
+                        ->orderBy('webhooks.created_at', 'desc');
+        if (!empty($keyword)) {
+            return $query->where('name', 'LIKE', "%$keyword%")
+                        ->paginate($perPage);
+        } else {
+            return $query->paginate($perPage);
+        }
     }
 }
