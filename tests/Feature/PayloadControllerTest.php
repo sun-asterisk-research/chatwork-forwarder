@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Condition;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Webhook;
@@ -62,7 +63,7 @@ class PayloadControllerTest extends TestCase
         $response->assertLocation('/login');
         $response->assertStatus(302);
     }
-    
+
     /**
     * test Feature remove Permision denied. Payload belong to another user
     *
@@ -205,5 +206,222 @@ class PayloadControllerTest extends TestCase
             'values' => ['rammus', '30']
         ]);
         $response->assertStatus(404);
+    }
+
+    /**
+     * test Feature show payload detail success
+     *
+     * @return void
+     */
+    public function testShowPayloadDetailSuccessFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        factory(Condition::class)->create(['payload_id' => $payload->id]);
+        $this->actingAs($user);
+
+        $response = $this->get(route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]));
+        $response->assertStatus(200);
+        $response->assertViewHas(['webhook', 'payload', 'conditions']);
+    }
+
+    /**
+     * test Feature show payload detail when user not login
+     *
+     * @return void
+     */
+    public function testShowPayloadDetailUnauthorizedFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $response = $this->get(route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]));
+
+        $response->assertLocation('/login');
+        $response->assertStatus(302);
+    }
+
+    /**
+     * test Feature show payload does not exist
+     *
+     * @return void
+     */
+    public function testShowNotExistPayloadDetailFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+        $response = $this->get(route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => -1]));
+
+        $response->assertStatus(404);
+    }
+
+    /**
+     * test Feature show payload not belong to webhook
+     *
+     * @return void
+     */
+    public function testShowPayloadNotBelongToWebhookFeature()
+    {
+        $user = factory(User::class)->create();
+        $currentWebhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $currentWebhook->id, 'content' => 'Sample content']);
+        $anotherWebhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+        $response = $this->get(route('webhooks.payloads.edit', ['webhook' => $anotherWebhook, 'payload' => $payload]));
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * test Feature show webhook belong to another user
+     *
+     * @return void
+     */
+    public function testShowWebhookBelongToOtherUserFeature()
+    {
+        $currentUser = factory(User::class)->create();
+        $anotherUser = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $anotherUser->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
+        $this->actingAs($currentUser);
+        $response = $this->get(route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]));
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * test Feature payload is updated successfully
+     *
+     * @return void
+     */
+    public function testUpdatePayloadSuccessFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'content' => 'new content'
+        ]);
+        $payload = Payload::find($payload->id);
+
+        $response->assertStatus(200);
+        $response->assertSessionHas('messageSuccess', 'This payload successfully updated');
+        $this->assertEquals($payload->content, 'new content');
+    }
+
+    /**
+     * test Feature payload with its conditions are updated successfully
+     *
+     * @return void
+     */
+    public function testUpdatePayloadWithConditionsSuccessFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
+        $condition = factory(Condition::class)->create([
+            'payload_id' => $payload->id,
+            'field' => '$payload->user->name',
+            'operator' => '==',
+            'value' => 'rasmus',
+        ]);
+        $params = [
+            'content' => 'New content',
+            'ids' => [$condition->id],
+            'conditions' => [[
+                'id' => $condition->id,
+                'field' => '$payload->user->age',
+                'operator' => '>=',
+                'value' => '18'
+            ]]
+        ];
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), $params);
+        $condition = Condition::find($condition->id);
+
+        $response->assertStatus(200);
+        $response->assertSessionHas('messageSuccess', 'This payload successfully updated');
+        $this->assertEquals($condition->field, $params['conditions'][0]['field']);
+        $this->assertEquals($condition->operator, $params['conditions'][0]['operator']);
+        $this->assertEquals($condition->value, $params['conditions'][0]['value']);
+    }
+
+    /**
+     * test Feature updating payload when violating validation rule
+     *
+     * @return void
+     */
+    public function testUpdatePayloadFailedFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'content' => ''
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'content' => 'Please enter content'
+        ]);
+    }
+
+    /**
+     * test Feature updating an payload does not exist
+     *
+     * @return void
+     */
+    public function testUpdatePayloadNotExistFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => -1]), [
+            'content' => 'New content'
+        ]);
+
+        $response->assertStatus(404);
+    }
+
+    /**
+     * test Feature update payload not belong to webhook
+     *
+     * @return void
+     */
+    public function testUpdatePayloadNotBelongToWebhookFeature()
+    {
+        $user = factory(User::class)->create();
+        $currentWebhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $currentWebhook->id, 'content' => 'old content']);
+        $anotherWebhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $anotherWebhook, 'payload' => $payload]), [
+            'content' => 'new content'
+        ]);
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * test Feature update webhook belong to another user
+     *
+     * @return void
+     */
+    public function testUpdateWebhookBelongToOtherUserFeature()
+    {
+        $currentUser = factory(User::class)->create();
+        $anotherUser = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $anotherUser->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
+        $this->actingAs($currentUser);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'content' => 'new content'
+        ]);
+
+        $response->assertStatus(403);
     }
 }

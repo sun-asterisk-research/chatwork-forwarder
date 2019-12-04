@@ -45,4 +45,17 @@ class PayloadRepositoryTest extends TestCase
 
         $this->assertDatabaseHas('payloads', ['content' => 'sample content', 'webhook_id' => $webhook->id]);
     }
+
+    public function testUpdatePayload()
+    {
+        $payloadRepository = new PayloadRepository;
+        $payload = factory(Payload::class)->create(['content' => 'old content']);
+        $attributes = [
+            'content' => 'new content'
+        ];
+
+        $payloadRepository->update($payload->id, $attributes);
+
+        $this->assertDatabaseHas('payloads', ['content' => 'new content', 'id' => $payload->id]);
+    }
 }
