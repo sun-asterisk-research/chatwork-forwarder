@@ -17,9 +17,8 @@
   margin-bottom: 5px !important;
 }
 
-.modal {
+.modal-dialog {
   top: calc(50% - 100px);
-  left: calc(50% - 300px);
 }
 
 .modal-title {

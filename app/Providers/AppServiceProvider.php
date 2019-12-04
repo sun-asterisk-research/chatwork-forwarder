@@ -14,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
         'WebhookRepository',
         'BotRepository',
         'PayloadRepository',
+        'PayloadHistoryRepository',
     ];
 
     /**
