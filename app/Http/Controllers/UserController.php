@@ -6,13 +6,22 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Models\User;
 use App\Http\Resources\User as UserResource;
+use App\Http\Requests\UserCreateRequest;
+use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function index()
     {
-        return view('admins/user');
+        return view('users.index');
     }
 
     public function getList()
@@ -28,6 +37,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        return view('users.create');
     }
 
     /**
@@ -36,9 +46,21 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
-        //
+        try {
+            $user = $this->userRepository->store($request);
+            $data = ['email' => $request->email, 'password' => $request->password];
+            $email = $request->email;
+            Mail::send('mail/create_user_mail', $data, function ($message) use ($email) {
+                $message->to($email)->subject('Create successful account');
+            });
+
+            return redirect()->route('users.index')
+                              ->with('messageSuccess', 'This user successfully created');
+        } catch (QueryException $exception) {
+             return redirect()->back()->with('messageFail', 'Create failed. Something went wrong')->withInput();
+        }
     }
 
     /**

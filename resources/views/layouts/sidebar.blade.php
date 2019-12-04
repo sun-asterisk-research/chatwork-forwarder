@@ -7,7 +7,7 @@
             <div class="sidebar-section sidebar-user clearfix sidebar-nav-mini-hide">
                 <div class="sidebar-user-avatar">
                     <a href="/">
-                        <img src="img/avatar2.jpg" alt="avatar">
+                        <img src="/img/avatar2.jpg" alt="avatar">
                     </a>
                 </div>
                 <div class="sidebar-user-name">Chatwork Fowarder</div>
