@@ -204,4 +204,67 @@ class WebhookControllerTest extends TestCase
        $response->assertLocation('/login');
        $response->assertStatus(302);
    }
+
+    public function testUserCanUpdateBot()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(
+            [
+                'name' => 'Created webhook',
+                'user_id' => $user->id,
+                'description' => 'description create',
+                'bot_id' => 1,
+                'room_name' => 'Name create',
+                'room_id' => 1
+            ]);
+        $params = [
+            'name' => 'Update webhook',
+            'description' => 'description Update',
+            'bot_id' => 1,
+            'room_name' => 'Name Update',
+            'room_id' => 1,
+            'status' => 1,
+            'id' => $webhook->id,
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.update', $webhook->id), $params);
+        $response->assertRedirect('webhooks/' . $webhook->id . '/edit');
+        $this->assertDatabaseHas('webhooks',
+            [
+                'id' => $webhook->id,
+                'name' => 'Update webhook',
+                'description' => 'description Update',
+                'bot_id' => 1,
+                'room_name' => 'Name Update',
+                'room_id' => 1,
+                'status' => 1,
+            ]);
+    }
+    public function testUpdateWebhookRequireName()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(
+            [
+                'name' => 'Created webhook',
+                'user_id' => $user->id,
+                'description' => 'description create',
+                'bot_id' => 1,
+                'room_name' => 'Name create',
+                'room_id' => 1
+            ]);
+        $params = [
+            'name' => NULL,
+            'description' => 'description Update',
+            'bot_id' => 1,
+            'room_name' => 'Name Update',
+            'room_id' => 1,
+            'status' => 1,
+            'id' => $webhook->id,
+        ];
+        
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.update', $webhook->id), $params);
+        $response->assertStatus(302)->assertSessionHasErrors('name');
+    }
 }
