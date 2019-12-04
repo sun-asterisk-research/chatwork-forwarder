@@ -1,29 +1,6 @@
 function addFields() {
-    var flag = true;
-    $(".field").each(function () {
-        if ($(this).val() == "") {
-            $(".error-field").html("Please enter field")
-            flag = false;
-            return false;
-        }
-    });
-    $(".value").each(function () {
-        if ($(this).val().length > 100) {
-            $(".error-value").html("Value is too long (maximum is 100 characters)")
-            flag = false;
-            return false;
-        }
-        if ($(this).val() == "") {
-            $(".error-value").html("Please enter value")
-            flag = false;
-            return false;
-        }
-    });
-    if (flag == true) {
-        $(".error-field").html("");
-        $(".error-value").html("");
-        counter = $(".mult-condition").children().length;
-
+    if (checkData()) {
+        var counter = $(".mult-condition").children().length;
         var operators = ["==", "!=", ">", ">=", "<", "<="]
         var fieldInput = $("<input>")
             .attr({ name: "field[]", id: "field" + counter })
@@ -59,6 +36,30 @@ function addFields() {
     }
 }
 
+function checkData() {
+    var flag = true;
+    $(".error-field").html("");
+    $(".error-value").html("");
+    $(".field").each(function () {
+        if ($(this).val() == "") {
+            $(".error-field").html("Please enter field")
+            flag = false;
+        }
+    });
+    $(".value").each(function () {
+        if ($(this).val().length > 100) {
+            $(".error-value").html("Value is too long (maximum is 100 characters)")
+            flag = false;
+        }
+        if ($(this).val() == "") {
+            $(".error-value").html("Please enter value")
+            flag = false;
+        }
+    });
+
+    return flag;
+}
+
 function removeCondition(row) {
     $(".error-field").html("");
     $(".error-value").html("");
@@ -86,32 +87,76 @@ function getValues(items){
 $(document).ready(function () {
     $("#submit").click(function (e) {
         e.preventDefault();
+        if (checkData()) {
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            var content = $("textarea[name='content']").val();
+            var webhook_id = $("input[name='webhook_id']").val();
+            var fields = getValues($("input[name^='field[]']"));
+            var operators = getValues($("select[name^='operator[]']"));
+            var values = getValues($("input[name^='value[]']"));
 
-        var _token = $('meta[name="csrf-token"]').attr('content');
-        var content = $("textarea[name='content']").val();
-        var webhook_id = $("input[name='webhook_id']").val();
-        var fields = getValues($("input[name^='field[]']"));
-        var operators = getValues($("select[name^='operator[]']"));
-        var values = getValues($("input[name^='value[]']"));
+            $.ajax({
+                url: "/webhooks/" + webhook_id + "/payloads",
+                type: "POST",
+                data: {
+                    _token: _token,
+                    content: content,
+                    fields: fields,
+                    operators: operators,
+                    values: values,
+                },
+                success: function (id) {
+                    window.location.replace("/webhooks/" + webhook_id + "/payloads/" + id + "/edit");
+                },
+                error: function (data) {
+                    toastr.error(' Something went wrong', 'Create failed', { timeOut: 4000 });
+                    clearOldErrorMessage();
+                    printErrorMsg(data.responseJSON.errors);
+                }
+            });
+        }
+    });
 
-        $.ajax({
-            url: "/webhooks/" + webhook_id + "/payloads",
-            type: "POST",
-            data: {
-                _token: _token,
-                content: content,
-                fields: fields,
-                operators: operators,
-                values: values,
-            },
-            success: function (id) {
-                window.location.replace("/webhooks/" + webhook_id + "/payloads/" + id + "/edit");
-            },
-            error: function (data) {
-                toastr.error(' Something went wrong', 'Create failed', { timeOut: 4000 });
-                clearOldErrorMessage();
-                printErrorMsg(data.responseJSON.errors);
+    $("#update").click(function (e) {
+        e.preventDefault();
+        if (checkData()) {
+            var _token = $('meta[name="csrf-token"]').attr("content");
+            var content = $("textarea[name='content']").val();
+            var webhook_id = $("input[name='webhook_id']").val();
+            var fields = getValues($("input[name^='field[]']"));
+            var operators = getValues($("select[name^='operator[]']"));
+            var values = getValues($("input[name^='value[]']"));
+            var ids = $("input[name^='field[]']").map(function () { return $(this).attr("data-id"); }).get();
+            var conditions = [];
+
+            for (i = 0; i < fields.length; i++) {
+                conditions.push({
+                    id: ids[i] ? ids[i] : "",
+                    field: fields[i],
+                    operator: operators[i],
+                    value: values[i],
+                });
             }
-        });
+
+            $.ajax({
+                url: $("input[name='url']").val(),
+                type: "PUT",
+                data: {
+                    _token: _token,
+                    content: content,
+                    conditions: conditions,
+                    ids: ids,
+                },
+                success: function (id) {
+                    window.location.replace("/webhooks/" + webhook_id + "/payloads/" + id + "/edit");
+                },
+                error: function (data) {
+                    toastr.error("Something went wrong", "Update failed", { timeOut: 4000 });
+                    clearOldErrorMessage();
+                    printErrorMsg(data.responseJSON.errors);
+                }
+            });
+        }
     });
 });
+
