@@ -30,8 +30,10 @@
                 </tr>
             </thead>
             <tbody>
+                @include('webhooks.delete_webhook_confirm_modal')
+
                 @foreach ($webhooks as $webhook)
-                    <tr class="item-{{ $webhook->id }}">
+                    <tr class="item-{{ $webhook->id }} webhook-item">
                         <td>{{ $webhook->name }}</td>
                         <td class="webhook-description">{{ $webhook->description }}</td>
                         <td>{{ $webhook->room_name }}</td>
@@ -39,13 +41,25 @@
                         <td class="pl-20 webhook-status">{{ $webhook->status == WebhookStatus::ENABLED ? 'Enabled' : 'Disabled' }}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                                <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></a>
+                                <a class="btn btn-sm btn-default" href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i> Edit</a>&nbsp
+
+                                {{ Form::open([
+                                    'method' => 'DELETE',
+                                    'route' => ['webhooks.destroy', 'webhook' => $webhook],
+                                    'style' => 'display:inline',
+                                    'class' => 'form-delete'
+                                ]) }}
+                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                    'type' => 'DELETE',
+                                    'class' => 'btn btn-sm btn-danger delete-btn',
+                                    'title' => 'Delete'
+                                ]) }}
+                                {{ Form::close() }}
                             </div>
                             @if($webhook->status == WebhookStatus::ENABLED)
-                                <button class="btn btn-xs btn-danger btn-disabled-wh" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
+                                <button class="btn btn-sm btn-danger btn-disabled-wh" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
                             @else
-                                <button class="btn btn-xs btn-success btn-enabled-wh" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
+                                <button class="btn btn-sm btn-success btn-enabled-wh" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
                             @endif
                         </td>
                     </tr>
