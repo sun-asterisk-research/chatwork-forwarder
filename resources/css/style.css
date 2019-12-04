@@ -62,3 +62,17 @@
   top: calc(20% - 100px);
   left: calc(20% - 300px);
 }
+
+.padding-l-r-10 {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+.width350 {
+  width: 350px;
+}
+.display-none {
+  display: none!important;
+}
+.padding-bottom-30 {
+  padding-bottom: 30px!important;
+}
