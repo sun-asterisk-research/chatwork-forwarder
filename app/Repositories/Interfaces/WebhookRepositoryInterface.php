@@ -14,5 +14,5 @@ interface WebhookRepositoryInterface
      * Get all webhooks by admin
      * @return mixed
      */
-    public function getAll();
+    public function getAllAndSearch($perPage, $keyword);
 }
