@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\WebhookStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,5 +34,10 @@ class Webhook extends Model
     public function payloads()
     {
         return $this->hasMany(Payload::class);
+    }
+
+    public function scopeEnable($query)
+    {
+        return $query->where('status', WebhookStatus::ENABLED);
     }
 }
