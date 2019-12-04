@@ -34,9 +34,9 @@ class PayloadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($webhookId)
+    public function create(Webhook $webhook)
     {
-        return view('payloads.create', compact('webhookId'));
+        return view('payloads.create', compact('webhook'));
     }
 
 
