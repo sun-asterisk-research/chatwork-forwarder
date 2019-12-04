@@ -80,7 +80,7 @@ class WebhookRepositoryTest extends TestCase
 
     /**
      * test update webhook success with once attribute
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookSuccessWithOnceAttribute()
@@ -94,7 +94,7 @@ class WebhookRepositoryTest extends TestCase
 
     /**
      * test update webhook success with multiple attributes
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookSuccessWithMulAttributes()
@@ -108,7 +108,7 @@ class WebhookRepositoryTest extends TestCase
 
     /**
      * test update webhook fail with webhook not found
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookFailWithWebhookNotFound()
@@ -117,5 +117,42 @@ class WebhookRepositoryTest extends TestCase
         $result = $webhookRepository->update(-1, ['name' => 'new name', 'status' => 0]);
 
         $this->assertEquals(false, $result);
+    }
+
+    /**
+     * test getAllAndSearch with keyword
+     *
+     * @return void
+     */
+    public function testGetAllAndSearch()
+    {
+        factory(Webhook::class, 2)->create(['name' => 'keyword']);
+        factory(Webhook::class, 3)->create(['name' => 'example']);
+
+        $webhookRepository = new WebhookRepository;
+        $perPage = config('paginate.perPage');
+        $result = $webhookRepository->getAllAndSearch($perPage, 'key');
+
+        $this->assertCount(2, $result);
+
+        $resultNotFound = $webhookRepository->getAllAndSearch($perPage, 'not found');
+        $this->assertCount(0, $resultNotFound);
+    }
+
+    /**
+     * test getAllAndSearch without keyword
+     *
+     * @return void
+     */
+    public function testGetAllAndSearchWithoutKeyword()
+    {
+        factory(Webhook::class, 2)->create();
+
+        $webhookRepository = new WebhookRepository;
+        $perPage = config('paginate.perPage');
+
+        $this->assertCount(2, $webhookRepository->getAllAndSearch($perPage, ''));
+
+        $this->assertCount(2, $webhookRepository->getAllAndSearch($perPage, null));
     }
 }
