@@ -11,11 +11,11 @@
     <!-- END Simple Editor Title -->
 
     <!-- Simple Editor Content -->
-    <input type="hidden" name="webhook_id" value="{{ $webhookId }}">
+    <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
     <div class="form-horizontal form-bordered">
         <div class="col-xs-12">
             <button id="submit" type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
-            <a class="btn btn-sm btn-warning float-right" href="{{ route('webhooks.edit', $webhookId) }}"><i class="fa fa-times"></i> Cancel</a>
+            <a class="btn btn-sm btn-warning float-right" href="{{ route('webhooks.edit', $webhook) }}"><i class="fa fa-times"></i> Cancel</a>
         </div>
         <div class="form-group row">
             <div class="col-xs-12">
