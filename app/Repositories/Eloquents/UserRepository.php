@@ -25,7 +25,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $user = User::create($data);
         return $user;
     }
-    
+
     public function getAllAndSearch($perPage, $searchParams)
     {
         $query = $this->model->orderBy('created_at', 'desc');
