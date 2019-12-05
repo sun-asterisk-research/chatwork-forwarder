@@ -10,6 +10,7 @@ use Tests\TestCase;
 use App\Models\Webhook;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Enums\UserType;
 
 class WebhookControllerTest extends TestCase
 {
@@ -140,6 +141,44 @@ class WebhookControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('login');
     }
+
+    /**
+     * test admin can change status of user's webhook
+     *
+     * @return  void
+     */
+    public function testAuthorizedAdminCanChangeStatusWebhookOfUser()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+
+        $this->actingAs($admin);
+
+        $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "DISABLED"]);
+
+        $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'status' => 0]);
+        $response->assertSee('This webhook was updated successfully');
+    }
+
+    /**
+     * test admin can change status of admin's webhook
+     *
+     * @return  void
+     */
+    public function testAuthorizedAdminCanChangeStatusWebhookOfAdmin()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create(['user_id' => $admin->id]);
+
+        $this->actingAs($admin);
+
+        $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "DISABLED"]);
+
+        $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'status' => 0]);
+        $response->assertSee('This webhook was updated successfully');
+    }
+
 
     public function testUserCanSeeWebhook()
     {

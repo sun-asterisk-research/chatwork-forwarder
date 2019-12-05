@@ -27,7 +27,7 @@ $(document).ready(function () {
         $('#cw_room_id').val(room_id);
     });
 
-    $('body').on('click', '.btn-enabled-wh', function() {
+    $('body').on('click', '.btn-enable-wh', function() {
         var webhook_id = $(this).data('id');
         var webhook_name = $(this).data('name');
         $('#enableModal .webhook-name').text(webhook_name);
@@ -35,7 +35,7 @@ $(document).ready(function () {
         $('#enableModal').modal('show');
     });
 
-    $('body').on('click', '.btn-disabled-wh', function() {
+    $('body').on('click', '.btn-disable-wh', function() {
         var webhook_id = $(this).data('id');
         var webhook_name = $(this).data('name');
         $('#disableModal .webhook-name').text(webhook_name);
@@ -44,18 +44,19 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-confirm-enable', function() {
-        updateWebhookStatus('#enableModal', 'enabled', 'success');
+        updateWebhookStatus('#enableModal', 'enable', 'success');
     });
 
     $('body').on('click', '.btn-confirm-disable', function() {
-        updateWebhookStatus('#disableModal', 'disabled', 'danger');
+        updateWebhookStatus('#disableModal', 'disable', 'warning');
     });
 
     function updateWebhookStatus(modal_id, status, current_btn_class) {
         let webhook_id = $(modal_id + ' input').val();
         let item = $('.item-' + webhook_id);
-        let opposite_status = (status == 'enabled') ? 'disabled' : 'enabled';
-        let opposite_btn_class = (current_btn_class == 'success') ? 'danger' : 'success';
+        let status_change = (status == 'enable') ? 'enabled' : 'disabled';
+        let opposite_status = (status == 'enable') ? 'disable' : 'enable';
+        let opposite_btn_class = (current_btn_class == 'success') ? 'warning' : 'success';
 
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -63,18 +64,18 @@ $(document).ready(function () {
             url: '/webhooks/change_status',
             data: {
                 id: webhook_id,
-                status: status.toUpperCase()
+                status: status_change.toUpperCase()
             },
             success: function(data) {
                 $(modal_id).modal('toggle');
-                var button = item.find('button');
+                var button = item.find('button.btn-enable-disable');
                 $(button).css('text-transform', 'capitalize');
                 $(button).text(opposite_status);
                 $(button).removeClass(`btn-${current_btn_class}`);
                 $(button).removeClass(`btn-${status}-wh`);
                 $(button).addClass(`btn-${opposite_btn_class}`);
                 $(button).addClass(`btn-${opposite_status}-wh`);
-                $(item).find('td.webhook-status').text(status).css('text-transform', 'capitalize');
+                $(item).find('td.webhook-status').text(status_change).css('text-transform', 'capitalize');
                 toastr.success(data, 'Update Successfully', {timeOut: 4000, showEasing: 'linear'});
             },
             error: function() {
