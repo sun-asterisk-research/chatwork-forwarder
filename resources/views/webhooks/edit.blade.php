@@ -10,7 +10,7 @@
 	</div>
 	<!-- END Simple Editor Title -->
 	<!-- Simple Editor Content -->
-	{{ Form::open(['url' => route('webhooks.update', ['id' => $webhook->id]), 'method' => 'PUT']) }}
+	{{ Form::open(['url' => route('webhooks.update', ['webhook' => $webhook]), 'method' => 'PUT']) }}
 	<div class="form-group row">
 		<div class="col-xs-12">
 			<button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
