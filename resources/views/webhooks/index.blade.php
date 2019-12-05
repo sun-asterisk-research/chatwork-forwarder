@@ -40,27 +40,26 @@
                         <td>{{ $webhook->room_id }}</td>
                         <td class="pl-20 webhook-status">{{ $webhook->status == WebhookStatus::ENABLED ? 'Enabled' : 'Disabled' }}</td>
                         <td class="text-center">
-                            <div class="btn-group">
-                                <a class="btn btn-sm btn-default" href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i> Edit</a>&nbsp
-
-                                {{ Form::open([
-                                    'method' => 'DELETE',
-                                    'route' => ['webhooks.destroy', 'webhook' => $webhook],
-                                    'style' => 'display:inline',
-                                    'class' => 'form-delete'
-                                ]) }}
-                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
-                                    'type' => 'DELETE',
-                                    'class' => 'btn btn-sm btn-danger delete-btn',
-                                    'title' => 'Delete'
-                                ]) }}
-                                {{ Form::close() }}
-                            </div>
                             @if($webhook->status == WebhookStatus::ENABLED)
-                                <button class="btn btn-sm btn-danger btn-disabled-wh" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
+                                <button class="btn btn-sm btn-warning btn-disable-wh btn-enable-disable" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
                             @else
-                                <button class="btn btn-sm btn-success btn-enabled-wh" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
+                                <button class="btn btn-sm btn-success btn-enable-wh btn-enable-disable" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
                             @endif
+
+                            <a class="btn btn-sm btn-default" href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i> Edit</a>
+
+                            {{ Form::open([
+                                'method' => 'DELETE',
+                                'route' => ['webhooks.destroy', 'webhook' => $webhook],
+                                'style' => 'display:inline',
+                                'class' => 'form-delete'
+                            ]) }}
+                            {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                'type' => 'DELETE',
+                                'class' => 'btn btn-sm btn-danger delete-btn',
+                                'title' => 'Delete'
+                            ]) }}
+                            {{ Form::close() }}
                         </td>
                     </tr>
                 @endforeach
@@ -87,8 +86,8 @@
         <p class="model-content">Are you sure you want to enable this webhook?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary btn-confirm-enable">Enable</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success btn-confirm-enable">Enable</button>
       </div>
     </div>
   </div>
@@ -109,8 +108,8 @@
         <p class="model-content">Are you sure you want to disable this webhook?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger btn-confirm-disable">Disable</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-warning btn-confirm-disable">Disable</button>
       </div>
     </div>
   </div>
