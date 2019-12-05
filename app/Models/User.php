@@ -46,9 +46,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bot::class);
     }
-    
+
     public function webhooks()
     {
         return $this->hasMany(Webhook::class);
+    }
+
+    public function scopeSearch($query, $searchParams, $perPage)
+    {
+        return $query
+            ->where('name', 'LIKE', '%' . $searchParams['name'] . '%')
+            ->where('email', 'LIKE', '%' . $searchParams['email'] . '%')
+            ->paginate($perPage);
     }
 }

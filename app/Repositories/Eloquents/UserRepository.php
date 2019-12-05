@@ -25,4 +25,29 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $user = User::create($data);
         return $user;
     }
+    
+    public function getAllAndSearch($perPage, $searchParams)
+    {
+        $query = $this->model->orderBy('created_at', 'desc');
+
+        if ($searchParams) {
+            $searchParams = $this->handleSearchParams($searchParams);
+
+            return $query->search($searchParams, $perPage);
+        } else {
+            return $query->paginate($perPage);
+        }
+    }
+
+    private function handleSearchParams($searchParams)
+    {
+        $searchKeys = ['name', 'email'];
+        foreach ($searchKeys as $searchKey) {
+            if (!array_key_exists($searchKey, $searchParams)) {
+                $searchParams[$searchKey] = '';
+            }
+        }
+
+        return $searchParams;
+    }
 }

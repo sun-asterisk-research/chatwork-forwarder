@@ -17,7 +17,7 @@
 	<div class="form-group row">
 		<div class="row">
 			<div class="col-xs-12">
-				<a class="btn btn-sm btn-warning float-right cancel-btn" href="{{ route('users.index') }}"><i class="fa fa-times"></i> Cancel</a>
+				<button class="btn btn-sm btn-warning float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
 				<button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
 			</div>
 			<div class="col-md-4">
@@ -62,7 +62,7 @@
 						</div>
 						@enderror
 					</div>
-					<div class="form-group padding-bottom-30">                          
+					<div class="form-group padding-bottom-30">
 						<label>Role</label>
 						<select id="role" name="role" class="form-control">
 							 <option value="{{ UserType::USER }}">User</option>
@@ -70,7 +70,7 @@
 						</select>
 					</div>
 				</div>
-			</div>          
+			</div>
 		</div>
 	</div>
 	{{ Form::close() }}
