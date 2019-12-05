@@ -21,6 +21,7 @@
         <table id="webhook-datatable" class="table table-vcenter table-condensed table-bordered">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>Name</th>
                     <th class="webhook-description">Description</th>
                     <th>Chatwork Room</th>
@@ -34,6 +35,7 @@
 
                 @foreach ($webhooks as $webhook)
                     <tr class="item-{{ $webhook->id }} webhook-item">
+                        <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                         <td>{{ $webhook->name }}</td>
                         <td class="webhook-description">{{ $webhook->description }}</td>
                         <td>{{ $webhook->room_name }}</td>
@@ -86,8 +88,8 @@
         <p class="model-content">Are you sure you want to enable this webhook?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-success btn-confirm-enable">Enable</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -108,8 +110,8 @@
         <p class="model-content">Are you sure you want to disable this webhook?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-warning btn-confirm-disable">Disable</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

@@ -30,7 +30,7 @@ var TablesDatatables = function () {
                             } else {
                                 var img = "/storage/images/" + data
                             }
-                            return '<div class="imgList text-center"><img width= "60px;" src="' + img + '" alt=""></div>';  
+                            return '<div class="imgList text-center"><img width= "60px;" src="' + img + '" alt=""></div>';
                         } else {
                             return '<div class="imgList text-center"><img width= "60px;" src="' + '/img/avatar2.jpg' + '" alt=""></div>';
                         }
@@ -45,7 +45,7 @@ var TablesDatatables = function () {
                 {
                     data: 'email',
                     render: function (data, type, row) {
-                        return '<div class="text-center"><a href="mailto:' + data + '">' + data + '</a></div>';
+                        return '<div class="text-center">' + data + '</div>';
                     }
                 },
                 {
@@ -57,8 +57,12 @@ var TablesDatatables = function () {
                 {
                     data: 'id',
                     render: function (data, type, row) {
-                        return '<div class="text-center"><a href="#" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default" onclick="edit(' + data + ');"><i class="fa fa-pencil"></i></a>' +
-                        '&nbsp<a href="#" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger" onclick="delete(' + data + ');"><i class="fa fa-times"></i></a></div>';
+                        if(current_user_id == data){
+                            return '<div class="text-center"><a href="#" data-toggle="tooltip" title="Edit" class="btn btn-sm btn-default" onclick="edit(' + data + ');"><i class="fa fa-pencil"></i> Edit</a></div>';
+                        } else {
+                            return '<div class="text-center"><a href="#" data-toggle="tooltip" title="Edit" class="btn btn-sm btn-default" onclick="edit(' + data + ');"><i class="fa fa-pencil"></i> Edit</a>' +
+                            '&nbsp<a href="#" data-toggle="tooltip" title="Delete" class="btn btn-sm btn-danger" onclick="delete(' + data + ');"><i class="fa fa-trash-o"></i> Delete</a></div>';
+                        }
                     }
                 },
                 ],

@@ -48,7 +48,7 @@
         </div>
         <div class="form-group form-actions">
             <div class="col-xs-12">
-                <a class="btn btn-sm btn-warning cancel-btn" href="{{ route('bots.index') }}"><i class="fa fa-times"></i> Cancel</a>
+                <a class="btn btn-sm btn-default cancel-btn" href="{{ route('bots.index') }}"><i class="fa fa-times"></i> Cancel</a>
                 <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Save</button>
             </div>
         </div>

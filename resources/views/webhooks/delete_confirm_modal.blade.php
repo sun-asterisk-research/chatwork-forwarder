@@ -9,7 +9,7 @@
                 <p>Are you sure you want to delete this payload?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-primary" id="delete-btn" webhook_id="1">Delete</button>
+                <button type="button" class="btn btn-sm btn-danger" id="delete-btn" webhook_id="1">Delete</button>
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
