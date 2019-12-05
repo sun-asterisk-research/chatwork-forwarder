@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PayloadCreateRequest;
+use App\Http\Requests\PayloadUpdateRequest;
 use App\Models\Condition;
 use App\Models\Payload;
 use App\Models\Webhook;
 use App\Repositories\Interfaces\PayloadRepositoryInterface as PayloadRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PayloadController extends Controller
@@ -102,7 +102,7 @@ class PayloadController extends Controller
      * @param  \App\Models\Payload  $payload
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Webhook $webhook, Payload $payload)
+    public function update(PayloadUpdateRequest $request, Webhook $webhook, Payload $payload)
     {
         $this->authorize('update', [$payload, $webhook]);
 
