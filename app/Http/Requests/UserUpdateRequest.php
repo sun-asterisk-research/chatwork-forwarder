@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UserCreateRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,6 +16,7 @@ class UserCreateRequest extends FormRequest
     {
         return true;
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,10 +25,14 @@ class UserCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:5|max:50|',
-            'email' => 'required|max:200|unique:users',
-            'password' => 'required|min:8|max:50|',
-            'avatar' => 'image',
+            'name' => 'required|min:5|max:50',
+            'email' => [
+                'required',
+                'max:200',
+                Rule::unique('users')->ignore($this->id),
+            ],
+            'password' => 'required|min:8|max:50',
+            'avatar' => 'image|max:5120',
         ];
     }
     
@@ -42,6 +49,7 @@ class UserCreateRequest extends FormRequest
             'password.min' => 'Password is too short (minimum is 8 characters)',
             'password.max' => 'password is too long (maximum is 50 characters)',
             'avatar.image' => 'The avatar is not in the correct format',
+            'avatar.max' => 'Maximum file size to upload is 5MB (5120 KB)',
         ];
     }
 }
