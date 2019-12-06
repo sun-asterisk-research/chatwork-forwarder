@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Enums\UserType;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Enums\UserType;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class UserControllerTest extends TestCase
 {
@@ -50,7 +52,6 @@ class UserControllerTest extends TestCase
         $currentUser = factory(User::class)->create(['role' => UserType::USER]);
         $this->actingAs($currentUser);
         $response = $this->get(route('users.index'));
-
         $response->assertStatus(302);
         $response->assertLocation('/');
     }
@@ -115,5 +116,251 @@ class UserControllerTest extends TestCase
         $this->assertCount(1, $responseUsers);
         $this->assertEquals($user2->name, $responseUsers->first()->name);
         $this->assertEquals($user2->email, $responseUsers->first()->email);
+    }
+
+    /**
+     * test Feature show create view webhook.
+     *
+     * @return void
+     */
+    public function testShowCreateViewUserFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+
+        $response = $this->get(route('users.create'));
+        $response->assertStatus(200);
+    }
+
+    public function testUnauthenticateUserCannotSeeCreateView()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        
+        $response = $this->get(route('users.create'));
+        $response->assertStatus(302);
+        $response->assertRedirect('login');
+    }
+
+    public function testUserNotAdminCannotSeeCreateView()
+    {
+        $user = factory(User::class)->create(['role' => UserType::USER]);
+        $this->actingAs($user);
+        $response = $this->get(route('users.create'));
+        $response->assertStatus(302);
+        $response->assertLocation('/');
+    }
+
+    public function testStoreUserSuccessFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => "Name Create",
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response->assertRedirect();
+    }
+
+    public function testCreateUserRequireName()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => null,
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    public function testCreateUserNameMinLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => 'abc',
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    public function testCreateUserNameMaximumLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => Str::random(51),
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    public function testCreateUserRequireEmail()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => "Name create",
+            'email' => null,
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('email');
+    }
+
+    public function testCreateUserUniqueEmail()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user1 = factory(User::class)->create(['email' => "email@gamil.com"]);
+
+        $params = [
+            'name' => "Name create",
+            'email' => "email@gamil.com",
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('email');
+    }
+
+    public function testCreateUserEmailMaximumLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => Str::random(201),
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    public function testCreateUserRequirePassword()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => "Name create",
+            'email' => "email@gmail.com",
+            'password' => null,
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('password');
+    }
+
+    public function testCreateUserRequirePasswordMinLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => "Name create",
+            'email' => "email@gmail.com",
+            'password' => "123456",
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('password');
+    }
+
+    public function testCreateUserRequirePasswordMaximumLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => "Name create",
+            'email' => "email@gmail.com",
+            'password' => Str::random(51),
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('password');
+    }
+
+    public function testCreateUserAvatarNotImage()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => "Name create",
+            'email' => "email@gmail.com",
+            'password' => Str::random(51),
+            'role' => '1',
+            'avatar' => "fsdsF",
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('avatar');
+    }
+
+    public function UnauthenticateUserCannotCreateUser()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $params = [
+            'name' => "Name Create",
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $response = $this->post(route('users.store'), $params);
+        $response->assertStatus(302);
+        $response->assertRedirect('login');
     }
 }
