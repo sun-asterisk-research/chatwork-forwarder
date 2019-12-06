@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
         'PayloadRepository',
         'PayloadHistoryRepository',
         'UserRepository',
+        'MessageHistoryRepository',
     ];
 
     /**

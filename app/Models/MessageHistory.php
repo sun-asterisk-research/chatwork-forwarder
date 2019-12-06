@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class MessageHistory extends Model
 {
-    //
+    protected $fillable = [
+        'payload_history_id',
+        'message_content',
+        'status',
+        'log',
+    ];
 }
