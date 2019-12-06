@@ -29,18 +29,20 @@ class WebhookUpdateRequest extends FormRequest
             'bot_id' => 'required',
             'room_name' => 'required',
             'room_id' => 'required',
-            'name' => 'required|min:1|max:50',
-            'name' => Rule::unique('webhooks')->ignore($this->id)->where(function ($query) {
-                return $query->where('user_id', \Auth::id());
-            }),
+            'name' => [
+                'required',
+                'max:50',
+                Rule::unique('webhooks')->ignore($this->id)->where(function ($query) {
+                    return $query->where('user_id', \Auth::id());
+                }),
+            ],
         ];
     }
     public function messages()
     {
         return [
             'name.required' => 'Please enter name',
-            'name.min' => 'Name is too short (minimum is 5 characters)',
-            'name.max' => 'Name is too long (maximum is 200 characters)',
+            'name.max' => 'Name is too long (maximum is 50 characters)',
             'name.unique' => 'This webhook name has already been used by another webhook',
             'description.required' => 'Please enter description',
             'description.max' => 'Description is too long (maximum is 1000 characters)',
