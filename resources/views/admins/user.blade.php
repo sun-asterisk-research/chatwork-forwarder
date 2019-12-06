@@ -16,8 +16,8 @@
         <table id="user-table" class="table table-vcenter table-condensed table-bordered">
             <thead>
                 <tr>
-                    <th class="text-center">STT</th>
-                    <th class="text-center"><i class="gi gi-user"></i></th>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Avatar</th>
                     <th class="text-center">Name</th>
                     <th class="text-center">Email</th>
                     <th class="text-center">Role</th>
@@ -32,4 +32,7 @@
 @endsection
 @section('script')
 <script src="{{ asset('js/user.js') }}"></script>
+<script>
+    var current_user_id = {{Auth::user()->id}};
+</script>
 @endsection

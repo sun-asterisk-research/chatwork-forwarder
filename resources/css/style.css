@@ -17,10 +17,6 @@
   margin-bottom: 5px !important;
 }
 
-.modal-dialog {
-  top: calc(50% - 100px);
-}
-
 .modal-title {
   font-weight: bold !important;
   text-align: center;

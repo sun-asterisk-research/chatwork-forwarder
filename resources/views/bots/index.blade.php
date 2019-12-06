@@ -32,21 +32,19 @@
                         <td class="pl-20">{{ $bot->name }}</td>
                         <td class="pl-20">{{ $bot->cw_id }}</td>
                         <td class="text-center">
-                            <div class="btn-group">
-                                <a href="{{ route('bots.edit', $bot->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
-                                {{ Form::open([
-                                    'method' => 'DELETE',
-                                    'route' => ['bots.destroy', $bot->id],
-                                    'style' => 'display:inline',
-                                    'class' => 'form-delete'
-                                ]) }}
-                                    {{ Form::button('<i class="fa fa-times"></i>' , [
-                                            'type' => 'submit',
-                                            'class' => 'btn btn-xs btn-danger',
-                                            'title' => 'Delete'
-                                    ]) }}
-                                {{ Form::close() }}
-                            </div>
+                            <a class="btn btn-sm btn-default" href="{{ route('bots.edit', $bot->id) }}"><i class="fa fa-pencil"></i> Edit</a>
+
+                            {{ Form::open([
+                                'method' => 'DELETE',
+                                'route' => ['bots.destroy', 'bot' => $bot],
+                                'style' => 'display:inline',
+                                'class' => 'form-delete'
+                            ]) }}
+                            {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                'type' => 'DELETE',
+                                'class' => 'btn btn-sm btn-danger delete-btn',
+                                'title' => 'Delete'
+                            ]) }}
                         </td>
                     </tr>
                 @endforeach

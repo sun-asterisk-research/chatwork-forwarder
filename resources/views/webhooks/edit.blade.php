@@ -14,7 +14,7 @@
 	<div class="form-group row">
 		<div class="col-xs-12">
 			<button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
-			<a class="btn btn-sm btn-warning float-right" href="{{ route('webhooks.index') }}"><i class="fa fa-times"></i> Cancel</a>
+			<a class="btn btn-sm btn-default float-right" href="{{ route('webhooks.index') }}"><i class="fa fa-times"></i> Cancel</a>
 		</div>
 		<div class="col-xs-8">
 			<label class="field-compulsory required" for="webhook_name">Webhook name</label>
@@ -109,19 +109,21 @@
 				</div>
 				<div class="col-xs-5">
 					<div class="panel panel-default">
-						<div class="panel-heading">
 							@if($payload->conditions->isEmpty())
-								<h4 class="panel-title">No conditions</h4>
+								<div class="panel-heading">
+									<h4 class="panel-title">No conditions</h4>
+								</div>
 							@else
 								@foreach($payload->conditions as $key => $condition)
-									<h4 class="panel-title">{{$condition->field}} {{$condition->operator}} {{$condition->value}}</h4><br>
+									<div class="panel-heading">
+										<h4 class="panel-title">{{$condition->field}} {{$condition->operator}} {{$condition->value}}</h4>
+									</div>
 								@endforeach
 							@endif
-						</div>
 					</div>
 				</div>
 				<div class="col-xs-2">
-					<a class="btn btn-sm btn-warning" href="{{ route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]) }} ">
+					<a class="btn btn-sm btn-default" href="{{ route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]) }} ">
 						<i class="fa fa-pencil"></i> Edit
 					</a>&nbsp
 

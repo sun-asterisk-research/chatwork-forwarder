@@ -6,46 +6,32 @@
         <div class="sidebar-content">
             <div class="sidebar-section sidebar-user clearfix sidebar-nav-mini-hide">
                 <div class="sidebar-user-avatar">
-                    <a href="/">
-                        <img src="img/avatar2.jpg" alt="avatar">
+                    <a href="/dashboard">
+                        <img src="/img/avatar2.jpg" alt="avatar">
                     </a>
                 </div>
                 <div class="sidebar-user-name">Chatwork Fowarder</div>
             </div>
             <!-- Sidebar Navigation -->
             <ul class="sidebar-nav">
-                <li class="sidebar-header">
-                    <span class="sidebar-header-title">GENERAL</span>
+                <li>
+                    <a href="/dashboard"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
+                </li>
+                @admin
+                <li>
+                    <a href="/admin/users"><i class="fa fa-users"></i> Users</a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-notes_2 sidebar-nav-icon"></i> <span class="sidebar-nav-mini-hide">Tree menu</span></a>
-                    <ul>
-                        <li>
-                            <a href="page_forms_general.html">Menu item 1</a>
-                        </li>
-                        <li>
-                            <a href="page_forms_components.html">Menu item 2</a>
-                        </li>
-                    </ul>
+                    <a href="/admin/webhooks"><i class="fa fa-desktop"></i> Webhooks</a>
+                </li>
+                @else
+                <li>
+                    <a href="/webhooks"><i class="fa fa-desktop"></i> Webhooks</a>
                 </li>
                 <li>
-                    <a href="page_widgets_stats.html"><i class="gi gi-charts sidebar-nav-icon"></i> <span class="sidebar-nav-mini-hide">Normal menu</span></a>
+                    <a href="/bots"><i class="fa fa-reddit"></i> Bots</a>
                 </li>
-                <li class="active">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-table sidebar-nav-icon"></i> <span class="sidebar-nav-mini-hide">Tables</span></a>
-                    <ul>
-                        <li>
-                            <a href="/" class="active">Datatables</a>
-                            @admin
-                            <a href="/admin/users">Users</a>
-                            <a href="/admin/webhooks">Webhooks</a>
-                            @else
-                            <a href="/webhooks">Webhooks</a>
-                            <a href="/bots">Bots</a>
-                            @endadmin
-                        </li>
-                    </ul>
-                </li>
+                @endadmin
             </ul>
             <!-- END Sidebar Navigation -->
         </div>

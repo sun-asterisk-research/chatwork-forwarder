@@ -30,6 +30,7 @@
         <table  class="table table-vcenter table-condensed table-bordered">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>Name</th>
                     <th class="webhook-description">Description</th>
                     <th>User's webhook</th>
@@ -42,6 +43,7 @@
             <tbody>
                 @foreach ($webhooks as $webhook)
                     <tr class="item-{{ $webhook->id }}">
+                        <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                         <td>{{ $webhook->name }}</td>
                         <td class="webhook-description">{{ $webhook->description }}</td>
                         <td>{{ $webhook->user->name }}</td>

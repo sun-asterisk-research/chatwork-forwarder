@@ -24,9 +24,9 @@ var TablesDatatables = function () {
                 pageLength: 10,
                 lengthMenu: [[10, 20, 50, -1], [10, 20, 50, 'All']]
             });
-            
+
             $('#webhook-datatable').dataTable({
-                columnDefs: [{ orderable: false, targets: [1, 3, 5] }],
+                columnDefs: [{ orderable: false, targets: [2, 4, 6] }],
                 pageLength: 10,
                 lengthMenu: [[10, 20, 50, -1], [10, 20, 50, 'All']]
             });
