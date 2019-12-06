@@ -50,7 +50,7 @@ class UserController extends Controller
             Mail::send('mail/create_user_mail', $data, function ($message) use ($email) {
                 $message->to($email)->subject('Welcome to Chatwork Forwarder Application');
             });
-            return redirect()->route('users.index')
+            return redirect()->route('users.edit', $user)
                              ->with('messageSuccess', 'This user successfully created');
         } catch (QueryException $exception) {
             return redirect()->back()->with('messageFail', 'Create failed. Something went wrong')->withInput();
