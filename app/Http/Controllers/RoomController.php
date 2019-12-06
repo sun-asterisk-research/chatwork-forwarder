@@ -19,6 +19,13 @@ class RoomController extends Controller
         $bot = Bot::findOrFail($request->bot_id);
         $chatwork = Chatwork::withAPIToken($bot->bot_key);
         $rooms = $chatwork->rooms()->list();
-        return $rooms;
+        $groupBoxs = [];
+        foreach ($rooms as $room) {
+            if ($room['type'] == 'group') {
+                array_push($groupBoxs, $room);
+            }
+        }
+
+        return $groupBoxs;
     }
 }
