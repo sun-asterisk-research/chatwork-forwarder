@@ -76,3 +76,17 @@
 .padding-bottom-30 {
   padding-bottom: 30px!important;
 }
+
+.tbl-no-data {
+  color: #f6576a;
+  margin-top: .3rem;
+  line-height: .825rem;
+  padding-left: 2rem;
+  display: block;
+}
+
+.btn-search{
+  background-color: #00d3d5;
+  border-color: #dbe1e8;
+  color: #f5f5f5;
+}

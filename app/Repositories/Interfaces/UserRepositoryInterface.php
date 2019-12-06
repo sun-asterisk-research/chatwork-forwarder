@@ -9,4 +9,6 @@ interface UserRepositoryInterface
      * @return mixed
      */
     public function store($data);
+
+    public function getAllAndSearch($perPage, $keyword);
 }

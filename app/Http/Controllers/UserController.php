@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
-use App\Models\User;
-use App\Http\Resources\User as UserResource;
 use App\Http\Requests\UserCreateRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 use Illuminate\Support\Facades\Mail;
@@ -13,20 +10,19 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
     private $userRepository;
+
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('users.index');
-    }
+        $searchParams = $request->search;
+        $perPage = config('paginate.perPage');
+        $users = $this->userRepository->getAllAndSearch($perPage, $searchParams);
 
-    public function getList()
-    {
-        $users = collect(UserResource::collection(User::orderBy('created_at', 'desc')->get()));
-        return Datatables::of($users)->addIndexColumn()->make(true);
+        return view('admins.users.index', compact('users'));
     }
 
     /**
@@ -36,7 +32,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        return view('admins.users.create');
     }
 
     /**

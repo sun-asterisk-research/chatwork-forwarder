@@ -29,7 +29,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     });
-    Route::get('/list/users', 'UserController@getList');
     Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
         Route::resource('users', 'UserController');
         Route::group(['namespace' => 'Admin'], function () {
