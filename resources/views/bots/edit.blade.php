@@ -11,7 +11,7 @@
     <!-- END Simple Editor Title -->
 
     <!-- Simple Editor Content -->
-    @include('bots.cancel_modal')
+    @include('modals.cancel_modal')
     {{ Form::open(['url' => route('bots.update', $bot->id), 'method' => 'PUT', 'class' => 'bot-form form-horizontal form-bordered']) }}
         <div class="form-group row">
             <input type="hidden" name="id" value="{{ $bot->id }}">

@@ -11,7 +11,7 @@
     <!-- END Simple Editor Title -->
 
     <!-- Simple Editor Content -->
-    @include('bots.cancel_modal')
+    @include('modals.cancel_modal')
     {{ Form::open(['url' => route('bots.store'), 'method' => 'post', 'class' => 'bot-form form-horizontal form-bordered']) }}
         <div class="form-group row">
             <div class="col-xs-4">

@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
         'BotRepository',
         'PayloadRepository',
         'PayloadHistoryRepository',
+        'UserRepository',
     ];
 
     /**
