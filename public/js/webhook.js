@@ -1,6 +1,12 @@
 $(document).ready(function () {
     $('#cw_rooms').prop('disabled', true);
-    $('#cw_bots').change(function () {
+
+    load_room_name();
+    load_room_id();
+
+    function load_room_name() {
+        var room_name = document.getElementById("room_name").value;
+
         $.ajax({
             type: 'GET',
             url: '/rooms',
@@ -9,8 +15,14 @@ $(document).ready(function () {
                 'bot_id': $('#cw_bots').val()
             },
             success: function (data) {
+                $('#cw_rooms').find('option').remove().end();
                 $.each(data, function (index, value) {
-                    $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "'>" + value['name'] + "</option>");
+                    if (value['name'] == room_name) {
+                        $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "' selected='selected'>" + value['name'] + "</option>");
+                        $('#cw_rooms').select2('data', {id: value['name'], text: room_name});
+                    } else {
+                        $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "'>" + value['name'] + "</option>");
+                    }
                 });
                 $('#cw_rooms').prop('disabled', false);
             },
@@ -20,6 +32,19 @@ $(document).ready(function () {
                 $('#cw_room_id').val('');
             }
         });
+    }
+
+    function load_room_id() {
+        var room_id = document.getElementById("room_id").value;
+
+        if (room_id) {
+          $('#cw_room_id').val(room_id);
+        }
+    }
+
+    $('#cw_bots').change(function () {
+        $('#cw_rooms').select2('data', {id: '', text: 'Choose one...'});
+        load_room_name();
     });
 
     $('#cw_rooms').change(function () {
