@@ -66,7 +66,7 @@
                         @endif
                     </td>
                     <td class="text-center">
-                        <a class="btn btn-sm btn-default" href=""><i class="fa fa-pencil"></i> Edit</a>
+                        <a class="btn btn-sm btn-default" href="{{ route('users.edit', ['user' => $user]) }}"><i class="fa fa-pencil"></i> Edit</a>
                         <a class="btn btn-sm btn-danger" href=""><i class="fa fa-trash-o"></i> Delete</a>
                     </td>
                 </tr>

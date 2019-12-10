@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -74,9 +76,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return view('admins.users.edit', compact('user'));
     }
 
     /**
@@ -86,9 +88,21 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
-        //
+        try {
+            $user = $this->userRepository->update($id, $request);
+            
+            return response()->json([
+                'error' => false,
+                'messageSuccess' => 'This user successfully updated',
+            ]);
+        } catch (QueryException $exception) {
+            return response()->json([
+                'error' => true,
+                'messageFail' => 'Update failed. Something went wrong',
+            ]);
+        }
     }
 
     /**

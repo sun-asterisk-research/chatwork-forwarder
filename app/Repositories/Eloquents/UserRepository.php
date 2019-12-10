@@ -50,4 +50,22 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         return $searchParams;
     }
+
+    public function update($id, $request)
+    {
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('public/images');
+            $data['avatar'] = strstr($path, '/');
+        }
+        $data['name'] = $request->name;
+        $data['email'] = $request->email;
+        $data['password'] = bcrypt($request->password);
+        $data['role'] = $request->role;
+        $result = User::findOrFail($id);
+        if ($result) {
+            $result->update($data);
+            
+            return $result;
+        }
+    }
 }
