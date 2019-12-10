@@ -8,6 +8,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Auth;
 
 class UserController extends Controller
 {
@@ -111,8 +112,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        try {
+            if ($user->id == Auth::user()->id) {
+                return redirect()->back()->with('messageFail', 'Delete failed, Cannot delete myself');
+            } else {
+                $this->userRepository->delete($user->id);
+                return redirect('/admin/users')->with('messageSuccess', 'This user successfully deleted');
+            }
+        } catch (Exception $exception) {
+            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+        }
     }
 }
