@@ -363,4 +363,339 @@ class UserControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('login');
     }
+    
+    public function testUpdateUserSuccessFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'Name Update',
+            'email' => 'emaiupdatel@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response->assertStatus(200)->assertJsonFragment([
+            'messageSuccess' => 'This user successfully updated',
+        ]);
+    }
+
+    public function testUnauthenticateCannotUpdateUser()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'Name Update',
+            'email' => 'emaiupdatel@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response->assertStatus(302);
+        $response->assertRedirect('login');
+    }
+
+    public function testUnauthorizationCannotUpdateUser()
+    {
+        $user1 = factory(User::class)->create(['role' => UserType::USER]);
+        $this->actingAs($user1);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => "Name Update",
+            'email' => 'emaiupdatel@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response->assertStatus(302);
+    }
+
+    public function testUpdateUserRequireName()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => null,
+            'email' => 'emaiupdatel@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    public function testUpdateUserNameMinLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => '123',
+            'email' => 'emaiupdatel@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    public function testUpdateUserNameMaximumLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => Str::random(51),
+            'email' => 'emaiupdatel@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    public function testUpdateUserRequireEmail()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'name update',
+            'email' => null,
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('email');
+    }
+
+    public function testUpdateUserUniqueEmail()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user1 = factory(User::class)->create(['email' => "emailduplicate@gmail.com"]);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'name update',
+            'email' => 'emailduplicate@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('email');
+    }
+
+    public function testUpdateUserEmailMaximumLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'name update',
+            'email' => Str::random(201),
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('email');
+    }
+
+    public function testUpdateUserRequirePassword()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'name update',
+            'email' => 'emailupdate@gmail.com',
+            'password' => null,
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('password');
+    }
+
+    public function testUpdateUserRequirePasswordMinLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'name update',
+            'email' => 'emailupdate@gmail.com',
+            'password' => '123',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('password');
+    }
+
+    public function testUpdateUserRequirePasswordMaximumLength()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'name update',
+            'email' => 'emailupdate@gmail.com',
+            'password' => Str::random(51),
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('password');
+    }
+
+    public function testUpdateUserAvatarNotImage()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'name update',
+            'email' => 'emailupdate@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => 'abc',
+        ];
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response
+            ->assertStatus(302)
+            ->assertSessionHasErrors('avatar');
+    }
 }
