@@ -65,10 +65,10 @@ class PayloadControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove Permision denied. Payload belong to another user
-    *
-    * @return void
-    */
+     * test Feature remove Permision denied. Payload belong to another user
+     *
+     * @return void
+     */
     public function testRemovePayloadFailPermissionDenied1Feature()
     {
         $user = factory(User::class)->create();
@@ -86,7 +86,7 @@ class PayloadControllerTest extends TestCase
      * test Feature remove Permision denied. Payload belong to another webhook
      *
      * @return void
-    */
+     */
     public function testRemovePayloadFailPermissionDenied2Feature()
     {
         $user = factory(User::class)->create();
@@ -158,12 +158,38 @@ class PayloadControllerTest extends TestCase
 
         $response = $this->post(route('webhooks.payloads.store', $webhook), [
             'content' => 'sample content',
+            'params' => '{"name": "rasmus", "age": "30"}',
             'fields' => ['$payload->name', '$payload->age'],
             'operators' => ['==', '>'],
             'values' => ['rammus', '30']
         ]);
         $response->assertStatus(200);
         $response->assertSessionHas('messageSuccess', 'This payload successfully created');
+    }
+
+    /**
+     * test Feature store payload with condition fields not match with params
+     *
+     * @return void
+     */
+    public function testStorePayloadInvalidFieldsFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+
+        $response = $this->post(route('webhooks.payloads.store', $webhook), [
+            // 'content' => 'sample content',
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['$payload->asd', '$payload->age'],
+            'operators' => ['==', '>'],
+            'values' => ['rammus', '30']
+        ]);
+        $errors = session('errors')->toArray();
+
+        $response->assertStatus(302);
+        $this->assertEquals($errors['fields'][0], ['field0' => 'This field is not match with params']);
+        $this->assertEquals($errors['content'][0], 'Please enter content');
     }
 
     /**
@@ -185,7 +211,8 @@ class PayloadControllerTest extends TestCase
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
-            'content' => 'Please enter content'
+            'content' => 'Please enter content',
+            'params' => 'Please enter payload params to validate the conditions',
         ]);
     }
 
@@ -201,6 +228,7 @@ class PayloadControllerTest extends TestCase
 
         $response = $this->post(route('webhooks.payloads.store', -1), [
             'content' => 'sample content',
+            'params' => '{"name": "rasmus", "age": "30"}',
             'fields' => ['$payload->name', '$payload->age'],
             'operators' => ['==', '>'],
             'values' => ['rammus', '30']
@@ -303,7 +331,8 @@ class PayloadControllerTest extends TestCase
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
         $this->actingAs($user);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
-            'content' => 'new content'
+            'content' => 'new content',
+            'params' => '{"$payload->name": "rasmus", "$payload->name": "30"}',
         ]);
         $payload = Payload::find($payload->id);
 
@@ -324,16 +353,18 @@ class PayloadControllerTest extends TestCase
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
         $condition = factory(Condition::class)->create([
             'payload_id' => $payload->id,
-            'field' => '$payload->user->name',
+            'field' => '$payload->name',
             'operator' => '==',
             'value' => 'rasmus',
         ]);
         $params = [
             'content' => 'New content',
             'ids' => [$condition->id],
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['$payload->age'],
             'conditions' => [[
                 'id' => $condition->id,
-                'field' => '$payload->user->age',
+                'field' => '$payload->age',
                 'operator' => '>=',
                 'value' => '18'
             ]]
@@ -361,13 +392,36 @@ class PayloadControllerTest extends TestCase
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
         $this->actingAs($user);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
-            'content' => ''
+            'content' => '',
+            'params' => ''
         ]);
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
-            'content' => 'Please enter content'
+            'content' => 'Please enter content',
+            'params' => 'Please enter payload params to validate the conditions',
         ]);
+    }
+
+    /**
+     * test Feature updating payload with invalid condition fields
+     *
+     * @return void
+     */
+    public function testUpdatePayloadInvalidFieldFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['$payload->name', '$payload->asd'],
+        ]);
+        $errors = session('errors')->toArray();
+
+        $response->assertStatus(302);
+        $this->assertEquals($errors['fields'][0], ['field1' => 'This field is not match with params']);
     }
 
     /**
@@ -400,7 +454,9 @@ class PayloadControllerTest extends TestCase
         $anotherWebhook = factory(Webhook::class)->create(['user_id' => $user->id]);
         $this->actingAs($user);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $anotherWebhook, 'payload' => $payload]), [
-            'content' => 'new content'
+            'content' => 'new content',
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['$payload->age'],
         ]);
 
         $response->assertStatus(403);
@@ -419,7 +475,9 @@ class PayloadControllerTest extends TestCase
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
         $this->actingAs($currentUser);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
-            'content' => 'new content'
+            'content' => 'new content',
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['$payload->age'],
         ]);
 
         $response->assertStatus(403);

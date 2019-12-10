@@ -49,7 +49,7 @@ class PayloadController extends Controller
     public function store(PayloadCreateRequest $request, $webhookId)
     {
         $webhook = Webhook::findOrFail($webhookId);
-        $data = $request->only(['content']);
+        $data = $request->only(['content', 'params']);
         $data['webhook_id'] = $webhook->id;
 
         DB::beginTransaction();
@@ -107,7 +107,7 @@ class PayloadController extends Controller
         $this->authorize('update', [$payload, $webhook]);
 
         $conditions = $request->only('conditions');
-        $data = $request->only('content');
+        $data = $request->only(['content', 'params']);
         $ids = (array) $request->ids;
         DB::beginTransaction();
         try {

@@ -20,6 +20,15 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-12">
+                <label class="field-compulsory required">Payload params</label>
+                <textarea class="form-control" rows="5" name="params">{{ $payload->params }}</textarea>
+                <div class="has-error">
+                    <span class="help-block params"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-12">
                 <label class="field-compulsory">Conditions</label>
                 <a href="" data-toggle="modal" data-target="#payloadExample"><i class="fa fa-info-circle"></i> example</a>
             </div>

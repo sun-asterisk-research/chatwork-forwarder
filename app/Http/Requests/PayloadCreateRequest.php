@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ConditionFieldMatchPayloadParams;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PayloadCreateRequest extends FormRequest
@@ -25,6 +26,8 @@ class PayloadCreateRequest extends FormRequest
     {
         return [
             'content' => 'required',
+            'params' => 'required',
+            'fields' => new ConditionFieldMatchPayloadParams($this->params),
         ];
     }
 
@@ -32,6 +35,7 @@ class PayloadCreateRequest extends FormRequest
     {
         return [
             'content.required' => 'Please enter content',
+            'params.required' => 'Please enter payload params to validate the conditions',
         ];
     }
 }

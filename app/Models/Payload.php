@@ -9,6 +9,7 @@ class Payload extends Model
     protected $fillable = [
         'webhook_id',
         'content',
+        'params',
     ];
 
     public function webhook()

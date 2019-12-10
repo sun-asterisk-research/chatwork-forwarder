@@ -72,16 +72,24 @@ function removeCondition(row) {
 function clearOldErrorMessage() {
     $(".webhook_id").html("");
     $(".content").html("");
+    $(".fields").remove();
 }
 
 function printErrorMsg(errors) {
     $.each(errors, function (index, value) {
-        $("." + index).html(value);
+        if (index === 'fields') {
+            $.each(value[0], function (key, message) {
+                $('#' + key)
+                    .after('<div class="has-error fields"><span class="help-block">' + message + '</span></div>')
+            })
+        } else {
+            $("." + index).html(value);
+        }
     })
 }
 
-function getValues(items){
-    return items.map(function(){ return $(this).val(); }).get();
+function getValues(items) {
+    return items.map(function () { return $(this).val(); }).get();
 }
 
 $(document).ready(function () {
@@ -90,6 +98,7 @@ $(document).ready(function () {
         if (checkData()) {
             var _token = $('meta[name="csrf-token"]').attr('content');
             var content = $("textarea[name='content']").val();
+            var params = $("textarea[name='params']").val();
             var webhook_id = $("input[name='webhook_id']").val();
             var fields = getValues($("input[name^='field[]']"));
             var operators = getValues($("select[name^='operator[]']"));
@@ -101,6 +110,7 @@ $(document).ready(function () {
                 data: {
                     _token: _token,
                     content: content,
+                    params: params,
                     fields: fields,
                     operators: operators,
                     values: values,
@@ -122,6 +132,7 @@ $(document).ready(function () {
         if (checkData()) {
             var _token = $('meta[name="csrf-token"]').attr("content");
             var content = $("textarea[name='content']").val();
+            var params = $("textarea[name='params']").val();
             var webhook_id = $("input[name='webhook_id']").val();
             var fields = getValues($("input[name^='field[]']"));
             var operators = getValues($("select[name^='operator[]']"));
@@ -144,6 +155,8 @@ $(document).ready(function () {
                 data: {
                     _token: _token,
                     content: content,
+                    params: params,
+                    fields: fields,
                     conditions: conditions,
                     ids: ids,
                 },
