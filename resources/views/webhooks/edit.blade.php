@@ -33,11 +33,11 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-xs-12">
+        <div class="mt-15 col-xs-12">
             <label class="field-compulsory">Token</label>
             <input type="text" class="form-control" value="{{ $webhook->token }}" readonly>
         </div>
-        <div class="col-xs-12">
+        <div class="mt-15 col-xs-12">
             <label class="field-compulsory required" for="webhook_description">Description</label>
             <textarea class="form-control" rows="5" name="description" id="webhook_description">{{ $webhook->description }}</textarea>
             @error('description')
@@ -48,6 +48,9 @@
         </div>
     </div>
     <div class="block">
+        <div class="block-title">
+            <h2><strong>Chatbot</strong></h2>
+        </div>
         <div class="form-group row">
             <div class="col-xs-4">
                 <input type="hidden" name="id" value="{{ $webhook->id }}">
@@ -89,48 +92,52 @@
         </div>
     </div>
     {{ Form::close() }}
-    <div class="block payload-content">
-        <div class="form-group row">
-            <div class="col-xs-12">
-                <a class="btn btn-sm btn-primary float-right" href="{{ route('webhooks.payloads.create', $webhook->id) }}"><i class="fa fa-plus-circle"></i> Create</a>
+
+    <br/>
+    <div class="block">
+        <!-- Simple Editor Title -->
+        <div class="block-title">
+            <h2><strong>Payloads</strong></h2>
+            <a href="{{ route('webhooks.payloads.create', $webhook->id) }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
+        </div>
+
+        @if (count($payloads) <= 0)
+            <div class="form-group row">
+                <div class="col-xs-12">
+                    No records
+                </div>
             </div>
-            <div class="col-xs-12">
+        @else
+            <div class="form-group row">
                 <div class="col-xs-5">
                     <label class="field-compulsory" for="cw_room_id">Payload content</label>
                 </div>
                 <div class="col-xs-5">
                     <label class="field-compulsory" for="cw_room_id">Payload condition</label>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-xs-2 text-center">
                     <label class="field-compulsory" for="cw_room_id">&nbsp &nbsp Action</label>
                 </div>
             </div>
             @include('webhooks.delete_confirm_modal')
             @foreach($payloads as $key => $payload)
-            <div class="row">
+            <div class="form-group row">
                 <div class="col-xs-5">
-                    <div class="panel panel-default">
+                    <input type="text" class="form-control" value="{{ $payload->content }}" readonly>
+                </div>
+                <div class="col-xs-5">
+                    @if($payload->conditions->isEmpty())
+                        <input type="text" class="form-control" value="No conditions" readonly>
                         <div class="panel-heading">
-                            <h4 class="panel-title">{{ $payload->content }}</h4>
+                            <h4 class="panel-title"></h4>
                         </div>
-                    </div>
+                    @else
+                        @foreach($payload->conditions as $key => $condition)
+                        <input type="text" class="form-control" value="{{$condition->field}} {{$condition->operator}} {{$condition->value}}" readonly>
+                        @endforeach
+                    @endif
                 </div>
-                <div class="col-xs-5">
-                    <div class="panel panel-default">
-                        @if($payload->conditions->isEmpty())
-                            <div class="panel-heading">
-                                <h4 class="panel-title">No conditions</h4>
-                            </div>
-                        @else
-                            @foreach($payload->conditions as $key => $condition)
-                            <div class="panel-heading">
-                                <h4 class="panel-title">{{$condition->field}} {{$condition->operator}} {{$condition->value}}</h4>
-                            </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-		            <div class="col-xs-2">
+		            <div class="col-xs-2 text-center">
 		                <a class="btn btn-sm btn-default" href="{{ route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]) }} ">
 		                    <i class="fa fa-pencil"></i> Edit
 		                </a>&nbsp
@@ -150,7 +157,7 @@
 		            </div>
             </div>
             @endforeach
-        </div>
+        @endif
     </div>
     <!-- END Simple Editor Content -->
 </div>

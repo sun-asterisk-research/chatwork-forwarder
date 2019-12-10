@@ -2,6 +2,10 @@
     padding-left: 20px !important;
 }
 
+.mt-15 {
+    margin-top: 15px !important;
+}
+
 .webhook-description {
     max-width: 350px !important;
 }

@@ -13,6 +13,10 @@
     <!-- Simple Editor Content -->
     {{ Form::open(['url' => route('webhooks.store'), 'method' => 'post', 'class' => 'form-horizontal form-bordered']) }}
         <div class="form-group row">
+            <div class="col-xs-12">
+                <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
+                <a class="btn btn-sm btn-default float-right" href="{{ route('webhooks.index') }}"><i class="fa fa-times"></i> Cancel</a>
+            </div>
             <div class="col-xs-8">
                 <label class="field-compulsory required" for="webhook_name">Webhook name</label>
                 <input type="text" id="webhook_name" name="name" class="form-control" value="{{ old('name') }}">
@@ -30,7 +34,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-xs-12">
+            <div class="mt-15 col-xs-12">
                 <label class="field-compulsory required" for="webhook_description">Description</label>
                 <textarea class="form-control" rows="5" name="description" id="webhook_description">{{ old('description') }}</textarea>
                 @error('description')
@@ -76,12 +80,6 @@
                         <span class="help-block">{{ $message }}</span>
                     </div>
                 @enderror
-            </div>
-        </div>
-        <div class="form-group form-actions">
-            <div class="col-xs-12">
-                <a class="btn btn-sm btn-warning" href="{{ route('webhooks.index') }}"><i class="fa fa-times"></i> Cancel</a>
-                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Save</button>
             </div>
         </div>
     {{ Form::close() }}
