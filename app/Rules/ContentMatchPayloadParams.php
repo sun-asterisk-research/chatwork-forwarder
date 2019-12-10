@@ -6,9 +6,9 @@ use ErrorException;
 use Illuminate\Contracts\Validation\Rule;
 use Throwable;
 
-class ConditionFieldMatchPayloadParams implements Rule
+class ContentMatchPayloadParams implements Rule
 {
-    private $errors;
+    private $errorFields;
     private $payloadParams;
     /**
      * Create a new rule instance.
@@ -17,6 +17,7 @@ class ConditionFieldMatchPayloadParams implements Rule
      */
     public function __construct($payloadParams)
     {
+        $this->errorFields = [];
         $this->payloadParams = $payloadParams;
     }
 
@@ -29,16 +30,18 @@ class ConditionFieldMatchPayloadParams implements Rule
      */
     public function passes($attribute, $value)
     {
+        $value = $this->getStringsBetweebBrackets($value);
         $params = json_decode($this->payloadParams);
         for ($i = 0; $i < count($value); $i++) {
             try {
                 eval('return ' . $value[$i] . ';');
             } catch (Throwable | ErrorException $err) {
-                $this->errors['field' . $i] = 'This field is not match with params';
+                array_push($this->errorFields, $value[$i]);
                 continue;
             }
         }
-        return empty($this->errors) ? true : false;
+
+        return empty($this->errorFields) ? true : false;
     }
 
     /**
@@ -48,6 +51,14 @@ class ConditionFieldMatchPayloadParams implements Rule
      */
     public function message()
     {
-        return ['fields' => $this->errors];
+        return join(', ', $this->errorFields) . ' not found in payload params';
+    }
+
+    private function getStringsBetweebBrackets($str)
+    {
+        $regex = '#{{(.*?)}}#';
+        preg_match_all($regex, $str, $matches);
+
+        return $matches[1];
     }
 }
