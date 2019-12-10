@@ -42,11 +42,11 @@
         </div>
         <div class="form-group">
             <div class="col-xs-4">
-                <label class="field-compulsory required" for="webhook_description">Chatwork bot</label>
+                <label class="field-compulsory required" for="webhook_bot_id">Chatwork bot</label>
                 <select id="cw_bots" name="bot_id" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
-                    @foreach($bots as $key => $value)
-                        <option value="{{ $value }}">{{ $key }}</option>
+                    @foreach($bots as $bot)
+                        <option value="{{ $bot->id }}" {{ old('bot_id') == $bot->id ? "selected" : "" }}>{{ $bot->name }}</option>
                     @endforeach
                 </select>
                 @error('bot_id')
@@ -56,9 +56,10 @@
                 @enderror
             </div>
             <div class="col-xs-4">
+                <input type="hidden" id="room_name" value="{{ old('room_name') }}">
                 <label class="field-compulsory required" for="cw_rooms">Chatwork room</label>
                 <select id="cw_rooms" name="room_name" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
-                <option></option>
+                    <option></option>
                 </select>
                 @error('room_name')
                     <div class="has-error">
@@ -68,6 +69,7 @@
             </div>
             <div class="col-xs-4">
                 <label class="field-compulsory required" for="cw_room_id">Chatwork room id</label>
+                <input type="hidden" id="room_id" value="{{ old('room_id') }}">
                 <input type="text" readonly id="cw_room_id" name="room_id" class="form-control">
                 @error('room_id')
                     <div class="has-error">
