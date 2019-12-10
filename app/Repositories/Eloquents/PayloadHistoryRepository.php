@@ -11,4 +11,9 @@ class PayloadHistoryRepository extends BaseRepository implements PayloadHistoryR
     {
         return PayloadHistory::class;
     }
+
+    public function find($id)
+    {
+        return $this->model->with('webhook')->find($id);
+    }
 }

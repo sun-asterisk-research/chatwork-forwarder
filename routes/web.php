@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('bots', 'BotController')->except('show');
     Route::put('webhooks/change_status', 'WebhookController@changeStatus');
     Route::resource('webhooks', 'WebhookController');
+    Route::resource('history', 'PayloadHistoryController')->only(['show']);
     Route::resource('rooms', 'RoomController')->only([
         'index'
     ]);

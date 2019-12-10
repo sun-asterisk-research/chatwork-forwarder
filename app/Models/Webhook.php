@@ -36,6 +36,11 @@ class Webhook extends Model
         return $this->hasMany(Payload::class);
     }
 
+    public function payloadHistories()
+    {
+        return $this->hasMany(PayloadHistory::class);
+    }
+
     public function scopeEnable($query)
     {
         return $query->where('status', WebhookStatus::ENABLED);

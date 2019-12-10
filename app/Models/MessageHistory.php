@@ -12,4 +12,9 @@ class MessageHistory extends Model
         'status',
         'log',
     ];
+
+    public function payloadHistory()
+    {
+        return $this->belongsTo(PayloadHistory::class);
+    }
 }
