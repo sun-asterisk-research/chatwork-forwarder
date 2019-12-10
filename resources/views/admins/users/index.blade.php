@@ -52,7 +52,11 @@
                     <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                     <td class="text-center">
                         @if($user->avatar)
-                        <img src="/storage/{{ $user->avatar }}" alt="avatar" width="60px;">
+                            @if (substr($user->avatar, 0, 8) == 'https://')
+                            <img src="{{ $user->avatar }}" alt="avatar" width="60px;">
+                            @else
+                            <img src="/storage/{{ $user->avatar }}" alt="avatar" width="60px;">
+                            @endif
                         @else
                         <img src="/img/avatar_default.png" alt="avatar" width="60px;">
                         @endif
