@@ -698,4 +698,49 @@ class UserControllerTest extends TestCase
             ->assertStatus(302)
             ->assertSessionHasErrors('avatar');
     }
+
+    public function testRemoveUserFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $user = factory(User::class)->create(['role' => UserType::USER, 'name' => 'name remove']);
+        $this->actingAs($admin);
+
+        $response = $this->delete(route('users.destroy', ['user' => $user]));
+        $this->assertDatabaseMissing('users', ['id' => $user->id, 'name' => 'name remove', 'deleted_at' => NULL]);
+        $response->assertRedirect(route('users.index'));
+        $response->assertStatus(302);
+    }
+
+    public function testRemoveUserFail()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $user = factory(User::class)->create(['role' => UserType::USER, 'name' => 'name remove fail']);
+        $this->actingAs($admin);
+        $user->id = 1000;
+
+        $response = $this->delete(route('users.destroy', ['user' => $user]));
+        $this->assertDatabaseMissing('users', ['id' => $user->id, 'name' => 'name remove', 'deleted_at' => NULL]);
+        $this->assertDatabaseHas('users', ['name' => 'name remove fail']);
+        $response->assertStatus(404);
+    }
+
+    public function testRemoveUserUnauthenticateFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $user = factory(User::class)->create();
+
+        $response = $this->delete(route('users.destroy', ['user' => $user]));
+        $response->assertLocation('/login');
+        $response->assertStatus(302);
+    }
+
+    public function testRemoveUserUnauthorizedFeature()
+    {
+        $user1 = factory(User::class)->create(['role' => UserType::USER]);
+        $this->actingAs($user1);
+        $user = factory(User::class)->create();
+
+        $response = $this->delete(route('users.destroy', ['user' => $user]));
+        $response->assertStatus(302);
+    }
 }
