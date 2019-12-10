@@ -1,6 +1,7 @@
 @php use App\Enums\UserType; @endphp
 @extends('layouts.app')
 @section('content')
+@include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Users</li>
@@ -47,13 +48,13 @@
                 <p class="tbl-no-data "><i class="fa fa-info-circle"></i> No data</p>
                 @else
                 @foreach($users as $user)
-                <tr>
+                <tr class="item-{{ $user->id }} user-item">
                     <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                     <td class="text-center">
                         @if($user->avatar)
-                            <img src="/storage/{{ $user->avatar }}" alt="avatar" width="60px;">
+                        <img src="/storage/{{ $user->avatar }}" alt="avatar" width="60px;">
                         @else
-                            <img src="/img/avatar_default.png" alt="avatar" width="60px;">
+                        <img src="/img/avatar_default.png" alt="avatar" width="60px;">
                         @endif
                     </td>
                     <td><a href="page_ready_user_profile.html">{{ $user->name }}</a></td>
@@ -67,7 +68,18 @@
                     </td>
                     <td class="text-center">
                         <a class="btn btn-sm btn-default" href="{{ route('users.edit', ['user' => $user]) }}"><i class="fa fa-pencil"></i> Edit</a>
-                        <a class="btn btn-sm btn-danger" href=""><i class="fa fa-trash-o"></i> Delete</a>
+                        {{ Form::open([
+                            'method' => 'DELETE',
+                            'route' => ['users.destroy', 'user' => $user],
+                            'style' => 'display:inline',
+                            'class' => 'form-delete'
+                            ]) }}
+                            {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                            'type' => 'DELETE',
+                            'class' => 'btn btn-sm btn-danger delete-btn',
+                            'title' => 'Delete'
+                            ]) }}
+                        {{ Form::close() }}
                     </td>
                 </tr>
                 @endforeach
@@ -77,9 +89,10 @@
         <div class="pagination-wrapper"> {{ $users->appends(['search' => Request::get('search')])->render() }} </div>
     </div>
 </div>
+@include('modals.delete_user_confirm_modal')
 <!-- END Datatables Content -->
 
 @endsection
 @section('script')
-<script src="{{ asset('js/user.js') }}"></script>
+    <script src="{{ asset('js/user.js') }}"></script>
 @endsection
