@@ -12,7 +12,7 @@
             "type": "new_post",
             "user": {
                 "name": "rasmus",
-                "user_display_name": "Rasmus Lerdorf",
+                "display_name": "Rasmus Lerdorf",
                 "number_of_posts": 3
             },
             "post": {

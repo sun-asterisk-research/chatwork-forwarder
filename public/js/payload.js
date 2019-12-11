@@ -3,10 +3,10 @@ function addFields() {
         var counter = $(".mult-condition").children().length;
         var operators = ["==", "!=", ">", ">=", "<", "<="]
         var fieldInput = $("<input>")
-            .attr({ name: "field[]", id: "field" + counter })
+            .attr({ name: "field[]", id: "field" + counter, placeholder: "Contidion field" })
             .addClass("form-control col-md-4 field");
         var valueInput = $("<input>")
-            .attr({ name: "value[]", id: "value" + counter })
+            .attr({ name: "value[]", id: "value" + counter, placeholder: "Contidion value" })
             .addClass("form-control col-md-4 value");
         var operatorsDropdown = $("<select/>")
             .attr({ name: "operator[]", id: "operator" + counter })
@@ -172,4 +172,3 @@ $(document).ready(function () {
         }
     });
 });
-

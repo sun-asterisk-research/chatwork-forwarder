@@ -93,7 +93,7 @@ class UserController extends Controller
     {
         try {
             $user = $this->userRepository->update($id, $request);
-            
+
             return response()->json([
                 'error' => false,
                 'messageSuccess' => 'This user successfully updated',

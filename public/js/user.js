@@ -47,7 +47,7 @@ $('#user_update').on('submit',function(e){
     formData.append('_method', 'PUT');
 
     $.ajax({
-        url: "/admin/users/" + id, 
+        url: "/admin/users/" + id,
         data: formData,
         type: 'POST',
         contentType: false,

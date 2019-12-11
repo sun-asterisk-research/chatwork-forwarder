@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Users</li>
-    <li><a href="{{ route('users.index') }}">Lists</a></li>
+    <li><a href="{{ route('users.index') }}">List</a></li>
 </ul>
 <!-- END Datatables Header -->
 
@@ -19,7 +19,7 @@
             <div class="col-xs-4">
                 <input type="text" name="search[email]" class="form-control" placeholder="Enter user's email" value="{{ request('search')['email'] ?? '' }}">
             </div>
-            <button class="btn btn-md btn-search"><i class="fa fa-search"></i> search</button>
+            <button class="btn btn-md btn-search"><i class="fa fa-search"></i> Search</button>
         </form>
     </div>
 </div>
@@ -61,7 +61,7 @@
                         <img src="/img/avatar_default.png" alt="avatar" width="60px;">
                         @endif
                     </td>
-                    <td><a href="page_ready_user_profile.html">{{ $user->name }}</a></td>
+                    <td><a href="{{ route('users.edit', ['user' => $user]) }}">{{ $user->name }}</a></td>
                     <td>{{ $user->email }}</td>
                     <td class="text-center">
                         @if($user->role === UserType::ADMIN)
@@ -90,7 +90,7 @@
                 @endif
             </tbody>
         </table>
-        <div class="pagination-wrapper"> {{ $users->appends(['search' => Request::get('search')])->render() }} </div>
+        <div class="pagination-wrapper text-center"> {{ $users->appends(['search' => Request::get('search')])->render() }} </div>
     </div>
 </div>
 @include('modals.delete_user_confirm_modal')

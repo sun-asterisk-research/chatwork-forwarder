@@ -2,6 +2,13 @@
 @section('content')
 @include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
+
+<ul class="breadcrumb breadcrumb-top">
+    <li>Bots</li>
+    <li><a href="{{ route('bots.index') }}">List</a></li>
+    <li><a href="javascript:window.location.href=window.location.href">Edit</a></li>
+</ul>
+
 <!-- Simple Editor Block -->
 <div class="block">
     <!-- Simple Editor Title -->
@@ -17,7 +24,7 @@
             <input type="hidden" name="id" value="{{ $bot->id }}">
             <div class="col-xs-4">
                 <label class="field-compulsory required" for="bot_name">Bot name</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ $bot->name }}">
+                <input type="text" id="name" name="name" class="form-control" value="{{ $bot->name }}" placeholder="Enter name">
                 @error('name')
                     <div class="has-error">
                         <span class="help-block">{{ $message }}</span>
@@ -27,19 +34,8 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-4">
-                <label class="field-compulsory required" for="cw_id">Chatwork Bot ID</label>
-                <input type="number" id="cw_id" name="cw_id" class="form-control" value="{{ $bot->cw_id }}">
-                @error('cw_id')
-                    <div class="has-error">
-                        <span class="help-block">{{ $message }}</span>
-                    </div>
-                @enderror
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-xs-4">
                 <label class="field-compulsory required" for="bot_key">Bot Key</label>
-                <input type="text" id="bot_key" name="bot_key" class="form-control" value="{{ $bot->bot_key }}">
+                <input type="text" id="bot_key" name="bot_key" class="form-control" value="{{ $bot->bot_key }}" placeholder="Enter bot key">
                 @error('bot_key')
                     <div class="has-error">
                         <span class="help-block">{{ $message }}</span>

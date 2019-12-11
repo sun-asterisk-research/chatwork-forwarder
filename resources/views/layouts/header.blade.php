@@ -4,7 +4,11 @@
         <!-- User Dropdown -->
         <li class="dropdown">
             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="/img/avatar2.jpg" alt="avatar">
+                @if(Auth::user()->avatar)
+                <img src="/storage/{{ $user->avatar }}" alt="avatar" width="60px;">
+                @else
+                <img src="/img/avatar_default.png" alt="avatar" width="60px;">
+                @endif
                 &nbsp{{Auth::user()->name}}&nbsp&nbsp
                 <i class="fa fa-angle-down"></i>
             </a>

@@ -13,10 +13,10 @@
                 <div class="container">
 
                     <label for="uname"><b>Email</b></label>
-                    <input id="email" placeholder="Enter mmail" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
+                    <input id="email" placeholder="Enter email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
 
                     <label for="psw"><b>Password</b></label>
-                    <input id="password" placeholder="Enter Password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="current-password">
+                    <input id="password" placeholder="Enter password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="current-password">
                     @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

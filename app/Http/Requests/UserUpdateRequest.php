@@ -35,7 +35,7 @@ class UserUpdateRequest extends FormRequest
             'avatar' => 'image|max:5120',
         ];
     }
-    
+
     public function messages()
     {
         return [

@@ -11,32 +11,34 @@
 <!-- END Datatables Header -->
 
 <!-- Datatables Content -->
+
+<div class="block">
+    <div class="form-group row">
+        <form method="GET" action="{{ route('admin.webhooks.index') }}">
+            <div class="col-xs-4">
+                <input type="text" name="search" class="form-control" placeholder="Enter webhook's name" value="{{ request('search') }}">
+            </div>
+            <button class="btn btn-md btn-search"><i class="fa fa-search"></i> Search</button>
+        </form>
+    </div>
+</div>
+
 <div class="block full">
     <div class="block-title">
         <h2><strong>Webhooks list</strong></h2>
         <a href="{{ route('webhooks.create') }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
     </div>
     <div class="table-responsive">
-        {{ Form::open(['method' => 'GET', 'route' => 'admin.webhooks.index', 'class' => 'form-inline my-2 my-lg-0 float-right', 'role' => 'search'])  }}
-        <div class="input-group">
-            <input type="text" type="submit" hidden class="form-control" name="search" placeholder="search" value="{{ request('search') }}">
-            <div class="input-group-btn">
-                <button class="btn btn-default" style="height: 34px;" type="submit">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        </div>
-        {{ Form::close() }}
-        <table  class="table table-vcenter table-condensed table-bordered">
+        <table  class="table table-vcenter table-striped">
             <thead>
                 <tr>
                     <th>No.</th>
                     <th>Name</th>
                     <th class="webhook-description">Description</th>
-                    <th>User's webhook</th>
+                    <th>User</th>
                     <th>Chatwork Room</th>
-                    <th>Chatwork Room ID</th>
-                    <th>Status</th>
+                    <th class="text-center">Chatwork Room ID</th>
+                    <th class="text-center">Status</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -48,8 +50,14 @@
                         <td class="webhook-description">{{ $webhook->description }}</td>
                         <td>{{ $webhook->user->name }}</td>
                         <td>{{ $webhook->room_name }}</td>
-                        <td>{{ $webhook->room_id }}</td>
-                        <td class="pl-20 webhook-status">{{ $webhook->status == WebhookStatus::ENABLED ? 'Enabled' : 'Disabled' }}</td>
+                        <td class="text-center">{{ $webhook->room_id }}</td>
+                        <td class="pl-20">
+                            @if($webhook->status === WebhookStatus::ENABLED)
+                            <div class="webhook-status label label-success">Enabled</div>
+                            @else
+                            <div class="webhook-status label label-warning">Disabled</div>
+                            @endif
+                        </td>
                         <td class="text-center">
                             @if($webhook->status == WebhookStatus::ENABLED)
                                 <button class="btn btn-sm btn-warning btn-disable-wh btn-enable-disable" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
@@ -64,7 +72,7 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="pagination-wrapper"> {{ $webhooks->appends(['search' => Request::get('search')])->render() }} </div>
+        <div class="text-center pagination-wrapper"> {{ $webhooks->appends(['search' => Request::get('search')])->render() }} </div>
     </div>
 </div>
 <!-- END Datatables Content -->

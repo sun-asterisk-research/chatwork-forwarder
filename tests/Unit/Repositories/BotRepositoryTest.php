@@ -54,7 +54,6 @@ class BotRepositoryTest extends TestCase
         $user = factory(User::class)->create();
         $attributes = [
             'name' => 'Bot Name',
-            'cw_id' => '123123',
             'bot_key' => 'asdad234saddr2sdfsasd',
             'user_id' => $user->id
         ];
@@ -76,7 +75,6 @@ class BotRepositoryTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $attributes = [
             'name' => 'Bot Name',
-            'cw_id' => '123123',
             'bot_key' => 'asdad234saddr2sdfsasd',
             'user_id' => $user->id
         ];

@@ -20,7 +20,7 @@ var TablesDatatables = function () {
 
             $('#bot-datatable').dataTable({
                 order: [],
-                columnDefs: [{orderable: false, targets: [2]}],
+                columnDefs: [{orderable: false, targets: [1]}],
                 pageLength: 10,
                 lengthMenu: [[10, 20, 50, -1], [10, 20, 50, 'All']]
             });
