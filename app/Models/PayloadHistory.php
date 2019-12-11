@@ -12,4 +12,14 @@ class PayloadHistory extends Model
         'status',
         'log',
     ];
+
+    public function webhook()
+    {
+        return $this->belongsTo(Webhook::class);
+    }
+
+    public function messageHistories()
+    {
+        return $this->hasMany(MessageHistory::class);
+    }
 }
