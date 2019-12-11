@@ -157,9 +157,9 @@ class PayloadControllerTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->post(route('webhooks.payloads.store', $webhook), [
-            'content' => 'sample content',
+            'content' => 'Hi my name is {{$params->name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$payload->name', '$payload->age'],
+            'fields' => ['$params->name', '$params->age'],
             'operators' => ['==', '>'],
             'values' => ['rammus', '30']
         ]);
@@ -179,9 +179,9 @@ class PayloadControllerTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->post(route('webhooks.payloads.store', $webhook), [
-            // 'content' => 'sample content',
+            'content' => '',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$payload->asd', '$payload->age'],
+            'fields' => ['$params->asd', '$params->age'],
             'operators' => ['==', '>'],
             'values' => ['rammus', '30']
         ]);
@@ -190,6 +190,27 @@ class PayloadControllerTest extends TestCase
         $response->assertStatus(302);
         $this->assertEquals($errors['fields'][0], ['field0' => 'This field is not match with params']);
         $this->assertEquals($errors['content'][0], 'Please enter content');
+    }
+
+    /**
+     * test Feature store payload with message content not match with params
+     *
+     * @return void
+     */
+    public function testStorePayloadInvalidContentFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+
+        $response = $this->post(route('webhooks.payloads.store', $webhook), [
+            'content' => 'Hi my name is {{$payload->asd}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
+        ]);
+        $errors = session('errors')->toArray();
+
+        $response->assertStatus(302);
+        $this->assertEquals($errors['content'][0], '$payload->asd not found in payload params');
     }
 
     /**
@@ -229,7 +250,7 @@ class PayloadControllerTest extends TestCase
         $response = $this->post(route('webhooks.payloads.store', -1), [
             'content' => 'sample content',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$payload->name', '$payload->age'],
+            'fields' => ['$params->name', '$params->age'],
             'operators' => ['==', '>'],
             'values' => ['rammus', '30']
         ]);
@@ -331,14 +352,14 @@ class PayloadControllerTest extends TestCase
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
         $this->actingAs($user);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
-            'content' => 'new content',
-            'params' => '{"$payload->name": "rasmus", "$payload->name": "30"}',
+            'content' => 'Hi my name is {{$params->name}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
         ]);
         $payload = Payload::find($payload->id);
 
         $response->assertStatus(200);
         $response->assertSessionHas('messageSuccess', 'This payload successfully updated');
-        $this->assertEquals($payload->content, 'new content');
+        $this->assertEquals($payload->content, 'Hi my name is {{$params->name}}');
     }
 
     /**
@@ -353,7 +374,7 @@ class PayloadControllerTest extends TestCase
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
         $condition = factory(Condition::class)->create([
             'payload_id' => $payload->id,
-            'field' => '$payload->name',
+            'field' => '$params->name',
             'operator' => '==',
             'value' => 'rasmus',
         ]);
@@ -361,10 +382,10 @@ class PayloadControllerTest extends TestCase
             'content' => 'New content',
             'ids' => [$condition->id],
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$payload->age'],
+            'fields' => ['$params->age'],
             'conditions' => [[
                 'id' => $condition->id,
-                'field' => '$payload->age',
+                'field' => '$params->age',
                 'operator' => '>=',
                 'value' => '18'
             ]]
@@ -416,12 +437,33 @@ class PayloadControllerTest extends TestCase
         $this->actingAs($user);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$payload->name', '$payload->asd'],
+            'fields' => ['$params->name', '$params->asd'],
         ]);
         $errors = session('errors')->toArray();
 
         $response->assertStatus(302);
         $this->assertEquals($errors['fields'][0], ['field1' => 'This field is not match with params']);
+    }
+
+    /**
+     * test Feature updating payload with invalid message content
+     *
+     * @return void
+     */
+    public function testUpdatePayloadInvalidContentFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'content' => 'Hi my name is {{$payload->asd}}',
+        ]);
+        $errors = session('errors')->toArray();
+
+        $response->assertStatus(302);
+        $this->assertEquals($errors['content'][0], '$payload->asd not found in payload params');
     }
 
     /**
@@ -456,7 +498,7 @@ class PayloadControllerTest extends TestCase
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $anotherWebhook, 'payload' => $payload]), [
             'content' => 'new content',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$payload->age'],
+            'fields' => ['$params->age'],
         ]);
 
         $response->assertStatus(403);
@@ -477,7 +519,7 @@ class PayloadControllerTest extends TestCase
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
             'content' => 'new content',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$payload->age'],
+            'fields' => ['$params->age'],
         ]);
 
         $response->assertStatus(403);

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\ConditionFieldMatchPayloadParams;
+use App\Rules\ContentMatchPayloadParams;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PayloadCreateRequest extends FormRequest
@@ -25,7 +26,7 @@ class PayloadCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => 'required',
+            'content' => ['required', new ContentMatchPayloadParams($this->params)],
             'params' => 'required',
             'fields' => new ConditionFieldMatchPayloadParams($this->params),
         ];

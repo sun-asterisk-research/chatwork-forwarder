@@ -50,6 +50,7 @@
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory required" for="webhook_description">Content</label>
+                <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> example</a>
                 <textarea class="form-control" rows="5" name="content"></textarea>
                 <div class="has-error">
                     <span class="help-block content"></span>
@@ -60,6 +61,7 @@
     </div>
 </div>
 @include('payloads.condition-example')
+@include('payloads.content-example')
 <!-- END Simple Editor Block -->
 @endsection
 @section('js')
