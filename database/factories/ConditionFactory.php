@@ -9,7 +9,7 @@ use Faker\Generator as Faker;
 $factory->define(Condition::class, function (Faker $faker) {
     $operator = ['==', '!=', '>', '>=', '<', '<='];
     return [
-        'field' => '$payload->' . $faker->word,
+        'field' => '$params->' . $faker->word,
         'operator' => $operator[array_rand($operator)],
         'value' => $faker->name,
         'payload_id' => factory(Payload::class)->create()->id

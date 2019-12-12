@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Throwable;
+use ErrorException;
 use App\Models\Webhook;
 use SunAsterisk\Chatwork\Chatwork;
 use App\Enums\PayloadHistoryStatus;
@@ -42,13 +44,13 @@ class ForwardChatworkService
                 // 'return $payloads->fieldName == "value";'
                 try {
                     $expression = 'return ' . $condition->field . ' '
-                                            . $condition->operator
-                                            . ' "' . $condition->value . '";';
+                        . $condition->operator
+                        . ' "' . $condition->value . '";';
                     if (!eval($expression)) {
                         $isValid = false;
                         break;
                     }
-                } catch (\ErrorException $e) {
+                } catch (Throwable | ErrorException $e) {
                     $isValid = false;
                     break;
                 }
@@ -113,9 +115,9 @@ class ForwardChatworkService
             '#{{(.*?)}}#',
             function ($match) use ($params, &$isMatching) {
                 try {
-                    $value = 'return '. $match[1] . ';';
+                    $value = 'return ' . $match[1] . ';';
                     return eval($value);
-                } catch (\ErrorException $e) {
+                } catch (Throwable | ErrorException $e) {
                     // create a failed payload_history when values in payload's content not matching with params payload
                     $isMatching = false;
                     $log = 'Not found ' . $match[1];
@@ -155,8 +157,7 @@ class ForwardChatworkService
                         // add to queue and excute this job after 5 minutes
                         SendMessageToChatwork::dispatch($bot, $roomId, $messages, $this->payloadHistory->id)
                             ->onQueue('high')
-                            ->delay(now()
-                            ->addMinutes(5));
+                            ->delay(now()->addMinutes(5));
                         break 2;
                     case 401:
                         // authorized
