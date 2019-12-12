@@ -8,11 +8,17 @@ interface WebhookRepositoryInterface
      * Get all webhooks by user
      * @return mixed
      */
-    public function getAllByUser();
+    public function getAllByUser($perPage);
 
     /**
      * Get all webhooks by admin
      * @return mixed
      */
-    public function getAllAndSearch($perPage, $keyword);
+    public function getAllAndSearch($perPage, $searchParams);
+
+    /**
+     * Get all webhooks by user
+     * @return mixed
+     */
+    public function getAllByUserForDropdown();
 }

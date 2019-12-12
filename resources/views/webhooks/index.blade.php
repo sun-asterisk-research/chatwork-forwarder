@@ -6,7 +6,7 @@
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li>Webhooks</li>
-    <li><a href="">List</a></li>
+    <li><a href="{{ route('webhooks.index') }}">List</a></li>
 </ul>
 <!-- END Datatables Header -->
 
@@ -18,7 +18,7 @@
     </div>
 
     <div class="table-responsive">
-        <table id="webhook-datatable" class="table table-vcenter table-condensed table-bordered">
+        <table  class="table table-vcenter table-striped">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -73,6 +73,7 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="text-center pagination-wrapper"> {{ $webhooks->appends(['search' => Request::get('search')])->render() }} </div>
     </div>
 </div>
 <!-- END Datatables Content -->

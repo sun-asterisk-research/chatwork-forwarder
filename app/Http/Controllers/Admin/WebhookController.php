@@ -20,9 +20,9 @@ class WebhookController extends Controller
 
     public function index(Request $request)
     {
-        $keyword = $request->get('search');
+        $searchParams = $request->get('search');
         $perPage = config('paginate.perPage');
-        $webhooks = $this->webhookRepository->getAllAndSearch($perPage, $keyword);
+        $webhooks = $this->webhookRepository->getAllAndSearch($perPage, $searchParams);
 
         return view('admins.webhooks.index', compact('webhooks'));
     }

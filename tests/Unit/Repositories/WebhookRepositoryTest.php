@@ -37,12 +37,31 @@ class WebhookRepositoryTest extends TestCase
 
         $webhookLists = factory(Webhook::class, 10)->create(['name' => 'test get all webhook by user']);
         $user = $webhookLists[0]->user;
-
+        $perPage = config('paginate.perPage');
         Auth::shouldReceive('user')->once()->andReturn($user);
 
-        $webhookRepo->getAllByUser();
+        $webhookRepo->getAllByUser($perPage);
         $this->assertDatabaseHas('webhooks', ['name' => 'test get all webhook by user']);
     }
+
+    /**
+     * get all list webhook for dropdown
+     *
+     * @return void
+     */
+    public function testGetAllByUserForDropdown()
+    {
+        $webhookRepo = new WebhookRepository;
+
+        $webhookLists = factory(Webhook::class, 10)->create(['name' => 'test get all webhook by user']);
+        $user = $webhookLists[0]->user;
+        $perPage = config('paginate.perPage');
+        Auth::shouldReceive('user')->once()->andReturn($user);
+
+        $webhookRepo->getAllByUserForDropDown();
+        $this->assertDatabaseHas('webhooks', ['name' => 'test get all webhook by user']);
+    }
+
 
     /**
      * test create webhook in repository
@@ -126,16 +145,19 @@ class WebhookRepositoryTest extends TestCase
      */
     public function testGetAllAndSearch()
     {
-        factory(Webhook::class, 2)->create(['name' => 'keyword']);
-        factory(Webhook::class, 3)->create(['name' => 'example']);
+        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 0]);
+        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 1]);
+        factory(Webhook::class)->create(['name' => 'example', 'status' => 0]);
 
         $webhookRepository = new WebhookRepository;
         $perPage = config('paginate.perPage');
-        $result = $webhookRepository->getAllAndSearch($perPage, 'key');
+        $searchParams = ['name' => 'key', 'status' => '0'];
+        $result = $webhookRepository->getAllAndSearch($perPage, $searchParams);
 
-        $this->assertCount(2, $result);
+        $this->assertCount(1, $result);
 
-        $resultNotFound = $webhookRepository->getAllAndSearch($perPage, 'not found');
+        $searchParamsNotFound = ['name' => 'not found', 'status' => '0'];
+        $resultNotFound = $webhookRepository->getAllAndSearch($perPage, $searchParamsNotFound);
         $this->assertCount(0, $resultNotFound);
     }
 

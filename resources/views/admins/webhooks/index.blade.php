@@ -6,7 +6,7 @@
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li>Webhooks</li>
-    <li><a href="">List</a></li>
+    <li><a href="{{ route('admin.webhooks.index') }}">List</a></li>
 </ul>
 <!-- END Datatables Header -->
 
@@ -16,7 +16,14 @@
     <div class="form-group row">
         <form method="GET" action="{{ route('admin.webhooks.index') }}">
             <div class="col-xs-4">
-                <input type="text" name="search" class="form-control" placeholder="Enter webhook's name" value="{{ request('search') }}">
+                <input type="text" name="search[name]" class="form-control" placeholder="Enter webhook's name" value="{{ request('search')['name'] ?? '' }}">
+            </div>
+            <div class="col-xs-2">
+                <select name="search[status]" class="form-control">
+                    <option value="">All</option>
+                    <option value="{{ WebhookStatus::ENABLED }}" {{ request('search')['status'] === strval(WebhookStatus::ENABLED) ? "selected" : "" }}>Enable</option>
+                    <option value="{{ WebhookStatus::DISABLED }}"  {{ request('search')['status'] === strval(WebhookStatus::DISABLED) ? "selected" : "" }}>Disable</option>
+                </select>
             </div>
             <button class="btn btn-md btn-search"><i class="fa fa-search"></i> Search</button>
         </form>

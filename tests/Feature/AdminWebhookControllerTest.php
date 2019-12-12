@@ -35,17 +35,18 @@ class AdminWebhookControllerTest extends TestCase
      */
     public function testShowListWebhookWithKeywordFeature()
     {
-        factory(Webhook::class, 5)->create(['name' => 'keyword']);
-        factory(Webhook::class, 2)->create(['name' => 'example']);
+        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 0]);
+        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 1]);
+        factory(Webhook::class)->create(['name' => 'example', 'status' => 0]);
         $user = factory(User::class)->create(['role' => 0]);
 
         $this->actingAs($user);
 
-        $response = $this->get('/admin/webhooks?search=keyword');
+        $response = $this->get('/admin/webhooks?search[name]=keyword&search[status]=0');
         $response->assertStatus(200);
         $response->assertViewHas('webhooks');
 
-        $this->assertCount(5, $response->getOriginalContent()->getData()['webhooks']);
+        $this->assertCount(1, $response->getOriginalContent()->getData()['webhooks']);
     }
 
     /**
