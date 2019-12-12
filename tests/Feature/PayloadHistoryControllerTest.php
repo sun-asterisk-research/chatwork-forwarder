@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PayloadHistoryStatus;
 use Tests\TestCase;
 use App\Models\User;
 use App\Enums\UserType;
 use App\Models\MessageHistory;
+use App\Models\PayloadHistory;
+use App\Models\Webhook;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -60,5 +63,141 @@ class PayloadHistoryControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('payloadHistory');
         $response->assertViewHas('messageHistories');
+    }
+
+    /**
+     * test Feature list payload history success.
+     *
+     * @return void
+     */
+    public function testListPayloadHistoryFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        factory(PayloadHistory::class, 2)->create(['webhook_id' => $webhook->id]);
+
+        $this->actingAs($user);
+        $response = $this->get(route('history.index'));
+        $responsePayloadHistories = $response->getOriginalContent()->getData()['payloadHistories'];
+        $response->assertStatus(200);
+        $response->assertViewHas('payloadHistories');
+        $this->assertCount(2, $responsePayloadHistories);
+    }
+
+    /**
+     * test Feature list payload history when user not login.
+     *
+     * @return void
+     */
+    public function testListPayloadHistoryUnauthenticatedFeature()
+    {
+        factory(PayloadHistory::class, 2)->create();
+
+        $response = $this->get(route('history.index'));
+        $response->assertStatus(302);
+        $response->assertLocation('/login');
+    }
+
+    /**
+     * test Feature search payload history by webhook.
+     *
+     * @return void
+     */
+    public function testSearchPayloadHistoryByWebhookFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook1 = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $webhook2 = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $expectPayloadHistory = factory(PayloadHistory::class)->create(['webhook_id' => $webhook1->id]);
+        factory(PayloadHistory::class)->create(['webhook_id' => $webhook2->id]);
+        $searchParams = ['search' => ['webhook' => $webhook1->id]];
+
+        $this->actingAs($user);
+        $response = $this->get(route('history.index', $searchParams));
+        $responsePayloadHistories = $response->getOriginalContent()->getData()['payloadHistories'];
+        $response->assertStatus(200);
+        $response->assertViewHas('payloadHistories');
+        $this->assertCount(1, $responsePayloadHistories);
+        $this->assertEquals($expectPayloadHistory->id, $responsePayloadHistories[0]->id);
+    }
+
+    /**
+     * test Feature search payload history by status.
+     *
+     * @return void
+     */
+    public function testSearchPayloadHistoryByStatusFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $expectPayloadHistory = factory(PayloadHistory::class)
+            ->create(['webhook_id' => $webhook->id, 'status' => PayloadHistoryStatus::FAILED]);
+        factory(PayloadHistory::class)->create(['webhook_id' => $webhook->id, 'status' => PayloadHistoryStatus::SUCCESS]);
+        $searchParams = ['search' => ['status' => 'FAILED']];
+
+        $this->actingAs($user);
+        $response = $this->get(route('history.index', $searchParams));
+        $responsePayloadHistories = $response->getOriginalContent()->getData()['payloadHistories'];
+        $response->assertStatus(200);
+        $response->assertViewHas('payloadHistories');
+        $this->assertCount(1, $responsePayloadHistories);
+        $this->assertEquals($expectPayloadHistory->id, $responsePayloadHistories[0]->id);
+    }
+
+    /**
+     * test Feature search payload history by webhook and status.
+     *
+     * @return void
+     */
+    public function testSearchPayloadHistoryByWebhookAndStatusFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook1 = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $webhook2 = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $expectPayloadHistory = factory(PayloadHistory::class)->create([
+            'webhook_id' => $webhook1->id,
+            'status' => PayloadHistoryStatus::FAILED
+        ]);
+        factory(PayloadHistory::class)->create([
+            'webhook_id' => $webhook2->id,
+            'status' => PayloadHistoryStatus::SUCCESS
+        ]);
+        $searchParams = ['search' => [
+            'status' => 'FAILED',
+            'webhook' => $webhook1->id
+        ]];
+
+        $this->actingAs($user);
+        $response = $this->get(route('history.index', $searchParams));
+        $responsePayloadHistories = $response->getOriginalContent()->getData()['payloadHistories'];
+        $response->assertStatus(200);
+        $response->assertViewHas('payloadHistories');
+        $this->assertCount(1, $responsePayloadHistories);
+        $this->assertEquals($expectPayloadHistory->id, $responsePayloadHistories[0]->id);
+    }
+
+    /**
+     * test Feature search payload history not found.
+     *
+     * @return void
+     */
+    public function testSearchPayloadHistoryNotFoundFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook1 = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $webhook2 = factory(Webhook::class)->create(['user_id' => $user->id]);
+        factory(PayloadHistory::class)->create([
+            'webhook_id' => $webhook2->id,
+            'status' => PayloadHistoryStatus::SUCCESS
+        ]);
+        $searchParams = ['search' => ['webhook' => $webhook1->id]];
+
+        $this->actingAs($user);
+        $response = $this->get(route('history.index', $searchParams));
+        $responsePayloadHistories = $response->getOriginalContent()->getData()['payloadHistories'];
+        $response->assertStatus(200);
+        $response->assertViewHas('payloadHistories');
+        $this->assertCount(0, $responsePayloadHistories);
+        $response->assertSeeText('No matching records found');
     }
 }
