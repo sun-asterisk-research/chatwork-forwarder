@@ -2,6 +2,13 @@
 @section('content')
 @include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
+
+<ul class="breadcrumb breadcrumb-top">
+    <li>Bots</li>
+    <li><a href="{{ route('bots.index') }}">List</a></li>
+    <li><a href="javascript:window.location.href=window.location.href">Create</a></li>
+</ul>
+
 <!-- Simple Editor Block -->
 <div class="block">
     <!-- Simple Editor Title -->
@@ -13,10 +20,14 @@
     <!-- Simple Editor Content -->
     @include('modals.cancel_modal')
     {{ Form::open(['url' => route('bots.store'), 'method' => 'post', 'class' => 'bot-form form-horizontal form-bordered']) }}
+        <div class="col-xs-12">
+            <button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
+            <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
+        </div>
         <div class="form-group row">
             <div class="col-xs-4">
                 <label class="field-compulsory required" for="bot_name">Bot name</label>
-                <input type="text" id="bot_name" name="name" class="form-control" value="{{ old('name') }}">
+                <input type="text" id="bot_name" name="name" class="form-control" value="{{ old('name') }}" placeholder="Enter name">
                 @error('name')
                     <div class="has-error">
                         <span class="help-block">{{ $message }}</span>
@@ -26,30 +37,13 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-4">
-                <label class="field-compulsory required" for="cw_id">Chatwork Bot ID</label>
-                <input type="number" id="cw_id" name="cw_id" class="form-control" value="{{ old('cw_id') }}">
-                @error('cw_id')
-                    <div class="has-error">
-                        <span class="help-block">{{ $message }}</span>
-                    </div>
-                @enderror
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-xs-4">
                 <label class="field-compulsory required" for="bot_key">Bot Key</label>
-                <input type="text" id="bot_key" name="bot_key" class="form-control" value="{{ old('bot_key') }}">
+                <input type="text" id="bot_key" name="bot_key" class="form-control" value="{{ old('bot_key') }}" placeholder="Enter bot key">
                 @error('bot_key')
                     <div class="has-error">
                         <span class="help-block">{{ $message }}</span>
                     </div>
                 @enderror
-            </div>
-        </div>
-        <div class="form-group form-actions">
-            <div class="col-xs-12">
-                <a class="btn btn-sm btn-default cancel-btn" href="{{ route('bots.index') }}"><i class="fa fa-times"></i> Cancel</a>
-                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Save</button>
             </div>
         </div>
     {{ Form::close() }}

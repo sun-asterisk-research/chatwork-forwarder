@@ -71,7 +71,6 @@ class ChatbotControllerTest extends TestCase
         $user = factory(User::class)->create();
         $params = [
             'name' => 'Test Bot',
-            'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
 
@@ -92,7 +91,6 @@ class ChatbotControllerTest extends TestCase
         $user = factory(User::class)->create();
         $params = [
             'name' => NULL,
-            'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
 
@@ -116,7 +114,6 @@ class ChatbotControllerTest extends TestCase
 
         $params = [
             'name' => $bot->name,
-            'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
 
@@ -140,7 +137,6 @@ class ChatbotControllerTest extends TestCase
 
         $params = [
             'name' => 'assdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkd1',
-            'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
 
@@ -150,77 +146,6 @@ class ChatbotControllerTest extends TestCase
         $response
             ->assertStatus(302)
             ->assertSessionHasErrors('name');
-    }
-
-    /**
-     * test bot required cw_id
-     *
-     * @return void
-     */
-    public function testBotRequiredCWId()
-    {
-        $user = factory(User::class)->create();
-
-        $params = [
-            'name' => 'asd',
-            'cw_id' => NULL,
-            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
-        ];
-
-        $this->actingAs($user);
-        $response = $this->post(route('bots.store'), $params);
-
-        $response
-            ->assertStatus(302)
-            ->assertSessionHasErrors('cw_id');
-    }
-
-    /**
-     * test bot unique cw_id with user
-     *
-     * @return void
-     */
-    public function testBotUniqueCWIdWithUser()
-    {
-        $bot = factory(Bot::class)->create();
-        $user = $bot->user;
-
-        $params = [
-            'name' => 'asd',
-            'cw_id' => $bot->cw_id,
-            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
-        ];
-
-        $this->actingAs($user);
-        $response = $this->post(route('bots.store'), $params);
-
-        $response
-            ->assertStatus(302)
-            ->assertSessionHasErrors('cw_id');
-    }
-
-    /**
-     * test bot cw_id have maximum length is 50 characters
-     *
-     * @return void
-     */
-    public function testBotCWIdMaximumLength()
-    {
-        $bot = factory(Bot::class)->create();
-        $user = $bot->user;
-
-        $params = [
-            'name' => 'asd',
-            'cw_id' => '131233234113123323411312332341131233234113123323412',
-            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
-        ];
-
-        $this->actingAs($user);
-        $response = $this->post(route('bots.store'), $params);
-
-        $response
-            ->assertStatus(302)
-            ->assertSessionHasErrors('cw_id');
     }
 
     /**
@@ -234,7 +159,6 @@ class ChatbotControllerTest extends TestCase
 
         $params = [
             'name' => 'asd',
-            'cw_id' => '12321',
             'bot_key' => NULL,
         ];
 
@@ -258,7 +182,6 @@ class ChatbotControllerTest extends TestCase
 
         $params = [
             'name' => 'asd',
-            'cw_id' => '12321',
             'bot_key' => $bot->bot_key,
         ];
 
@@ -282,7 +205,6 @@ class ChatbotControllerTest extends TestCase
 
         $params = [
             'name' => 'asd',
-            'cw_id' => '12321',
             'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdwe',
         ];
 
@@ -374,7 +296,7 @@ class ChatbotControllerTest extends TestCase
 
    /**
      * test user can see edit bot form
-     * 
+     *
      * @return void
      */
     public function testUserCanSeeEditBotForm()
@@ -390,7 +312,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test user unauthorized cannot see edit bot form
-     * 
+     *
      * @return void
      */
     public function testUnauthorizedUserCannotSeeEditBotForm()
@@ -405,7 +327,7 @@ class ChatbotControllerTest extends TestCase
 
      /**
      * test user authorized can edit bot
-     * 
+     *
      * @return void
      */
     public function testUserCanEditBot()
@@ -414,19 +336,18 @@ class ChatbotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => 'Updated Bot',
-            'cw_id' => '123456789',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('bots.update', $bot->id), $params);
         $response->assertRedirect('bots/' . $bot->id . '/edit');
-        $this->assertDatabaseHas('bots', ['id' => $bot->id, 'name' => 'Updated Bot', 'cw_id' => '123456789', 'bot_key' => 'asdg12asd3423adasdasd23sdasdas23']);
+        $this->assertDatabaseHas('bots', ['id' => $bot->id, 'name' => 'Updated Bot', 'bot_key' => 'asdg12asd3423adasdasd23sdasdas23']);
     }
 
      /**
      * test bot required name
-     * 
+     *
      * @return void
      */
     public function testUpdateBotRequireName()
@@ -435,10 +356,9 @@ class ChatbotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => NULL,
-            'cw_id' => '123456789',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('bots.update', $bot->id), $params);
 
@@ -449,7 +369,7 @@ class ChatbotControllerTest extends TestCase
 
      /**
      * test bot unique name with a user
-     * 
+     *
      * @return void
      */
     public function testUpdateBotUniqueNameWithUser()
@@ -457,13 +377,12 @@ class ChatbotControllerTest extends TestCase
         $user = factory(User::class)->create();
         $bot_1 = factory(Bot::class)->create(['name' => 'Created Bot 1', 'user_id' => $user->id]);
         $bot_2 = factory(Bot::class)->create(['name' => 'Created Bot 2', 'user_id' => $user->id]);
-        
+
         $params = [
             'name' => $bot_1->name,
-            'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('bots.update', $bot_2->id), $params);
 
@@ -474,7 +393,7 @@ class ChatbotControllerTest extends TestCase
 
     /**
      * test bot name have maximum length is 50 characters
-     * 
+     *
      * @return void
      */
     public function testUpdateBotNameMaximumLength()
@@ -483,82 +402,19 @@ class ChatbotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => 'assdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkd1',
-            'cw_id' => '131233',
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('bots.update', $bot->id), $params);
         $response
             ->assertStatus(302)
             ->assertSessionHasErrors('name');
     }
-    /**
-     * test bot required cw_id
-     * 
-     * @return void
-     */
-    public function testUpdateBotRequiredCWId()
-    {
-        $user = factory(User::class)->create();
-        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
-        $params = [
-            'name' => 'asd',
-            'cw_id' => NULL,
-            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
-        ];
-        
-        $this->actingAs($user);
-        $response = $this->put(route('bots.update', $bot->id), $params);
-        $response
-            ->assertStatus(302)
-            ->assertSessionHasErrors('cw_id');
-    }
-    /**
-     * test bot unique cw_id with user
-     * 
-     * @return void
-     */
-    public function testUpdateBotUniqueCWIdWithUser()
-    {
-        $user = factory(User::class)->create();
-        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
-        $params = [
-            'name' => 'asd',
-            'cw_id' => $bot->cw_id,
-            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
-        ];
-        
-        $this->actingAs($user);
-        $response = $this->put(route('bots.update', $bot->id), $params);
-        $response
-            ->assertStatus(302)
-            ->assertSessionHasErrors('cw_id');
-    }
-    /**
-     * test bot cw_id have maximum length is 50 characters
-     * 
-     * @return void
-     */
-    public function testUpdateBotCWIdMaximumLength()
-    {
-        $user = factory(User::class)->create();
-        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
-        $params = [
-            'name' => 'asd',
-            'cw_id' => '131233234113123323411312332341131233234113123323412',
-            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
-        ];
-        
-        $this->actingAs($user);
-        $response = $this->put(route('bots.update', $bot->id), $params);
-        $response
-            ->assertStatus(302)
-            ->assertSessionHasErrors('cw_id');
-    }
+
     /**
      * test bot required bot_key
-     * 
+     *
      * @return void
      */
     public function testUpdateBotRequiredBotKey()
@@ -567,10 +423,9 @@ class ChatbotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => 'asd',
-            'cw_id' => '12321',
             'bot_key' => NULL,
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('bots.update', $bot->id), $params);
         $response
@@ -579,7 +434,7 @@ class ChatbotControllerTest extends TestCase
     }
     /**
      * test bot unique bot_key with user
-     * 
+     *
      * @return void
      */
     public function testUpdateBotUniqueBotKeyWithUser()
@@ -588,10 +443,9 @@ class ChatbotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => 'asd',
-            'cw_id' => '12321',
             'bot_key' => $bot->bot_key,
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('bots.update', $bot->id), $params);
         $response
@@ -600,7 +454,7 @@ class ChatbotControllerTest extends TestCase
     }
      /**
      * test bot bot_key have maximum length is 50 characters
-     * 
+     *
      * @return void
      */
     public function testUpdateBotKeyMaximumLength()
@@ -609,10 +463,9 @@ class ChatbotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => 'asd',
-            'cw_id' => '12321',
             'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdwe',
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('bots.update', $bot->id), $params);
         $response

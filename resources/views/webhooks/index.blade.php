@@ -40,7 +40,13 @@
                         <td class="webhook-description">{{ $webhook->description }}</td>
                         <td>{{ $webhook->room_name }}</td>
                         <td>{{ $webhook->room_id }}</td>
-                        <td class="pl-20 webhook-status">{{ $webhook->status == WebhookStatus::ENABLED ? 'Enabled' : 'Disabled' }}</td>
+                        <td class="pl-20">
+                            @if($webhook->status === WebhookStatus::ENABLED)
+                            <div class="webhook-status label label-success">Enabled</div>
+                            @else
+                            <div class="webhook-status label label-warning">Disabled</div>
+                            @endif
+                        </td>
                         <td class="text-center">
                             @if($webhook->status == WebhookStatus::ENABLED)
                                 <button class="btn btn-sm btn-warning btn-disable-wh btn-enable-disable" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>

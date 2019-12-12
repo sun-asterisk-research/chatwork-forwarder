@@ -22,7 +22,6 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>CW ID</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -30,7 +29,6 @@
                 @foreach($bots as $bot)
                     <tr>
                         <td class="pl-20">{{ $bot->name }}</td>
-                        <td class="pl-20">{{ $bot->cw_id }}</td>
                         <td class="text-center">
                             <a class="btn btn-sm btn-default" href="{{ route('bots.edit', $bot->id) }}"><i class="fa fa-pencil"></i> Edit</a>
 

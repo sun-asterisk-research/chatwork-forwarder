@@ -9,7 +9,6 @@ class Bot extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'cw_id',
         'bot_key',
     ];
 

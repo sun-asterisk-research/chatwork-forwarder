@@ -2,6 +2,20 @@
 @section('content')
 @include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
+<?php use App\Enums\UserType; ?>
+
+<ul class="breadcrumb breadcrumb-top">
+    <li>Webhooks</li>
+    @if (Auth::user()->role == UserType::ADMIN)
+    <li><a href="{{ route('admin.webhooks.index') }}">List</a></li>
+    @else
+    <li><a href="{{ route('webhooks.index') }}">List</a></li>
+    @endif
+    <li><a href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}">Edit</a></li>
+    <li>Payloads</li>
+    <li><a href="javascript:window.location.href=window.location.href">Create</a></li>
+</ul>
+
 <!-- Simple Editor Block -->
 <div class="block">
     <!-- Simple Editor Title -->
@@ -20,7 +34,7 @@
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory required">Payload params</label>
-                <textarea class="form-control" rows="5" name="params"></textarea>
+                <textarea class="form-control" rows="5" name="params" placeholder="Enter payload params"></textarea>
                 <div class="has-error">
                     <span class="help-block params"></span>
                 </div>
@@ -51,7 +65,7 @@
             <div class="col-xs-12">
                 <label class="field-compulsory required" for="webhook_description">Content</label>
                 <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> example</a>
-                <textarea class="form-control" rows="5" name="content"></textarea>
+                <textarea class="form-control" rows="5" name="content" placeholder="Enter Content message"></textarea>
                 <div class="has-error">
                     <span class="help-block content"></span>
                 </div>

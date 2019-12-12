@@ -2,11 +2,23 @@
 @section('content')
 @include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
+<?php use App\Enums\UserType; ?>
+
+<ul class="breadcrumb breadcrumb-top">
+    <li>Webhooks</li>
+    @if (Auth::user()->role == UserType::ADMIN)
+    <li><a href="{{ route('admin.webhooks.index') }}">List</a></li>
+    @else
+    <li><a href="{{ route('webhooks.index') }}">List</a></li>
+    @endif
+    <li><a href="javascript:window.location.href=window.location.href">Edit</a></li>
+</ul>
+
 <!-- Simple Editor Block -->
 <div class="block">
     <!-- Simple Editor Title -->
     <div class="block-title">
-        <h2><strong>Detail webhook</strong></h2>
+        <h2><strong>Edit webhook</strong></h2>
     </div>
     <!-- END Simple Editor Title -->
     <!-- Simple Editor Content -->
@@ -18,7 +30,7 @@
         </div>
         <div class="col-xs-8">
             <label class="field-compulsory required" for="webhook_name">Webhook name</label>
-            <input type="text" id="webhook_name" name="name" class="form-control" value="{{  $webhook->name }}">
+            <input type="text" id="webhook_name" name="name" class="form-control" value="{{  $webhook->name }}" placeholder="Enter name">
             @error('name')
             <div class="has-error">
                 <span class="help-block">{{ $message }}</span>
@@ -39,7 +51,7 @@
         </div>
         <div class="mt-15 col-xs-12">
             <label class="field-compulsory required" for="webhook_description">Description</label>
-            <textarea class="form-control" rows="5" name="description" id="webhook_description">{{ $webhook->description }}</textarea>
+            <textarea class="form-control" rows="5" name="description" id="webhook_description" placeholder="Enter description">{{ $webhook->description }}</textarea>
             @error('description')
             <div class="has-error">
                 <span class="help-block">{{ $message }}</span>
@@ -82,7 +94,7 @@
             <div class="col-xs-4">
                 <label class="field-compulsory required" for="cw_room_id">Chatwork room id</label>
                 <input type="hidden" id="room_id" value="{{ $webhook->room_id }}">
-                <input type="text" readonly id="cw_room_id" name="room_id" class="form-control">
+                <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
                 @error('room_id')
                 <div class="has-error">
                     <span class="help-block">{{ $message }}</span>

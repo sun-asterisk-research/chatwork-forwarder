@@ -5,7 +5,7 @@ $(document).ready(function () {
     load_room_id();
 
     function load_room_name() {
-        var room_name = document.getElementById("room_name").value;
+        var room_name = document.getElementById("room_name");
 
         $.ajax({
             type: 'GET',
@@ -17,9 +17,9 @@ $(document).ready(function () {
             success: function (data) {
                 $('#cw_rooms').find('option').remove().end();
                 $.each(data, function (index, value) {
-                    if (value['name'] == room_name) {
+                    if (room_name != null && value['name'] == room_name.value) {
                         $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "' selected='selected'>" + value['name'] + "</option>");
-                        $('#cw_rooms').select2('data', {id: value['name'], text: room_name});
+                        $('#cw_rooms').select2('data', {id: value['name'], text: room_name.value});
                     } else {
                         $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "'>" + value['name'] + "</option>");
                     }
@@ -35,9 +35,9 @@ $(document).ready(function () {
     }
 
     function load_room_id() {
-        var room_id = document.getElementById("room_id").value;
+        var room_id = document.getElementById("room_id");
 
-        if (room_id) {
+        if (room_id != null && room_id.value) {
           $('#cw_room_id').val(room_id);
         }
     }
@@ -100,7 +100,11 @@ $(document).ready(function () {
                 $(button).removeClass(`btn-${status}-wh`);
                 $(button).addClass(`btn-${opposite_btn_class}`);
                 $(button).addClass(`btn-${opposite_status}-wh`);
-                $(item).find('td.webhook-status').text(status_change).css('text-transform', 'capitalize');
+
+                var webhook_status= $(item).find('div.webhook-status');
+                $(webhook_status).removeClass(`label-${opposite_btn_class}`);
+                $(webhook_status).addClass(`label-${current_btn_class}`);
+                $(webhook_status).text(status_change).css('text-transform', 'capitalize');
                 toastr.success(data, 'Update Successfully', {timeOut: 4000, showEasing: 'linear'});
             },
             error: function() {
