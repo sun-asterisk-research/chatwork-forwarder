@@ -65,8 +65,7 @@
                                 <button class="btn btn-sm btn-success btn-enable-wh btn-enable-disable" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
                             @endif
 
-                            <a class="btn btn-sm btn-default" href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i> Edit</a>
-                            <a class="btn btn-sm btn-danger" href=""><i class="fa fa-trash-o"></i> Delete</a>
+                            <a class="btn btn-sm btn-default" href="{{ route('admin.webhooks.show', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i>Detail</a>
                         </td>
                     </tr>
                 @endforeach
