@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Webhook;
+use App\Enums\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminWebhookControllerTest extends TestCase
@@ -61,5 +62,38 @@ class AdminWebhookControllerTest extends TestCase
         $response = $this->get('/admin/webhooks');
         $response->assertStatus(302);
         $response->assertRedirect('/');
+    }
+
+    public function testAdminCanSeeWebhook()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create();
+        $this->actingAs($admin);
+
+        $response = $this->get(route('admin.webhooks.show', ['webhook' => $webhook]));
+        $response->assertStatus(200);
+        $response->assertViewHas('webhook');
+        $response->assertViewHas('payloads');
+        $response->assertViewHas('bot');
+    }
+
+    public function testUnauthenticateAdminCannotSeeWebhook()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create();
+
+        $response = $this->get(route('admin.webhooks.show', ['webhook' => $webhook]));
+        $response->assertStatus(302);
+        $response->assertRedirect('login');
+    }
+
+    public function testUnauthorizationUserCannotSeeWebhook()
+    {
+        $user = factory(User::class)->create(['role' => UserType::USER]);
+        $webhook = factory(Webhook::class)->create();
+        $this->actingAs($user);
+
+        $response = $this->get(route('admin.webhooks.show', ['webhook' => $webhook]));
+        $response->assertStatus(302);
     }
 }
