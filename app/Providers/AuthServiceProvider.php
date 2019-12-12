@@ -6,10 +6,12 @@ use App\Models\Bot;
 use App\Models\Payload;
 use App\Models\Webhook;
 use App\Policies\BotPolicy;
+use App\Models\MessageHistory;
 use App\Models\PayloadHistory;
 use App\Policies\PayloadPolicy;
 use App\Policies\WebhookPolicy;
 use Illuminate\Support\Facades\Gate;
+use App\Policies\MessageHistoryPolicy;
 use App\Policies\PayloadHistoryPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -25,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         Webhook::class => WebhookPolicy::class,
         Payload::class => PayloadPolicy::class,
         PayloadHistory::class => PayloadHistoryPolicy::class,
+        MessageHistory::class => MessageHistoryPolicy::class,
     ];
 
     /**

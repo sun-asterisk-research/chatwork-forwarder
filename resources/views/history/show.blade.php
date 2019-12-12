@@ -53,6 +53,7 @@
     <div class="block-title">
         <h2><strong>Message History list</strong></h2>
     </div>
+    @include('common.flash-message')
     <div class="table-responsive">
 
         <div class="form-group row">
@@ -70,6 +71,7 @@
                     <th>Message Content</th>
                     <th class="text-center">Status</th>
                     <th>Log</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -85,6 +87,20 @@
                             @endif
                         </td>
                         <td>{{ $messageHistory->log }}</td>
+                        <td class="text-center">
+                            {{ Form::open([
+                                'method' => 'DELETE',
+                                'route' => ['message.destroy', 'message' => $messageHistory],
+                                'style' => 'display:inline',
+                                'class' => 'form-delete'
+                                ]) }}
+                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                'type' => 'DELETE',
+                                'class' => 'btn btn-sm btn-danger delete-btn',
+                                'title' => 'Delete'
+                                ]) }}
+                            {{ Form::close() }}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
