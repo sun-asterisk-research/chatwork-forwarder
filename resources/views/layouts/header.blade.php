@@ -5,7 +5,11 @@
         <li class="dropdown">
             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
                 @if(Auth::user()->avatar)
-                <img src="/storage/{{ $user->avatar }}" alt="avatar" width="60px;">
+                    @if (substr(Auth::user()->avatar, 0, 8) == 'https://')
+                    <img src="{{ Auth::user()->avatar }}" alt="avatar" width="60px;">
+                    @else
+                    <img src="/storage/{{ Auth::user()->avatar }}" alt="avatar" width="60px;">
+                    @endif
                 @else
                 <img src="/img/avatar_default.png" alt="avatar" width="60px;">
                 @endif

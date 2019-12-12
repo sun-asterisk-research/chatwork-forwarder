@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('webhooks/change_status', 'WebhookController@changeStatus');
     Route::resource('webhooks', 'WebhookController');
     Route::resource('history', 'PayloadHistoryController')->only(['show']);
+    Route::resource('history/message', 'MessageHistoryController')->only(['destroy']);
     Route::resource('rooms', 'RoomController')->only([
         'index'
     ]);
