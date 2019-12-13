@@ -19,3 +19,5 @@ gkc_*
 /public/css/style.css
 /public/js/custom.js
 /public/mix-manifest.json
+/public/docs/*
+/resources/docs/*

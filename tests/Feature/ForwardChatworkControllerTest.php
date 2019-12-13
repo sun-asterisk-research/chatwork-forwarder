@@ -73,7 +73,7 @@ class ForwardChatworkControllerTest extends TestCase
         ];
 
         $response = $this->post('api/v1/webhooks/23424234234234234', $params);
-        $response->assertStatus(200)
+        $response->assertStatus(404)
             ->assertSeeText("Webhook not found. Please try again");
     }
 }
