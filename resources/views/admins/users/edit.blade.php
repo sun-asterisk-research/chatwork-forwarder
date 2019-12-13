@@ -56,7 +56,7 @@
 						<div class="has-error reset-error" id="error-email"></div>
 					</div>
 					<div class="mt-15">
-						<label for="" class="field-compulsory required">Password</label>
+						<label for="" class="field-compulsory">Password</label>
 						<input type="password" class="form-control" name="password" id="password" placeholder="Enter new password">
 						<div class="has-error reset-error" id="error-password"></div>
 					</div>
