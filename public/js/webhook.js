@@ -37,8 +37,8 @@ $(document).ready(function () {
     function load_room_id() {
         var room_id = document.getElementById("room_id");
 
-        if (room_id != null && room_id.value) {
-          $('#cw_room_id').val(room_id);
+        if (room_id != null) {
+          $('#cw_room_id').val(room_id.value);
         }
     }
 
