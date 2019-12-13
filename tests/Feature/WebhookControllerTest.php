@@ -190,6 +190,7 @@ class WebhookControllerTest extends TestCase
         $response->assertSee('webhook');
         $response->assertSee('bots');
         $response->assertViewHas('payloads');
+        $response->assertViewHas('mappings');
     }
 
     public function testUnauthenticateUserCannotSeeWebhook()

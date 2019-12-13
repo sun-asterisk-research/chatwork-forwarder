@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             WebhooksSeeder::class,
             BotsSeeder::class,
+            MappingsSeeder::class,
         ]);
     }
 }
