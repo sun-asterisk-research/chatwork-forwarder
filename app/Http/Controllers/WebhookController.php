@@ -78,9 +78,10 @@ class WebhookController extends Controller
     {
         $this->authorize('update', $webhook);
         $payloads = $webhook->payloads()->get();
+        $mappings = $webhook->mappings()->get();
         $bots = Bot::byUser(Auth::id());
 
-        return view('webhooks.edit', compact('webhook', 'payloads', 'bots'));
+        return view('webhooks.edit', compact('webhook', 'payloads', 'bots', 'mappings'));
     }
 
     /**

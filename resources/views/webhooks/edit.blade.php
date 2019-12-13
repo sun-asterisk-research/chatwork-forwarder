@@ -171,6 +171,57 @@
             @endforeach
         @endif
     </div>
+    <br>
+    <div class="block">
+        <div class="block-title">
+            <h2><strong>Mappings</strong></h2>
+            <a href="" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
+        </div>
+
+        @if (count($mappings) <= 0)
+            <div class="form-group row">
+                <div class="col-xs-12">
+                    No records
+                </div>
+            </div>
+        @else
+            <div class="form-group row">
+                <div class="col-xs-5">
+                    <label class="field-compulsory" for="cw_room_id">Name</label>
+                </div>
+                <div class="col-xs-2">
+                    <label class="field-compulsory" for="cw_room_id">Key</label>
+                </div>
+                <div class="col-xs-3">
+                    <label class="field-compulsory" for="cw_room_id">Value</label>
+                </div>
+                <div class="col-xs-2 text-center">
+                    <label class="field-compulsory" for="cw_room_id">Action</label>
+                </div>
+            </div>
+            @foreach($mappings as $key => $mapping)
+                <div class="form-group row">
+                    <div class="col-xs-5">
+                        <input type="text" class="form-control" value="{{ $mapping->name }}" readonly>
+                    </div>
+                    <div class="col-xs-2">
+                        <input type="text" class="form-control" value="{{ $mapping->key }}" readonly>
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="text" class="form-control" value="{{ $mapping->value }}" readonly>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <a class="btn btn-sm btn-default" href="">
+                            <i class="fa fa-pencil"></i> Edit
+                        </a>&nbsp
+                        <a class="btn btn-sm btn-danger delete-btn" href="">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+    </div>
     <!-- END Simple Editor Content -->
 </div>
 

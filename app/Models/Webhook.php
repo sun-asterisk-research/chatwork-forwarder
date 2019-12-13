@@ -36,6 +36,11 @@ class Webhook extends Model
         return $this->hasMany(Payload::class);
     }
 
+    public function mappings()
+    {
+        return $this->hasMany(Mapping::class);
+    }
+
     public function payloadHistories()
     {
         return $this->hasMany(PayloadHistory::class);
