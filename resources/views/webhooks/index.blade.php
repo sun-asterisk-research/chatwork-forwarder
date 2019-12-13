@@ -9,7 +9,7 @@
     <li><a href="{{ route('webhooks.index') }}">List</a></li>
 </ul>
 <!-- END Datatables Header -->
-
+@include('common.flash-message')
 <!-- Datatables Content -->
 <div class="block full">
     <div class="block-title">

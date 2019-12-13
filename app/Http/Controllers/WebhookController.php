@@ -113,6 +113,10 @@ class WebhookController extends Controller
     public function destroy(Webhook $webhook)
     {
         $this->authorize('delete', $webhook);
+        if ($webhook->payloads->count() > 0) {
+            return redirect()->back()
+                ->with('messageFail', 'This webhook has some payloads to be related with, please delete them first');
+        }
 
         try {
             $this->webhookRepository->delete($webhook->id);
