@@ -35,4 +35,16 @@ class PayloadHistoryPolicy
     {
         return $user->id === $payloadHistory->webhook->user_id;
     }
+
+    /**
+     * Determine  if the given payload history can be showed by user
+     *
+     * @param App\Models\User
+     * @param App\Models\PayloadHistory
+     * @return bool
+     */
+    public function delete(User $user, PayloadHistory $payloadHistory)
+    {
+        return $user->id === $payloadHistory->webhook->user_id;
+    }
 }

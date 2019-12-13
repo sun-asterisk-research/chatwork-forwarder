@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use App\Enums\PayloadHistoryStatus;
 use Illuminate\Database\Eloquent\Model;
 
@@ -43,5 +44,13 @@ class PayloadHistory extends Model
         } else {
             return $query->paginate($perPage);
         }
+    }
+
+    public function delete()
+    {
+        DB::transaction(function () {
+            $this->messageHistories()->delete();
+            parent::delete();
+        });
     }
 }
