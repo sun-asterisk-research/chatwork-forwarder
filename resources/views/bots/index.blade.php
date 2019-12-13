@@ -18,9 +18,10 @@
 
     <div class="table-responsive">
         @include('bots.modal')
-        <table id="bot-datatable" class="table table-vcenter table-condensed table-bordered" data-toggle="dataTable" data-form="deleteForm">
+        <table class="table table-vcenter table-striped">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>Name</th>
                     <th class="text-center">Actions</th>
                 </tr>
@@ -28,6 +29,7 @@
             <tbody>
                 @foreach($bots as $bot)
                     <tr>
+                        <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                         <td class="pl-20">{{ $bot->name }}</td>
                         <td class="text-center">
                             <a class="btn btn-sm btn-default" href="{{ route('bots.edit', $bot->id) }}"><i class="fa fa-pencil"></i> Edit</a>
@@ -48,6 +50,7 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="text-center pagination-wrapper"> {{ $bots->appends(['search' => Request::get('search')])->render() }} </div>
     </div>
 </div>
 <!-- END Datatables Content -->

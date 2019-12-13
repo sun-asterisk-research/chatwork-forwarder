@@ -38,8 +38,9 @@ class BotRepositoryTest extends TestCase
         $botLists = factory(Bot::class, 10)->create(['name' => 'test get all bot by user']);
         $user = $botLists[0]->user;
         Auth::shouldReceive('user')->once()->andReturn($user);
+        $perPage = config('paginate.perPage');
 
-        $botRepository->getAllByUser();
+        $botRepository->getAllByUser($perPage);
         $this->assertDatabaseHas('bots', ['name' => 'test get all bot by user']);
     }
 

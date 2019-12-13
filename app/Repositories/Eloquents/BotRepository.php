@@ -13,10 +13,10 @@ class BotRepository extends BaseRepository implements BotRepositoryInterface
         return Bot::class;
     }
 
-    public function getAllByUser()
+    public function getAllByUser($perPage)
     {
         return Auth::user()->bots()
                             ->orderBy('bots.created_at', 'desc')
-                            ->get();
+                            ->paginate($perPage);
     }
 }
