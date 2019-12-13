@@ -99,4 +99,15 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
         return false;
     }
+
+    protected function handleSearchParams($searchKeys, $searchParams)
+    {
+        foreach ($searchKeys as $searchKey) {
+            if (!array_key_exists($searchKey, $searchParams)) {
+                $searchParams[$searchKey] = '';
+            }
+        }
+
+        return $searchParams;
+    }
 }

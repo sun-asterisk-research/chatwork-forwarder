@@ -4,6 +4,8 @@ namespace Tests\Unit\Repositories;
 
 use Tests\TestCase;
 use App\Models\PayloadHistory;
+use App\Models\Webhook;
+use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Repositories\Eloquents\PayloadHistoryRepository;
@@ -39,5 +41,32 @@ class PayloadHistoryRepositoryTest extends TestCase
         $payloadHistoryRepo->find($payloadHistories[0]->id);
 
         $this->assertDatabaseHas('payload_histories', ['params' => 'test find payload history']);
+    }
+
+    /**
+     * get find Payload History
+     *
+     * @return void
+     */
+    public function testgetAllAndSearch()
+    {
+        $payloadHistoryRepo = new PayloadHistoryRepository;
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        factory(PayloadHistory::class)->create();
+        factory(PayloadHistory::class)->create([
+            'webhook_id' => $webhook->id
+        ]);
+        $this->actingAs($user);
+        $searchParams = ['webhook' => $webhook->id];
+        $searchParamsNotFound = ['webhook' => -1];
+
+        $perPage = config('paginate.perPage');
+        $result = $payloadHistoryRepo->getAllAndSearch($perPage, $searchParams);
+
+        $this->assertCount(1, $result);
+
+        $resultNotFound = $payloadHistoryRepo->getAllAndSearch($perPage, $searchParamsNotFound);
+        $this->assertCount(0, $resultNotFound);
     }
 }

@@ -3,20 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Enums\PayloadHistoryStatus;
 use App\Repositories\Interfaces\PayloadHistoryRepositoryInterface as PayloadHistoryRepository;
 use App\Repositories\Interfaces\MessageHistoryRepositoryInterface as MessageHistoryRepository;
+use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 
 class PayloadHistoryController extends Controller
 {
     private $payloadHistoryRepository;
     private $messageHistoryRepository;
+    private $webhookRepository;
 
     public function __construct(
         PayloadHistoryRepository $payloadHistoryRepository,
-        MessageHistoryRepository $messageHistoryRepository
+        MessageHistoryRepository $messageHistoryRepository,
+        WebhookRepository $webhookRepository
     ) {
         $this->payloadHistoryRepository = $payloadHistoryRepository;
         $this->messageHistoryRepository = $messageHistoryRepository;
+        $this->webhookRepository = $webhookRepository;
     }
 
     /**
@@ -24,9 +29,15 @@ class PayloadHistoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $searchParams = $request->search;
+        $perPage = config('paginate.perPage');
+        $payloadHistories = $this->payloadHistoryRepository->getAllAndSearch($perPage, $searchParams);
+        $webhooks = $this->webhookRepository->getAllByUser()->pluck('id', 'name');
+        $payloadHistoryStatuses = PayloadHistoryStatus::toArray();
+
+        return view('payload_histories.index', compact('payloadHistories', 'webhooks', 'payloadHistoryStatuses'));
     }
 
     /**

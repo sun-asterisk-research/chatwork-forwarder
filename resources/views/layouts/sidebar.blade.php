@@ -31,6 +31,9 @@
                 <li>
                     <a href="/bots"><i class="fa fa-reddit"></i> Bots</a>
                 </li>
+                <li>
+                    <a href="/history"><i class="fa fa-history"></i> Payload histories</a>
+                </li>
                 @endadmin
             </ul>
             <!-- END Sidebar Navigation -->
