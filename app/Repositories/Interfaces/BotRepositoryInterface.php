@@ -8,5 +8,5 @@ interface BotRepositoryInterface
      * Get all bot by user
      * @return mixed
      */
-    public function getAllByUser();
+    public function getAllByUser($perPage);
 }

@@ -20,7 +20,8 @@ class BotController extends Controller
 
     public function index()
     {
-        $bots = $this->botRepository->getAllByUser();
+        $perPage = config('paginate.perPage');
+        $bots = $this->botRepository->getAllByUser($perPage);
 
         return view('bots.index', compact('bots'));
     }
