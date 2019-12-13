@@ -20,6 +20,29 @@ class ForwardChatworkController extends Controller
         $this->messageHistoryRepository = $mesHisRepo;
     }
 
+    /**
+     * api/v1/webhooks/{token}
+     *
+     * This api to call a webhook with webhook_token.
+     * The params to send to this api is a hash and it not have a fixed structure.
+     * Following example below to understand more.
+     *
+     * Example:
+     * {
+     *    status: 'active',
+     *    user: {
+     *      name: 'asd',
+     *      age: 20
+     *    }
+     * }
+     *
+     * @response {
+     *  "message" : "Excuted successfully"
+     * }
+     * @response 404 {
+     *  "message" : "Webhook not found. Please try again"
+     * }
+     */
     public function forwardMessage(Request $request, $token)
     {
         $params = json_decode(json_encode((object)$request->all()), false);
@@ -35,9 +58,9 @@ class ForwardChatworkController extends Controller
 
             $forwardChatworkService->call();
 
-            return response()->json('Excuted successfully');
+            return response()->json('Excuted successfully', 200);
         }
 
-        return response()->json('Webhook not found. Please try again');
+        return response()->json('Webhook not found. Please try again', 404);
     }
 }
