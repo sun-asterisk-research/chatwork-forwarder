@@ -45,4 +45,12 @@ class Webhook extends Model
     {
         return $query->where('status', WebhookStatus::ENABLED);
     }
+
+    public function scopeSearch($query, $searchParams, $perPage)
+    {
+        return $query
+            ->where('name', 'LIKE', '%' . $searchParams['name'] . '%')
+            ->where('status', 'LIKE', '%' . $searchParams['status'] . '%')
+            ->paginate($perPage);
+    }
 }

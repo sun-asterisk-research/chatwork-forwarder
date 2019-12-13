@@ -13,22 +13,30 @@ class WebhookRepository extends BaseRepository implements WebhookRepositoryInter
         return Webhook::class;
     }
 
-    public function getAllByUser()
+    public function getAllByUser($perPage)
     {
         return Auth::user()->webhooks()
                             ->orderBy('webhooks.status', 'desc')
                             ->orderBy('webhooks.created_at', 'desc')
+                            ->paginate($perPage);
+    }
+
+    public function getAllByUserForDropdown()
+    {
+        return Auth::user()->webhooks()
+                            ->orderBy('webhooks.name')
                             ->get();
     }
 
-    public function getAllAndSearch($perPage, $keyword)
+    public function getAllAndSearch($perPage, $searchParams)
     {
         $query = $this->model->with('user')
                         ->orderBy('webhooks.status', 'desc')
                         ->orderBy('webhooks.created_at', 'desc');
-        if (!empty($keyword)) {
-            return $query->where('name', 'LIKE', "%$keyword%")
-                        ->paginate($perPage);
+        if ($searchParams) {
+            $searchParams = $this->handleSearchParams(['webhook', 'status'], $searchParams);
+
+            return $query->search($searchParams, $perPage);
         } else {
             return $query->paginate($perPage);
         }

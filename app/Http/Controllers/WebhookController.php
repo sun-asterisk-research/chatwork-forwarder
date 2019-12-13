@@ -26,9 +26,10 @@ class WebhookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $webhooks = $this->webhookRepository->getAllByUser();
+        $perPage = config('paginate.perPage');
+        $webhooks = $this->webhookRepository->getAllByUser($perPage);
 
         return view('webhooks.index', compact('webhooks'));
     }
