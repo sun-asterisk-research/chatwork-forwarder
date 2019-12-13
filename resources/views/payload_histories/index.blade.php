@@ -81,6 +81,18 @@
                             <a class="btn btn-sm btn-default" href="{{ route('history.show', ['history' => $payloadHistory->id]) }}">
                                 <i class="fa fa-pencil"></i>Detail
                             </a>
+                            {{ Form::open([
+                                'method' => 'DELETE',
+                                'route' => ['history.destroy', 'history' => $payloadHistory],
+                                'style' => 'display:inline',
+                                'class' => 'form-delete'
+                                ]) }}
+                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                'type' => 'DELETE',
+                                'class' => 'btn btn-sm btn-danger delete-btn',
+                                'title' => 'Delete'
+                                ]) }}
+                            {{ Form::close() }}
                         </td>
                     </tr>
                     @endforeach
@@ -90,7 +102,7 @@
         <div class="pagination-wrapper text-center"> {{ $payloadHistories->appends(['search' => Request::get('search')])->render() }} </div>
     </div>
 </div>
-@include('modals.delete_user_confirm_modal')
+@include('payload_histories.delete_payload_history_confirm_modal')
 <!-- END Datatables Content -->
 
 @endsection
