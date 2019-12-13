@@ -24,16 +24,20 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required|min:5|max:50',
             'email' => [
                 'required',
                 'max:200',
                 Rule::unique('users')->ignore($this->id),
             ],
-            'password' => 'required|min:8|max:50',
             'avatar' => 'image|max:5120',
         ];
+        if ($this->password != '') {
+            $rules['password'] = 'min:8|max:50';
+        }
+
+        return $rules;
     }
 
     public function messages()
