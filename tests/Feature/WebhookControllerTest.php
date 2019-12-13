@@ -47,7 +47,6 @@ class WebhookControllerTest extends TestCase
         $this->actingAs($user);
         $response = $this->get('/webhooks/create');
         $response->assertStatus(200);
-        $response->assertViewHas('webhookStatuses');
         $response->assertViewHas('bots');
     }
 
@@ -190,7 +189,6 @@ class WebhookControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('webhook');
         $response->assertSee('bots');
-        $response->assertViewHas('webhookStatuses');
         $response->assertViewHas('payloads');
     }
 
@@ -262,7 +260,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test update webhook suscess
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookFeature()
@@ -318,7 +316,7 @@ class WebhookControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('login');
     }
-    
+
     /**
      * test unauthorization user cannot update webhook
      *
@@ -343,7 +341,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test Webhook required name
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookRequireName()
@@ -374,7 +372,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test update webhook unique name with a user
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookUniqueNameWithUser()
@@ -382,7 +380,7 @@ class WebhookControllerTest extends TestCase
         $user = factory(User::class)->create();
         $webhook_1 = factory(Webhook::class)->create(['name' => 'Created webhook 1', 'user_id' => $user->id]);
         $webhook_2 = factory(Webhook::class)->create(['name' => 'Created webhook 2', 'user_id' => $user->id]);
-        
+
         $params = [
             'name' => $webhook_1->name,
             'description' => 'description Update',
@@ -391,7 +389,7 @@ class WebhookControllerTest extends TestCase
             'room_id' => 1,
             'status' => 1,
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('webhooks.update', $webhook_2->id), $params);
         $response
@@ -401,7 +399,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test wenhook name have maximum length is 50 characters
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookNameMaximumLength()
@@ -416,7 +414,7 @@ class WebhookControllerTest extends TestCase
             'room_id' => 1,
             'status' => 1,
         ];
-        
+
         $this->actingAs($user);
         $response = $this->put(route('webhooks.update', $webhook->id), $params);
         $response
@@ -425,8 +423,8 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-     * test Webhook required description 
-     * 
+     * test Webhook required description
+     *
      * @return void
      */
     public function testUpdateWebhookRequireDescription()
@@ -456,7 +454,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test wenhook name have min length is 10 characters
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookDescriptionMinLength()
@@ -486,7 +484,7 @@ class WebhookControllerTest extends TestCase
 
     /**
      * test webhook description have maximum length is 1000 characters
-     * 
+     *
      * @return void
      */
     public function testUpdateWebhookDescriptionMaximumLength()
@@ -515,8 +513,8 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-     * test Webhook required bot_id 
-     * 
+     * test Webhook required bot_id
+     *
      * @return void
      */
     public function testUpdateWebhookRequireBotId()
@@ -544,8 +542,8 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-     * test Webhook required room_name 
-     * 
+     * test Webhook required room_name
+     *
      * @return void
      */
     public function testUpdateWebhookRequireRoomName()
@@ -572,8 +570,8 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-     * test Webhook required room_id 
-     * 
+     * test Webhook required room_id
+     *
      * @return void
      */
     public function testUpdateWebhookRequireRoomId()

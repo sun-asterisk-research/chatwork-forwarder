@@ -3,6 +3,7 @@
 @include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <?php use App\Enums\UserType; ?>
+<?php use App\Enums\WebhookStatus; ?>
 
 <ul class="breadcrumb breadcrumb-top">
     <li>Webhooks</li>
@@ -40,9 +41,8 @@
         <div class="col-xs-4">
             <label class="field-compulsory required" for="webhook_status">Status</label>
             <select id="webhook_status" name="status" class="form-control">
-                @foreach($webhookStatuses as $key => $value)
-                <option value="{{ $value }}" {{ $webhook->status == $value ? "selected" : "" }}>{{ $key }}</option>
-                @endforeach
+                <option value="{{ WebhookStatus::ENABLED }}" {{ $webhook->status == WebhookStatus::ENABLED ? "selected" : "" }}>Enable</option>
+                <option value="{{ WebhookStatus::DISABLED }}" {{ $webhook->status == WebhookStatus::DISABLED ? "selected" : "" }}>Disable</option>
             </select>
         </div>
         <div class="mt-15 col-xs-12">

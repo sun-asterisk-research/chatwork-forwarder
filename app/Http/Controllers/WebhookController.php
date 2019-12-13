@@ -40,10 +40,9 @@ class WebhookController extends Controller
      */
     public function create()
     {
-        $webhookStatuses = array_change_key_case(WebhookStatus::toArray());
-        $bots = Bot::all();
+        $bots = Bot::byUser(Auth::id());
 
-        return view('webhooks.create', compact('webhookStatuses', 'bots'));
+        return view('webhooks.create', compact('bots'));
     }
 
     /**
@@ -78,10 +77,9 @@ class WebhookController extends Controller
     {
         $this->authorize('update', $webhook);
         $payloads = $webhook->payloads()->get();
-        $webhookStatuses = array_change_key_case(WebhookStatus::toArray());
-        $bots = Bot::all();
+        $bots = Bot::byUser(Auth::id());
 
-        return view('webhooks.edit', compact('webhook', 'payloads', 'webhookStatuses', 'bots'));
+        return view('webhooks.edit', compact('webhook', 'payloads', 'bots'));
     }
 
     /**
