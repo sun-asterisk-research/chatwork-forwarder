@@ -141,6 +141,10 @@ class PayloadController extends Controller
     public function destroy(Webhook $webhook, Payload $payload)
     {
         $this->authorize('delete', [$payload, $webhook]);
+        if ($payload->conditions->count() > 0) {
+            return redirect()->back()
+                ->with('messageFail', 'This payload has some conditions to be related with, please delete them first');
+        }
 
         try {
             $this->payloadRepository->delete($payload->id);

@@ -11,6 +11,7 @@ use App\Models\Webhook;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Enums\UserType;
+use App\Models\Payload;
 use Illuminate\Support\Str;
 
 class WebhookControllerTest extends TestCase
@@ -226,6 +227,24 @@ class WebhookControllerTest extends TestCase
         $this->assertDatabaseMissing('webhooks', ['id' => $webhook->id, 'name' => 'test remove webhook success', 'deleted_at' => NULL]);
         $response->assertRedirect(route('webhooks.index'));
         $response->assertStatus(302);
+    }
+
+    /**
+    * test Feature remove webhook has payload.
+    *
+    * @return void
+    */
+    public function testRemoveWebhookHasPayloadFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook fail']);
+        factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
+        $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
+        $response->assertStatus(302);
+        $response->assertSessionHas('messageFail', 'This webhook has some payloads to be related with, please delete them first');
     }
 
     /**

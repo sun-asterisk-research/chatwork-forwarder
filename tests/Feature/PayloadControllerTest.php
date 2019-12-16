@@ -49,6 +49,25 @@ class PayloadControllerTest extends TestCase
     }
 
     /**
+     * test Feature remove payload fail when it has condition(s).
+     *
+     * @return void
+     */
+    public function testRemovePayloadHasConditionFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'test remove payload fail']);
+        factory(Condition::class)->create(['payload_id' => $payload->id]);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload_id' => $payload->id]));
+        $this->assertDatabaseHas('payloads', ['content' => 'test remove payload fail']);
+        $response->assertStatus(302);
+        $response->assertSessionHas('messageFail', 'This payload has some conditions to be related with, please delete them first');
+    }
+
+    /**
      * test Feature remove payload unauthorized
      *
      * @return void
