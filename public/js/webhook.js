@@ -122,6 +122,14 @@ $(document).ready(function () {
             });
     });
 
+    $('.mapping-item').on('click', '.form-delete-mapping', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        $('#delete-mapping-confirm').modal().on('click', '#delete-mapping-btn', function () {
+            $form.submit();
+        });
+    });
+
     $('.webhook-item').on('click', '.form-delete', function (e) {
         e.preventDefault();
         var $form = $(this);

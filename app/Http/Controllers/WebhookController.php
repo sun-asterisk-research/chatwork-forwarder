@@ -62,7 +62,7 @@ class WebhookController extends Controller
             $webhook = $this->webhookRepository->create($data);
 
             return redirect()->route('webhooks.edit', $webhook)
-                             ->with('messageSuccess', 'This webhook successfully created');
+                ->with('messageSuccess', 'This webhook successfully created');
         } catch (QueryException $exception) {
             return redirect()->back()->with('messageFail', 'Create failed. Something went wrong')->withInput();
         }
@@ -99,7 +99,7 @@ class WebhookController extends Controller
         try {
             $webhook = $this->webhookRepository->update($webhook->id, $data);
             return redirect()->route('webhooks.edit', $webhook)
-                             ->with('messageSuccess', 'This webhook successfully updated');
+                ->with('messageSuccess', 'This webhook successfully updated');
         } catch (QueryException $exception) {
             return redirect()->back()->with('messageFail', 'Update failed. Something went wrong')->withInput();
         }
@@ -117,6 +117,19 @@ class WebhookController extends Controller
         if ($webhook->payloads->count() > 0) {
             return redirect()->back()
                 ->with('messageFail', 'This webhook has some payloads to be related with, please delete them first');
+        }
+
+        if ($webhook->mappings->count() > 0) {
+            return redirect()->back()
+                ->with('messageFail', 'This webhook has some mappings to be related with, please delete them first');
+        }
+
+        if ($webhook->payloadHistories->count() > 0) {
+            return redirect()->back()
+                ->with(
+                    'messageFail',
+                    'This webhook has some payload histories to be related with, please delete them first'
+                );
         }
 
         try {

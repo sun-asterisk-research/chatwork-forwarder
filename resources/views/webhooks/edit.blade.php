@@ -199,6 +199,7 @@
                     <label class="field-compulsory" for="cw_room_id">Action</label>
                 </div>
             </div>
+            @include('webhooks.delete_mapping_confirm_modal')
             @foreach($mappings as $key => $mapping)
                 <div class="form-group row">
                     <div class="col-xs-5">
@@ -210,13 +211,22 @@
                     <div class="col-xs-3">
                         <input type="text" class="form-control" value="{{ $mapping->value }}" readonly>
                     </div>
-                    <div class="col-xs-2 text-center">
+                    <div class="col-xs-2 text-center mapping-item">
                         <a class="btn btn-sm btn-default" href="">
                             <i class="fa fa-pencil"></i> Edit
                         </a>&nbsp
-                        <a class="btn btn-sm btn-danger delete-btn" href="">
-                            <i class="fa fa-trash-o"></i> Delete
-                        </a>
+                        {{ Form::open([
+		                    'method' => 'DELETE',
+		                    'url' => route('webhooks.mappings.destroy', ['webhook' => $webhook, 'mapping' => $mapping]),
+		                    'style' => 'display:inline',
+		                    'class' => 'form-delete-mapping'
+		                ]) }}
+		                    {{ Form::button('<i class="fa fa-trash-o"> Delete</i>' , [
+                            'type' => 'DELETE',
+                            'class' => 'btn btn-sm btn-danger delete-btn delete-mapping',
+                            'title' => 'Delete',
+		                    ]) }}
+		                {{ Form::close() }}
                     </div>
                 </div>
             @endforeach

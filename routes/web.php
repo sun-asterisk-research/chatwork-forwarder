@@ -45,4 +45,5 @@ Route::group(['middleware' => ['auth']], function () {
         'index'
     ]);
     Route::resource('webhooks.payloads', 'PayloadController')->except('show');
+    Route::resource('webhooks.mappings', 'MappingController')->only('destroy');
 });

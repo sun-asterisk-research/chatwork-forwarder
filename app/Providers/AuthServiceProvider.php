@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Bot;
+use App\Models\Mapping;
 use App\Models\Payload;
 use App\Models\Webhook;
 use App\Policies\BotPolicy;
 use App\Models\MessageHistory;
 use App\Models\PayloadHistory;
+use App\Policies\MappingPolicy;
 use App\Policies\PayloadPolicy;
 use App\Policies\WebhookPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -28,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Payload::class => PayloadPolicy::class,
         PayloadHistory::class => PayloadHistoryPolicy::class,
         MessageHistory::class => MessageHistoryPolicy::class,
+        Mapping::class => MappingPolicy::class,
     ];
 
     /**
