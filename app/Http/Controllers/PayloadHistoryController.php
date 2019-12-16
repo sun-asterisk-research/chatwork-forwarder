@@ -73,9 +73,15 @@ class PayloadHistoryController extends Controller
             $this->payloadHistoryRepository->delete($history->id);
 
             return redirect(route('history.index'))
-                    ->with('messageSuccess', 'This payload history successfully deleted');
+                ->with('messageSuccess', [
+                    'status' => 'Delete success',
+                    'message' => 'This payload history successfully deleted',
+                ]);
         } catch (Exception $exception) {
-            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => 'Delete failed. Something went wrong',
+            ]);
         }
     }
 }

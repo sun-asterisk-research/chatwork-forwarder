@@ -33,9 +33,15 @@ class BotController extends Controller
         try {
             $this->botRepository->delete($bot->id);
 
-            return redirect('/bots')->with('messageSuccess', __('message.bot.notification.delete.success'));
+            return redirect('/bots')->with('messageSuccess', [
+                'status' => 'Delete success',
+                'message' => __('message.bot.notification.delete.success'),
+            ]);
         } catch (Exception $exception) {
-            return redirect()->back()->with('messageFail', __('message.bot.notification.delete.fail'));
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => __('message.bot.notification.delete.fail'),
+            ]);
         }
     }
 
@@ -52,9 +58,15 @@ class BotController extends Controller
         try {
             $bot = $this->botRepository->create($data);
             return redirect()->route('bots.edit', $bot)
-                             ->with('messageSuccess', 'This bot successfully created');
+                ->with('messageSuccess', [
+                    'status' => 'Create success',
+                    'message' => 'This bot successfully created',
+                ]);
         } catch (QueryException $exception) {
-            return redirect()->back()->with('messageFail', 'Create failed. Something went wrong')->withInput();
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Create failed',
+                'message' => 'Create failed. Something went wrong',
+            ])->withInput();
         }
     }
 
@@ -73,9 +85,15 @@ class BotController extends Controller
         try {
             $bot = $this->botRepository->update($bot->id, $data);
             return redirect()->route('bots.edit', $bot)
-                             ->with('messageSuccess', 'This bot successfully updated');
+                ->with('messageSuccess', [
+                    'status' => 'Update success',
+                    'message' => 'This bot successfully updated',
+                ]);
         } catch (QueryException $exception) {
-            return redirect()->back()->with('messageFail', 'Update failed. Something went wrong')->withInput();
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Update failed',
+                'message' => 'Update failed. Something went wrong',
+            ])->withInput();
         }
     }
 }

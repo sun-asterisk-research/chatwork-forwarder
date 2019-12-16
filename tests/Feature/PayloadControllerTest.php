@@ -64,7 +64,10 @@ class PayloadControllerTest extends TestCase
         $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload_id' => $payload->id]));
         $this->assertDatabaseHas('payloads', ['content' => 'test remove payload fail']);
         $response->assertStatus(302);
-        $response->assertSessionHas('messageFail', 'This payload has some conditions to be related with, please delete them first');
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'This payload has some conditions to be related with, please delete them first',
+        ]);
     }
 
     /**
@@ -183,7 +186,10 @@ class PayloadControllerTest extends TestCase
             'values' => ['rammus', '30']
         ]);
         $response->assertStatus(200);
-        $response->assertSessionHas('messageSuccess', 'This payload successfully created');
+        $response->assertSessionHas('messageSuccess', [
+            'status' => 'Create success',
+            'message' => 'This payload successfully created',
+        ]);
     }
 
     /**
@@ -377,7 +383,10 @@ class PayloadControllerTest extends TestCase
         $payload = Payload::find($payload->id);
 
         $response->assertStatus(200);
-        $response->assertSessionHas('messageSuccess', 'This payload successfully updated');
+        $response->assertSessionHas('messageSuccess', [
+            'status' => 'Update success',
+            'message' => 'This payload successfully updated',
+        ]);
         $this->assertEquals($payload->content, 'Hi my name is {{$params->name}}');
     }
 
@@ -414,7 +423,10 @@ class PayloadControllerTest extends TestCase
         $condition = Condition::find($condition->id);
 
         $response->assertStatus(200);
-        $response->assertSessionHas('messageSuccess', 'This payload successfully updated');
+        $response->assertSessionHas('messageSuccess', [
+            'status' => 'Update success',
+            'message' => 'This payload successfully updated',
+        ]);
         $this->assertEquals($condition->field, $params['conditions'][0]['field']);
         $this->assertEquals($condition->operator, $params['conditions'][0]['operator']);
         $this->assertEquals($condition->value, $params['conditions'][0]['value']);

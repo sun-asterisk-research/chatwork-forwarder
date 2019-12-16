@@ -2,7 +2,6 @@
 
 @extends('layouts.app')
 @section('content')
-@include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 <ul class="breadcrumb breadcrumb-top">
@@ -86,5 +85,6 @@
 <!-- END Simple Editor Block -->
 @endsection
 @section('js')
-<script src="{{ asset('js/user.js') }}"></script>
+	<script src="{{ asset('js/user.js') }}"></script>
+	@include('common.flash-message')
 @endsection

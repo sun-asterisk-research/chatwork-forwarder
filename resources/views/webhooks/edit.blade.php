@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <?php use App\Enums\UserType; ?>
 <?php use App\Enums\WebhookStatus; ?>
@@ -237,5 +236,6 @@
 
 @endsection
 @section('js')
-<script src="{{ asset('/js/webhook.js') }}"></script>
+    <script src="{{ asset('/js/webhook.js') }}"></script>
+    @include('common.flash-message')
 @endsection

@@ -135,7 +135,7 @@ class UserControllerTest extends TestCase
     public function testUnauthenticateUserCannotSeeCreateView()
     {
         $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
-        
+
         $response = $this->get(route('users.create'));
         $response->assertStatus(302);
         $response->assertRedirect('login');
@@ -363,7 +363,7 @@ class UserControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect('login');
     }
-    
+
     public function testUpdateUserSuccessFeature()
     {
         $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
@@ -386,7 +386,10 @@ class UserControllerTest extends TestCase
         ];
         $response = $this->put(route('users.update', $user->id), $params);
         $response->assertStatus(200)->assertJsonFragment([
-            'messageSuccess' => 'This user successfully updated',
+            'messageSuccess' => [
+                'status' => 'Update success',
+                'message' => 'This user successfully updated',
+            ],
         ]);
     }
 

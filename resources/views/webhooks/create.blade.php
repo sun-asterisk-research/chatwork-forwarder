@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@include('common.flash-message')
 <?php use App\Enums\UserType; ?>
 <?php use App\Enums\WebhookStatus; ?>
 
@@ -102,4 +101,5 @@
 @endsection
 @section('js')
     <script src="{{ asset('/js/webhook.js') }}"></script>
+    @include('common.flash-message')
 @endsection
