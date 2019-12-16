@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
-use Mockery;
-use Auth;
 use App\Models\Bot;
 use App\Models\User;
 use Tests\TestCase;
 use App\Models\Webhook;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Mapping;
+use App\Models\PayloadHistory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Enums\UserType;
 use App\Models\Payload;
@@ -245,6 +244,42 @@ class WebhookControllerTest extends TestCase
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(302);
         $response->assertSessionHas('messageFail', 'This webhook has some payloads to be related with, please delete them first');
+    }
+
+    /**
+    * test Feature remove webhook has mapping.
+    *
+    * @return void
+    */
+    public function testRemoveWebhookHasMappingFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook fail']);
+        factory(Mapping::class)->create(['webhook_id' => $webhook->id]);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
+        $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
+        $response->assertStatus(302);
+        $response->assertSessionHas('messageFail', 'This webhook has some mappings to be related with, please delete them first');
+    }
+
+    /**
+    * test Feature remove webhook has payload history.
+    *
+    * @return void
+    */
+    public function testRemoveWebhookHasPayloadHistoryFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook fail']);
+        factory(PayloadHistory::class)->create(['webhook_id' => $webhook->id]);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
+        $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
+        $response->assertStatus(302);
+        $response->assertSessionHas('messageFail', 'This webhook has some payload histories to be related with, please delete them first');
     }
 
     /**
