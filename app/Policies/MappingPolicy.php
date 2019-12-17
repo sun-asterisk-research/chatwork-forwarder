@@ -23,4 +23,16 @@ class MappingPolicy
     {
         return $webhook->id === $mapping->webhook->id && $user->id === $webhook->user_id;
     }
+
+    /**
+     * Determine if the given mapping can be create by user and webhook
+     *
+     * @param App\Models\User
+     * @param App\Models\Webhook
+     * @return bool
+     */
+    public function create(User $user, Mapping $mapping, Webhook $webhook)
+    {
+        return $user->id === $webhook->user_id;
+    }
 }

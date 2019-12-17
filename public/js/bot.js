@@ -7,7 +7,7 @@ $(document).ready(function () {
                 $form.submit();
             });
     });
-    
+
     $('.bot-form').on('click', '.cancel-btn', function (e) {
         e.preventDefault();
         $('#cancel-confirm').modal({ backdrop: 'static', keyboard: false })

@@ -174,7 +174,7 @@
     <div class="block">
         <div class="block-title">
             <h2><strong>Mappings</strong></h2>
-            <a href="" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
+            <a href="{{ route('webhooks.mappings.create', $webhook) }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
         </div>
 
         @if (count($mappings) <= 0)
