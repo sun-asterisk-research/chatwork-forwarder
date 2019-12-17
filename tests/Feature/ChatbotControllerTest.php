@@ -228,7 +228,11 @@ class ChatbotControllerTest extends TestCase
 
        $this->actingAs($user);
        $response = $this->delete(route('bots.destroy', $bot->id));
-       $this->assertDatabaseMissing('bots', ['id' => $bot->id, 'name' => 'test remove bot']);
+       $this->assertDatabaseMissing('bots', [
+           'id' => $bot->id,
+           'name' => 'test remove bot',
+           'deleted_at' => NULL,
+        ]);
        $response->assertRedirect('/bots');
        $response->assertStatus(302);
    }
