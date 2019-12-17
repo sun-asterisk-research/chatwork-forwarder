@@ -11,9 +11,7 @@
 |
  */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', 'Home');
 
 Auth::routes([
     'register' => false,
@@ -26,9 +24,7 @@ Route::namespace('Auth')->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
+    Route::get('/dashboard', 'Dashboard');
     Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
         Route::resource('users', 'UserController');
         Route::group(['namespace' => 'Admin'], function () {
