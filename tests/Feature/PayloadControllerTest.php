@@ -26,7 +26,11 @@ class PayloadControllerTest extends TestCase
 
         $this->actingAs($user);
         $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload' => $payload]));
-        $this->assertDatabaseMissing('payloads', ['id' => $payload->id, 'content' => 'test remove payload']);
+        $this->assertDatabaseMissing('payloads', [
+            'id' => $payload->id,
+            'content' => 'test remove payload',
+            'deleted_at' => NULL,
+        ]);
         $response->assertRedirect(route('webhooks.edit', $webhook));
         $response->assertStatus(302);
     }

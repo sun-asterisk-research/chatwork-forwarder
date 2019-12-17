@@ -215,8 +215,12 @@ class PayloadHistoryControllerTest extends TestCase
        $this->actingAs($user);
 
        $response = $this->delete(route('history.destroy', $payloadHistory));
-       $this->assertDatabaseMissing('payload_histories', ['id' => $payloadHistory->id, 'params' => 'test remove payload history']);
-       $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id]);
+       $this->assertDatabaseMissing('payload_histories', [
+           'id' => $payloadHistory->id,
+           'params' => 'test remove payload history',
+           'deleted_at' => NULL,
+        ]);
+       $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
        $response->assertRedirect(route('history.index'));
        $response->assertStatus(302);
    }
