@@ -23,7 +23,11 @@ class MessageHistoryControllerTest extends TestCase
        $payloadHistoryId = $messageHistory->payloadHistory->id;
        $this->actingAs($user);
        $response = $this->delete(route('message.destroy', $messageHistory));
-       $this->assertDatabaseMissing('message_histories', ['id' => $messageHistory->id, 'message_content' => 'test remove message history']);
+       $this->assertDatabaseMissing('message_histories', [
+           'id' => $messageHistory->id,
+           'message_content' => 'test remove message history',
+           'deleted_at' => NULL,
+        ]);
        $response->assertRedirect(route('history.show', ['history' => $payloadHistoryId]));
        $response->assertStatus(302);
    }

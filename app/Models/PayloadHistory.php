@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PayloadHistoryStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PayloadHistory extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'webhook_id',
         'params',
