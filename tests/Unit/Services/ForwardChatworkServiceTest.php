@@ -11,19 +11,46 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Repositories\Eloquents\PayloadHistoryRepository;
 use App\Repositories\Eloquents\MessageHistoryRepository;
+use App\Models\Mapping;
 
 class ForwardChatworkServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * test generate message matching field
+     * test generate message matching with mapping table
      *
      * @return void
      */
-    public function testGenerateMessageMatching()
+    public function testGenerateMessageMatchingWithMapping()
     {
         $webhook = factory(Webhook::class)->create();
+        factory(Mapping::class)->create(['webhook_id' => $webhook->id, 'key' => 'qtv', 'value' => '[To:123123] QTV']);
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'Hello, my name is {{ $params->name }}';
+        $params = json_decode('{"name" : "qtv"}');
+
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+
+        $this->assertEquals('Hello, my name is [To:123123] QTV', $result);
+    }
+
+    /**
+     * test generate message unmatching with mapping table
+     *
+     * @return void
+     */
+    public function testGenerateMessageUnmatchingWithMapping()
+    {
+        $webhook = factory(Webhook::class)->create();
+        factory(Mapping::class)->create(['webhook_id' => $webhook->id, 'key' => 'quangvv', 'value' => '[To:123123] QTV']);
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
             '',

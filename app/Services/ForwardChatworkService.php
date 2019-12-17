@@ -115,8 +115,10 @@ class ForwardChatworkService
             '#{{(.*?)}}#',
             function ($match) use ($params, &$isMatching) {
                 try {
-                    $value = 'return ' . $match[1] . ';';
-                    return eval($value);
+                    $requestValue = eval('return ' . $match[1] . ';');
+                    $mappingValue = $this->webhook->mappings()->byKey($requestValue)->first()['value'];
+
+                    return $mappingValue ? $mappingValue : $requestValue;
                 } catch (Throwable | ErrorException $e) {
                     // create a failed payload_history when values in payload's content not matching with params payload
                     $isMatching = false;

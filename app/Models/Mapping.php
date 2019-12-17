@@ -20,4 +20,9 @@ class Mapping extends Model
     {
         return $this->belongsTo(Webhook::class);
     }
+
+    public function scopeByKey($query, $key)
+    {
+        return $query->where('mappings.key', '=', $key);
+    }
 }
