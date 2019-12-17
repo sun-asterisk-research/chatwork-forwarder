@@ -6,9 +6,8 @@
 @section('content')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
-    <li>Payload History</li>
-    <li><a href="/history">List</a></li>
-    <li><a href="">Detail</a></li>
+    <li><a href="/history">Payload Histories</a></li>
+    <li>Detail</li>
 </ul>
 <div class="block full">
     <div class="block-title">

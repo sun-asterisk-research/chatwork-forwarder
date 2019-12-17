@@ -2,8 +2,7 @@
 @section('content')
 <!-- Datatables Header -->
 <ul class="breadcrumb breadcrumb-top">
-    <li>Home</li>
-    <li><a href="">Statistic</a></li>
+    <li>Dashboard</li>
 </ul>
 <!-- END Datatables Header -->
 

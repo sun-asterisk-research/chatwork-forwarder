@@ -8,7 +8,6 @@ use App\Enums\WebhookStatus; ?>
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li>Webhooks</li>
-    <li><a href="{{ route('webhooks.index') }}">List</a></li>
 </ul>
 <!-- END Datatables Header -->
 

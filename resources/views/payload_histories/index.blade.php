@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Payload histories</li>
-    <li><a href="{{ route('history.index') }}">Lists</a></li>
 </ul>
 <!-- END Datatables Header -->
 
