@@ -14,7 +14,6 @@
         <h2><strong>List bots</strong></h2>
         <a href="{{ route('bots.create') }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
     </div>
-    @include('common.flash-message')
 
     <div class="table-responsive">
         @include('bots.modal')
@@ -57,4 +56,5 @@
 @endsection
 @section('js')
     <script src="{{ asset('/js/bot.js') }}"></script>
+    @include('common.flash-message')
 @endsection

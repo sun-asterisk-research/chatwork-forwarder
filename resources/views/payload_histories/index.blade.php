@@ -1,7 +1,6 @@
 @php use App\Enums\PayloadHistoryStatus; @endphp
 @extends('layouts.app')
 @section('content')
-@include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Payload histories</li>
@@ -108,4 +107,5 @@
 @endsection
 @section('script')
     <script src="{{ asset('js/user.js') }}"></script>
+    @include('common.flash-message')
 @endsection

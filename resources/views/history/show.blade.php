@@ -53,7 +53,6 @@
     <div class="block-title">
         <h2><strong>Message History list</strong></h2>
     </div>
-    @include('common.flash-message')
     <div class="table-responsive">
 
         <div class="form-group row">
@@ -109,6 +108,9 @@
     </div>
 </div>
 <!-- END Datatables Content -->
+@endsection
+@section('js')
+    @include('common.flash-message')
 @endsection
 <script src="{{ mix('/js/custom.js') }}"></script>
 

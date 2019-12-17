@@ -1,7 +1,6 @@
 @php use App\Enums\UserType; @endphp
 @extends('layouts.app')
 @section('content')
-@include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Users</li>
@@ -99,4 +98,5 @@
 @endsection
 @section('script')
     <script src="{{ asset('js/user.js') }}"></script>
+    @include('common.flash-message')
 @endsection

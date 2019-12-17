@@ -1,12 +1,19 @@
 @if(Session::has('messageSuccess'))
-<div class="alert alert-success alert-dismissible">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>{{ Session::get('messageSuccess') }}</strong>
-</div>
-@endif
-@if(Session::has('messageFail'))
-<div class="alert alert-danger alert-dismissible">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>{{ Session::get('messageFail') }}</strong>
-</div>
+    <script>
+        toastr.success('{{ Session::get("messageSuccess")["message"] }}', '{{ Session::get("messageSuccess")["status"] }}',{
+            timeOut: 4000
+        });
+    </script>
+@elseif(Session::has('messageFail'))
+    <script>
+        toastr.error('{{ Session::get("messageFail")["message"] }}', '{{ Session::get("messageFail")["status"] }}', {
+            timeOut: 4000
+        });
+    </script>
+@elseif(Session::has('errors'))
+    <script>
+        toastr.error('There are some invalid inputs. Please check the fields and fix them.', {
+            timeOut: 4000
+        });
+    </script>
 @endif

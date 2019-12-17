@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@include('common.flash-message')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <?php use App\Enums\UserType; ?>
 
@@ -106,5 +105,6 @@
 <!-- END Simple Editor Block -->
 @endsection
 @section('js')
-<script src="{{ asset('/js/payload.js') }}"></script>
+    <script src="{{ asset('/js/payload.js') }}"></script>
+    @include('common.flash-message')
 @endsection

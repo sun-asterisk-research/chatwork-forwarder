@@ -73,7 +73,10 @@ class PayloadController extends Controller
             }
 
             DB::commit();
-            $request->session()->flash('messageSuccess', 'This payload successfully created');
+            $request->session()->flash('messageSuccess', [
+                'status' => 'Create success',
+                'message' => 'This payload successfully created',
+            ]);
 
             return $payload->id;
         } catch (QueryException $exception) {
@@ -124,7 +127,10 @@ class PayloadController extends Controller
             }
 
             DB::commit();
-            $request->session()->flash('messageSuccess', 'This payload successfully updated');
+            $request->session()->flash('messageSuccess', [
+                'status' => 'Update success',
+                'message' => 'This payload successfully updated',
+            ]);
 
             return $payload->id;
         } catch (QueryException $exception) {
@@ -143,16 +149,25 @@ class PayloadController extends Controller
         $this->authorize('delete', [$payload, $webhook]);
         if ($payload->conditions->count() > 0) {
             return redirect()->back()
-                ->with('messageFail', 'This payload has some conditions to be related with, please delete them first');
+                ->with('messageFail', [
+                    'status' => 'Delete failed',
+                    'message' => 'This payload has some conditions to be related with, please delete them first',
+                ]);
         }
 
         try {
             $this->payloadRepository->delete($payload->id);
 
             return redirect()->route('webhooks.edit', $webhook)
-                             ->with('messageSuccess', 'This payload successfully deleted');
+                ->with('messageSuccess', [
+                    'status' => 'Delete success',
+                    'message' => 'This payload successfully deleted',
+                ]);
         } catch (Exception $exception) {
-            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => 'Delete failed. Something went wrong',
+            ]);
         }
     }
 }

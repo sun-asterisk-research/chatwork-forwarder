@@ -29,9 +29,15 @@ class MessageHistoryController extends Controller
             $this->messageHistoryRepository->delete($message->id);
 
             return redirect(route('history.show', ['history' => $payloadHistoryId]))
-                    ->with('messageSuccess', 'This message history successfully deleted');
+                ->with('messageSuccess', [
+                    'status' => 'Delete success',
+                    'message' => 'This message history successfully deleted',
+                ]);
         } catch (Exception $exception) {
-            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => 'Delete failed. Something went wrong',
+            ]);
         }
     }
 }

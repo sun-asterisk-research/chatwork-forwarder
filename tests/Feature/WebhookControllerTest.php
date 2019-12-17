@@ -212,10 +212,10 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove webhook successfully.
-    *
-    * @return void
-    */
+     * test Feature remove webhook successfully.
+     *
+     * @return void
+     */
     public function testRemoveWebhookFeature()
     {
         $user = factory(User::class)->create();
@@ -229,10 +229,10 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove webhook has payload.
-    *
-    * @return void
-    */
+     * test Feature remove webhook has payload.
+     *
+     * @return void
+     */
     public function testRemoveWebhookHasPayloadFeature()
     {
         $user = factory(User::class)->create();
@@ -243,7 +243,10 @@ class WebhookControllerTest extends TestCase
         $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(302);
-        $response->assertSessionHas('messageFail', 'This webhook has some payloads to be related with, please delete them first');
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'This webhook has some payloads to be related with, please delete them first',
+        ]);
     }
 
     /**
@@ -261,7 +264,10 @@ class WebhookControllerTest extends TestCase
         $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(302);
-        $response->assertSessionHas('messageFail', 'This webhook has some mappings to be related with, please delete them first');
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'This webhook has some mappings to be related with, please delete them first',
+        ]);
     }
 
     /**
@@ -279,7 +285,10 @@ class WebhookControllerTest extends TestCase
         $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(302);
-        $response->assertSessionHas('messageFail', 'This webhook has some payload histories to be related with, please delete them first');
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'This webhook has some payload histories to be related with, please delete them first',
+        ]);
     }
 
     /**
@@ -299,10 +308,10 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove webhook unauthorized
-    *
-    * @return void
-    */
+     * test Feature remove webhook unauthorized
+     *
+     * @return void
+     */
     public function testRemoveWebhookUnauthorizedFeature()
     {
         $user = factory(User::class)->create();
@@ -321,7 +330,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookFeature()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => 'description create',
             'bot_id' => 1,
@@ -339,7 +349,8 @@ class WebhookControllerTest extends TestCase
         $this->actingAs($user);
         $response = $this->put(route('webhooks.update', $webhook->id), $params);
         $response->assertRedirect('webhooks/' . $webhook->id . '/edit');
-        $this->assertDatabaseHas('webhooks',
+        $this->assertDatabaseHas(
+            'webhooks',
             [
                 'id' => $webhook->id,
                 'name' => 'Name update',
@@ -347,7 +358,8 @@ class WebhookControllerTest extends TestCase
                 'bot_id' => '1',
                 'room_name' => 'Name Update',
                 'room_id' => 1, 'status' => 1,
-            ]);
+            ]
+        );
     }
 
     /**
@@ -402,7 +414,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookRequireName()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => 'description create',
             'bot_id' => 1,
@@ -422,7 +435,6 @@ class WebhookControllerTest extends TestCase
         $response
             ->assertStatus(302)
             ->assertSessionHasErrors('name');
-
     }
 
     /**
@@ -485,7 +497,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookRequireDescription()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => 'description create',
             'bot_id' => 1,
@@ -515,7 +528,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookDescriptionMinLength()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => 'des',
             'bot_id' => 1,
@@ -545,7 +559,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookDescriptionMaximumLength()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => '1234567891234567891234567 891234567891234567890',
             'bot_id' => 1,
@@ -575,7 +590,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookRequireBotId()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => 'description create',
             'bot_id' => 1,
@@ -604,7 +620,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookRequireRoomName()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => 'description create',
             'bot_id' => 1,
@@ -632,7 +649,8 @@ class WebhookControllerTest extends TestCase
     public function testUpdateWebhookRequireRoomId()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['name' => 'Created webhook',
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
             'user_id' => $user->id,
             'description' => 'description create',
             'bot_id' => 1,

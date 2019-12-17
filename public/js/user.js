@@ -54,13 +54,14 @@ $('#user_update').on('submit',function(e){
         processData: false,
         success: function (data) {
             if(data.error == true) {
-                toastr.error(data.messageFail)
+                toastr.error(data.messageFail.message)
             } else {
-                toastr.success(data.messageSuccess)
+                toastr.success(data.messageSuccess.message)
                 $('.has-error').hide();
             }
         },
         error: function (data) {
+            toastr.error('There are some invalid inputs. Please check the fields and fix them.');
             $('.has-error').show();
             document.getElementById("error-name", "error-email", "error-password", "error-avatar").innerHTML = ""
             jQuery.each(data.responseJSON.errors, function(key, value){

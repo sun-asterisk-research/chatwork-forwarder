@@ -33,8 +33,8 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <!-- Bootstrap.js, Jquery plugins and Custom JS code -->
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/plugins.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>

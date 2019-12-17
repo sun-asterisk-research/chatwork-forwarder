@@ -54,9 +54,15 @@ class UserController extends Controller
                 $message->to($email)->subject('Welcome to Chatwork Forwarder Application');
             });
             return redirect()->route('users.edit', $user)
-                             ->with('messageSuccess', 'This user successfully created');
+                ->with('messageSuccess', [
+                    'status' => 'Create success',
+                    'message' => 'This user successfully created',
+                ]);
         } catch (QueryException $exception) {
-            return redirect()->back()->with('messageFail', 'Create failed. Something went wrong')->withInput();
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Create success',
+                'message' => 'Create failed. Something went wrong',
+            ])->withInput();
         }
     }
 
@@ -96,12 +102,18 @@ class UserController extends Controller
 
             return response()->json([
                 'error' => false,
-                'messageSuccess' => 'This user successfully updated',
+                'messageSuccess' => [
+                    'status' => 'Update success',
+                    'message' => 'This user successfully updated',
+                ],
             ]);
         } catch (QueryException $exception) {
             return response()->json([
                 'error' => true,
-                'messageFail' => 'Update failed. Something went wrong',
+                'messageFail' => [
+                    'status' => 'Update success',
+                    'message' => 'Update failed. Something went wrong',
+                ],
             ]);
         }
     }
@@ -116,13 +128,22 @@ class UserController extends Controller
     {
         try {
             if ($user->id == Auth::user()->id) {
-                return redirect()->back()->with('messageFail', 'Delete failed, Cannot delete myself');
+                return redirect()->back()->with('messageFail', [
+                    'status' => 'Delete failed',
+                    'message' => 'Delete failed, Cannot delete myself',
+                ]);
             } else {
                 $this->userRepository->delete($user->id);
-                return redirect('/admin/users')->with('messageSuccess', 'This user successfully deleted');
+                return redirect('/admin/users')->with('messageSuccess', [
+                    'status' => 'Delete success',
+                    'message' => 'This user successfully deleted',
+                ]);
             }
         } catch (Exception $exception) {
-            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => 'Delete failed. Something went wrong',
+            ]);
         }
     }
 }
