@@ -24,6 +24,9 @@
                 <li>
                     <a href="/admin/webhooks"><i class="fa fa-desktop"></i> Webhooks</a>
                 </li>
+                <li>
+                    <a href="/admin/history"><i class="fa fa-history"></i> Payload histories</a>
+                </li>
                 @else
                 <li>
                     <a href="/webhooks"><i class="fa fa-desktop"></i> Webhooks</a>
