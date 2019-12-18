@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Webhook;
+use Exception;
 use App\Models\Mapping;
+use App\Models\Webhook;
 use Illuminate\Http\Request;
-use App\Http\Requests\MappingCreateRequest;
-use App\Repositories\Interfaces\MappingRepositoryInterface as MappingRepository;
 use Illuminate\Database\QueryException;
+use App\Http\Requests\MappingCreateRequest;
+use App\Http\Requests\MappingUpdateRequest;
+use App\Repositories\Interfaces\MappingRepositoryInterface as MappingRepository;
 
 class MappingController extends Controller
 {
@@ -17,6 +19,7 @@ class MappingController extends Controller
     {
         $this->mappingRepository = $mappingRepository;
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -47,9 +50,15 @@ class MappingController extends Controller
             $mapping = $this->mappingRepository->create($attributes);
 
             return redirect()->route('webhooks.mappings.edit', ['webhook' => $webhook, 'mapping' => $mapping])
-                ->with('messageSuccess', 'This mapping successfully created');
+                ->with('messageSuccess', [
+                    'status' => 'Create success',
+                    'message' => 'This mapping successfully created',
+                ]);
         } catch (QueryException $e) {
-            return back()->with('messageFail', 'Create failed. Something went wrong');
+            return back()->with('messageFail', [
+                'status' => 'Create failed',
+                'message' => 'Create failed. Something went wrong',
+            ]);
         }
     }
 
@@ -71,9 +80,27 @@ class MappingController extends Controller
      * @param  Webhook $webhook, Mapping $mapping
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Webhook $webhook, Mapping $mapping)
+    public function update(MappingUpdateRequest $request, Webhook $webhook, Mapping $mapping)
     {
-        //
+        $this->authorize('update', [$mapping, $webhook]);
+
+        $attributes = $request->except('_token');
+        $attributes['webhook_id'] = $webhook->id;
+
+        try {
+            $mapping = $this->mappingRepository->update($mapping->id, $attributes);
+
+            return redirect()->route('webhooks.mappings.edit', ['webhook' => $webhook, 'mapping' => $mapping])
+                ->with('messageSuccess', [
+                    'status' => 'Update success',
+                    'message' => 'This mapping successfully updated',
+                ]);
+        } catch (QueryException $e) {
+            return back()->with('messageFail', [
+                'status' => 'Update failed',
+                'message' => 'Update failed. Something went wrong',
+            ]);
+        }
     }
 
     /**
@@ -90,9 +117,15 @@ class MappingController extends Controller
             $this->mappingRepository->delete($mapping->id);
 
             return redirect()->route('webhooks.edit', $webhook)
-                ->with('messageSuccess', 'This mapping successfully deleted');
+                ->with('messageSuccess', [
+                    'status' => 'Delete success',
+                    'message' => 'This mapping successfully deleted',
+                ]);
         } catch (Exception $exception) {
-            return redirect()->back()->with('messageFail', 'Delete failed. Something went wrong');
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => 'Delete failed. Something went wrong',
+            ]);
         }
     }
 }
