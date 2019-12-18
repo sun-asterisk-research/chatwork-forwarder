@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\PayloadHistory;
 use App\Enums\PayloadHistoryStatus;
+use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 use App\Repositories\Interfaces\MessageHistoryRepositoryInterface as MessageHistoryRepository;
 use App\Repositories\Interfaces\PayloadHistoryRepositoryInterface as PayloadHistoryRepository;
@@ -54,5 +56,30 @@ class PayloadHistoryController extends Controller
         $messageHistories = $this->messageHistoryRepository->GetAllAndSearch($id, $keyword);
 
         return view('admins.payload_histories.show', compact('payloadHistory', 'messageHistories'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  App/models/PayloadHistory $history
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(PayloadHistory $history)
+    {
+        $this->authorize('delete', $history);
+        try {
+            $this->payloadHistoryRepository->delete($history->id);
+
+            return redirect(route('admin.history.index'))
+                ->with('messageSuccess', [
+                    'status' => 'Delete success',
+                    'message' => 'This payload history successfully deleted',
+                ]);
+        } catch (Exception $exception) {
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => 'Delete failed. Something went wrong',
+            ]);
+        }
     }
 }

@@ -210,4 +210,75 @@ class AdminPayloadHistoryController extends TestCase
         $response = $this->get(route('admin.history.show', ['history' => $messageHistories[0]->payloadHistory->id]));
         $response->assertStatus(302);
     }
+
+    /**
+    * test Feature admin remove payload history successfully.
+    *
+    * @return void
+    */
+   public function testRemovePayloadHistoryFeature()
+   {
+       $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history']);
+       factory(MessageHistory::class, 5)->create(['payload_history_id' => $payloadHistory->id]);
+
+       $user = factory(User::class)->create(['role' => 0]);
+       $this->actingAs($user);
+
+       $response = $this->delete(route('admin.history.destroy', $payloadHistory));
+       $this->assertDatabaseMissing('payload_histories', [
+           'id' => $payloadHistory->id,
+           'params' => 'test remove payload history',
+           'deleted_at' => NULL,
+        ]);
+       $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
+       $response->assertRedirect(route('admin.history.index'));
+       $response->assertStatus(302);
+   }
+
+   /**
+    * test Feature admin remove payload history fail.
+    *
+    * @return void
+    */
+   public function testRemovePayloadHistoryFailFeature()
+   {
+       $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history fail']);
+       factory(MessageHistory::class, 5)->create(['payload_history_id' => $payloadHistory->id]);
+       $user = factory(User::class)->create(['role' => 0]);
+       $this->actingAs($user);
+
+       $response = $this->delete(route('admin.history.destroy', $payloadHistory->id + 99));
+       $this->assertDatabaseHas('payload_histories', ['id' => $payloadHistory->id, 'params' => 'test remove payload history fail']);
+       $this->assertDatabaseHas('message_histories', ['payload_history_id' => $payloadHistory->id]);
+       $response->assertStatus(404);
+   }
+
+   /**
+    * test Feature admin remove payload history unauthorized
+    *
+    * @return void
+    */
+   public function testRemovePayloadHistoryUnauthorizedFeature()
+   {
+       $response = $this->delete(route('admin.history.destroy', 1));
+
+       $response->assertLocation('/login');
+       $response->assertStatus(302);
+   }
+
+    /**
+    * test admin remove payload history permission denied
+    *
+    * @return void
+    */
+    public function testRemovePayloadHistoryPermissionDenied()
+    {
+        $payloadHistory = factory(PayloadHistory::class)->create();
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user);
+        $response = $this->delete(route('admin.history.destroy', $payloadHistory));
+
+        $response->assertStatus(403);
+    }
 }

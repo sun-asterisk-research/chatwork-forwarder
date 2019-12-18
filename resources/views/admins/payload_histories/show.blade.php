@@ -91,7 +91,7 @@ use App\Enums\PayloadHistoryStatus;
                         <td class="text-center">
                             {{ Form::open([
                                 'method' => 'DELETE',
-                                'route' => ['message.destroy', 'message' => $messageHistory],
+                                'route' => ['admin.message.destroy', 'message' => $messageHistory],
                                 'style' => 'display:inline',
                                 'class' => 'form-delete'
                                 ]) }}
