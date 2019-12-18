@@ -35,4 +35,16 @@ class MappingPolicy
     {
         return $user->id === $webhook->user_id;
     }
+
+    /**
+     * Determine if the given mapping can be update by user and webhook
+     *
+     * @param App\Models\User
+     * @param App\Models\Webhook
+     * @return bool
+     */
+    public function update(User $user, Mapping $mapping, Webhook $webhook)
+    {
+        return $user->id === $mapping->webhook->user_id;
+    }
 }

@@ -210,7 +210,7 @@
                         <input type="text" class="form-control" value="{{ $mapping->value }}" readonly>
                     </div>
                     <div class="col-xs-2 text-center mapping-item">
-                        <a class="btn btn-sm btn-default" href="">
+                        <a class="btn btn-sm btn-default" href="{{ route('webhooks.mappings.edit', ['webhook' => $webhook, 'mapping' => $mapping]) }}">
                             <i class="fa fa-pencil"></i> Edit
                         </a>&nbsp
                         {{ Form::open([

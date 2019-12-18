@@ -343,4 +343,246 @@ class MappingControllerTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    /**
+     * test Feature update mapping successfully
+     *
+     * @return void
+     */
+    public function testUpdateMappingSuccessFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'Tran Van A',
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHas('messageSuccess');
+        $this->assertDatabaseHas('mappings', ['name' => 'Tran Van A', 'webhook_id' => $mapping->webhook->id]);
+    }
+
+    /**
+     * test Feature update mapping failed, name too long than 100 characters
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedNameTooLongFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => Str::random(101),
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    /**
+     * test Feature update mapping failed, name is required
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedNameRequiredFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => '',
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    /**
+     * test Feature update mapping failed, name is duplicate within a webhook
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedNameDuplicateFeature()
+    {
+        $mapping = factory(Mapping::class)->create(['name' => 'nguyen van a']);
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'nguyen van a',
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('name');
+    }
+
+    /**
+     * test Feature update mapping failed, key too long than 100 characters
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedKeyTooLongFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'tran van A',
+            'key' => Str::random(101),
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('key');
+    }
+
+    /**
+     * test Feature update mapping failed, key is required
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedKeyRequiredFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'tran van A',
+            'key' => '',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('key');
+    }
+
+    /**
+     * test Feature update mapping failed, key is duplicate within a webhook
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedKeyDuplicateFeature()
+    {
+        $mapping = factory(Mapping::class)->create(['key' => 'tranvana']);
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'tran van A',
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('key');
+    }
+
+    /**
+     * test Feature update mapping failed, value is required
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedValueRequireFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'tran van A',
+            'key' => 'tranvana',
+            'value' => '',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('value');
+    }
+
+    /**
+     * test Feature update mapping failed, value too long than 100 characters
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedValueTooLongFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'tran van A',
+            'key' => 'tranvana',
+            'value' => Str::random(101),
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors('value');
+    }
+
+    /**
+     * test feature update mapping failed, user is unauthentication
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedUnauthenticationFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+
+        $data = [
+            'name' => 'Tran Van A',
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(302)
+            ->assertRedirect('login');
+    }
+
+
+    /**
+     * test feature update mapping failed, webhook not belongs to current user
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedWebhookNotBelongToUserFeature()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = factory(User::class)->create();
+        $data = [
+            'name' => 'Tran Van A',
+            'key' => 'tranvana',
+            'value' => '123213',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertStatus(403);
+    }
 }
