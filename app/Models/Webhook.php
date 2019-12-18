@@ -51,6 +51,11 @@ class Webhook extends Model
         return $query->where('status', WebhookStatus::ENABLED);
     }
 
+    public function scopeDisable($query)
+    {
+        return $query->where('status', WebhookStatus::DISABLED);
+    }
+
     public function scopeSearch($query, $searchParams, $perPage)
     {
         return $query

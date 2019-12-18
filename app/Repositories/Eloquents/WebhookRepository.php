@@ -34,7 +34,7 @@ class WebhookRepository extends BaseRepository implements WebhookRepositoryInter
                         ->orderBy('webhooks.status', 'desc')
                         ->orderBy('webhooks.created_at', 'desc');
         if ($searchParams) {
-            $searchParams = $this->handleSearchParams(['webhook', 'status'], $searchParams);
+            $searchParams = $this->handleSearchParams(['name', 'status'], $searchParams);
 
             return $query->search($searchParams, $perPage);
         } else {

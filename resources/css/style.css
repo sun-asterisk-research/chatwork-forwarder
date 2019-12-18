@@ -94,3 +94,23 @@
   border-color: #dbe1e8 !important;
   color: #f5f5f5;
 }
+
+.rectangle-failed {
+  border: 2px solid #0b0b0b;
+  background-color: #F63328;
+  display: inline-block !important;
+  height: 20px;
+  margin-bottom: -3px;
+  margin-right: 5px;
+  width: 35px;
+}
+
+.rectangle-successful {
+  border: 2px solid #0b0b0b;
+  background-color: #3af900;
+  display: inline-block !important;
+  height: 20px;
+  margin-bottom: -3px;
+  margin-right: 5px;
+  width: 35px;
+}

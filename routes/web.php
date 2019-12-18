@@ -24,7 +24,7 @@ Route::namespace('Auth')->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/dashboard', 'Dashboard');
+    Route::resource('dashboard', 'DashboardController')->only('index');
     Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
         Route::resource('users', 'UserController');
         Route::group(['namespace' => 'Admin'], function () {
