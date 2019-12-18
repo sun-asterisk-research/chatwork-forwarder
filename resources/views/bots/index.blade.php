@@ -23,7 +23,7 @@
                     <th>Name</th>
                     <th class="text-center">Actions</th>
                 </tr>
-            </thead>
+            </thead>asdasdgit 
             <tbody>
                 @if (count($bots) <= 0)
                     <p class="tbl-no-data"><i class="fa fa-info-circle"></i> No data</p>
