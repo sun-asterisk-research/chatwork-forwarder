@@ -48,32 +48,36 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($webhooks as $webhook)
-                    <tr class="item-{{ $webhook->id }}">
-                        <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
-                        <td>{{ $webhook->name }}</td>
-                        <td class="webhook-description">{{ $webhook->description }}</td>
-                        <td>{{ $webhook->user->name }}</td>
-                        <td>{{ $webhook->room_name }}</td>
-                        <td class="text-center">{{ $webhook->room_id }}</td>
-                        <td class="pl-20">
-                            @if($webhook->status === WebhookStatus::ENABLED)
-                            <div class="webhook-status label label-success">Enabled</div>
-                            @else
-                            <div class="webhook-status label label-warning">Disabled</div>
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            @if($webhook->status == WebhookStatus::ENABLED)
-                                <button class="btn btn-sm btn-warning btn-disable-wh btn-enable-disable" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
-                            @else
-                                <button class="btn btn-sm btn-success btn-enable-wh btn-enable-disable" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
-                            @endif
+                @if(count($webhooks) == 0)
+                    <p class="tbl-no-data "><i class="fa fa-info-circle"></i> No data</p>
+                @else
+                    @foreach ($webhooks as $webhook)
+                        <tr class="item-{{ $webhook->id }}">
+                            <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
+                            <td>{{ $webhook->name }}</td>
+                            <td class="webhook-description">{{ $webhook->description }}</td>
+                            <td>{{ $webhook->user->name }}</td>
+                            <td>{{ $webhook->room_name }}</td>
+                            <td class="text-center">{{ $webhook->room_id }}</td>
+                            <td class="pl-20">
+                                @if($webhook->status === WebhookStatus::ENABLED)
+                                    <div class="webhook-status label label-success">Enabled</div>
+                                @else
+                                    <div class="webhook-status label label-warning">Disabled</div>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if($webhook->status == WebhookStatus::ENABLED)
+                                    <button class="btn btn-sm btn-warning btn-disable-wh btn-enable-disable" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
+                                @else
+                                    <button class="btn btn-sm btn-success btn-enable-wh btn-enable-disable" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
+                                @endif
 
-                            <a class="btn btn-sm btn-default" href="{{ route('admin.webhooks.show', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i>Detail</a>
-                        </td>
-                    </tr>
-                @endforeach
+                                <a class="btn btn-sm btn-default" href="{{ route('admin.webhooks.show', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i>Detail</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
         <div class="text-center pagination-wrapper"> {{ $webhooks->appends(['search' => Request::get('search')])->render() }} </div>

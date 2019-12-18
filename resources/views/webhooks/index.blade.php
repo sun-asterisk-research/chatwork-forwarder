@@ -33,45 +33,48 @@ use App\Enums\WebhookStatus; ?>
             </thead>
             <tbody>
                 @include('webhooks.delete_webhook_confirm_modal')
+                @if (count($webhooks) <= 0)
+                    <p class="tbl-no-data"><i class="fa fa-info-circle"></i> No data</p>
+                @else
+                    @foreach ($webhooks as $webhook)
+                        <tr class="item-{{ $webhook->id }} webhook-item">
+                            <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
+                            <td>{{ $webhook->name }}</td>
+                            <td class="webhook-description">{{ $webhook->description }}</td>
+                            <td>{{ $webhook->room_name }}</td>
+                            <td>{{ $webhook->room_id }}</td>
+                            <td class="pl-20">
+                                @if($webhook->status === WebhookStatus::ENABLED)
+                                    <div class="webhook-status label label-success">Enabled</div>
+                                @else
+                                    <div class="webhook-status label label-warning">Disabled</div>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if($webhook->status == WebhookStatus::ENABLED)
+                                    <button class="btn btn-sm btn-warning btn-disable-wh btn-enable-disable" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
+                                @else
+                                    <button class="btn btn-sm btn-success btn-enable-wh btn-enable-disable" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
+                                @endif
 
-                @foreach ($webhooks as $webhook)
-                    <tr class="item-{{ $webhook->id }} webhook-item">
-                        <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
-                        <td>{{ $webhook->name }}</td>
-                        <td class="webhook-description">{{ $webhook->description }}</td>
-                        <td>{{ $webhook->room_name }}</td>
-                        <td>{{ $webhook->room_id }}</td>
-                        <td class="pl-20">
-                            @if($webhook->status === WebhookStatus::ENABLED)
-                            <div class="webhook-status label label-success">Enabled</div>
-                            @else
-                            <div class="webhook-status label label-warning">Disabled</div>
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            @if($webhook->status == WebhookStatus::ENABLED)
-                                <button class="btn btn-sm btn-warning btn-disable-wh btn-enable-disable" data-toggle="modal" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}" data-target="#exampleModal">Disable</button>
-                            @else
-                                <button class="btn btn-sm btn-success btn-enable-wh btn-enable-disable" data-id="{{ $webhook->id }}" data-name="{{ $webhook->name }}">Enable</button>
-                            @endif
+                                <a class="btn btn-sm btn-default" href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i> Edit</a>
 
-                            <a class="btn btn-sm btn-default" href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}"><i class="fa fa-pencil"></i> Edit</a>
-
-                            {{ Form::open([
-                                'method' => 'DELETE',
-                                'route' => ['webhooks.destroy', 'webhook' => $webhook],
-                                'style' => 'display:inline',
-                                'class' => 'form-delete'
-                            ]) }}
-                            {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
-                                'type' => 'DELETE',
-                                'class' => 'btn btn-sm btn-danger delete-btn',
-                                'title' => 'Delete'
-                            ]) }}
-                            {{ Form::close() }}
-                        </td>
-                    </tr>
-                @endforeach
+                                {{ Form::open([
+                                    'method' => 'DELETE',
+                                    'route' => ['webhooks.destroy', 'webhook' => $webhook],
+                                    'style' => 'display:inline',
+                                    'class' => 'form-delete'
+                                ]) }}
+                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                    'type' => 'DELETE',
+                                    'class' => 'btn btn-sm btn-danger delete-btn',
+                                    'title' => 'Delete'
+                                ]) }}
+                                {{ Form::close() }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
         <div class="text-center pagination-wrapper"> {{ $webhooks->appends(['search' => Request::get('search')])->render() }} </div>

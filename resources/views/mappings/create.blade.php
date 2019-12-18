@@ -21,8 +21,8 @@
     @include('modals.cancel_modal')
     {{ Form::open(['url' => route('webhooks.mappings.store', $webhook), 'method' => 'post', 'class' => 'mapping-form form-horizontal form-bordered']) }}
         <div class="col-xs-12">
-            <button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
             <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
+            <button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
         </div>
         <div class="form-group row">
             <div class="col-xs-4">

@@ -23,8 +23,8 @@
 	<div class="form-group row">
 		<div class="row">
 			<div class="col-xs-12">
-				<button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
 				<button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
+				<button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
 			</div>
 			<input type="hidden" name="" id="id_user" value="{{$user->id}}">
 			<div class="col-md-4">
