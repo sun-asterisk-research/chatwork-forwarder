@@ -17,6 +17,7 @@ gkc_*
 .framgia-ci-result.temp.yml
 /public/css/login.css
 /public/css/style.css
+/public/css/landing.css
 /public/js/custom.js
 /public/mix-manifest.json
 /public/docs/*

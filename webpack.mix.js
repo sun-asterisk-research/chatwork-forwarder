@@ -16,4 +16,5 @@ mix.autoload({
 
 mix.js('resources/js/custom.js', 'public/js')
     .styles('resources/css/login.css', 'public/css/login.css')
-    .styles('resources/css/style.css', 'public/css/style.css');
+    .styles('resources/css/style.css', 'public/css/style.css')
+    .styles('resources/css/landing.css', 'public/css/landing.css');

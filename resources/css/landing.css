@@ -1,0 +1,62 @@
+@font-face {
+    font-family: customFont;
+    src: url('../fonts/UTM HELVE.TTF');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: customFont;
+
+}
+
+.main {
+    background-image: url("../img/landing-bg.png");
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 0;
+}
+
+.logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.content {
+    position: absolute;
+    top: 30%;
+    left: 100px;
+    width: 450px;
+    height: auto;
+    color: white;
+}
+.content h1 {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 0;
+}
+.content p {
+    margin: 40px 0px;
+    font-size: 15px;
+    line-height: 23px;
+}
+.content a {
+    display: block;
+    background: #EF3747;
+    text-decoration: none;
+    color: white;
+    padding: 5px 20px 10px 20px;
+    border-radius: 30px;
+    margin-top: 20px;
+    font-size: 23px;
+    font-style: italic;
+    font-weight: bold;
+    width: 200px;
+    text-align: center;
+}
