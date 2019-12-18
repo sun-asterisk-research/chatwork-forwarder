@@ -30,6 +30,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['namespace' => 'Admin'], function () {
             Route::get('webhooks', 'WebhookController@index')->name('admin.webhooks.index');
             Route::get('webhooks/{webhook}', 'WebhookController@show')->name('admin.webhooks.show');
+            Route::get('history', 'PayloadHistoryController@index')->name('admin.history.index');
+            Route::get('history/{history} ', 'PayloadHistoryController@show')->name('admin.history.show');
         });
     });
     Route::resource('bots', 'BotController')->except('show');

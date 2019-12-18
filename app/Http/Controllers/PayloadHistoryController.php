@@ -35,7 +35,7 @@ class PayloadHistoryController extends Controller
     {
         $searchParams = $request->search;
         $perPage = config('paginate.perPage');
-        $payloadHistories = $this->payloadHistoryRepository->getAllAndSearch($perPage, $searchParams);
+        $payloadHistories = $this->payloadHistoryRepository->getAllByUserAndSearch($perPage, $searchParams);
         $webhooks = $this->webhookRepository->getAllByUserForDropdown()->pluck('id', 'name');
         $payloadHistoryStatuses = PayloadHistoryStatus::toArray();
 
