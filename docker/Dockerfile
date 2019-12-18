@@ -4,14 +4,8 @@ FROM node:12-alpine as web
 WORKDIR /cw-forwarder
 
 ARG APP_URL
-ARG GOOGLE_CLIENT_ID
-ARG GOOGLE_CLIENT_SECRET
-ARG GOOGLE_REDIRECT
 
-ENV APP_URL=${APP_URL} \
-    GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID} \
-    GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET} \
-    GOOGLE_REDIRECT=${GOOGLE_REDIRECT}
+ENV APP_URL=${APP_URL}
 
 COPY package.json package-lock.json ./
 
@@ -36,7 +30,7 @@ RUN mkdir composer-autoload
 RUN mv vendor/autoload.php vendor/composer ./composer-autoload
 
 #### PHP application
-FROM sunasteriskrnd/php:7.4-caddy-alpine
+FROM sunasteriskrnd/php:7.3-caddy-alpine
 
 ENV PHP.opcache.validate_timestamps=0
 
