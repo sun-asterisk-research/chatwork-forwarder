@@ -73,34 +73,38 @@ use App\Enums\PayloadHistoryStatus;
                 </tr>
             </thead>
             <tbody>
-                @foreach ($messageHistories as $messageHistory)
-                <tr class="item-{{ $messageHistory->id }}">
-                    <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
-                    <td>{{ $messageHistory->message_content }}</td>
-                    <td class="text-center">
-                        @if($messageHistory->status == MessageHistoryStatus::SUCCESS)
-                        <div class="label label-primary">Success</div>
-                        @else
-                        <div class="label label-warning">Failed</div>
-                        @endif
-                    </td>
-                    <td>{{ $messageHistory->log }}</td>
-                    <td class="text-center">
-                        {{ Form::open([
-                            'method' => 'DELETE',
-                            'route' => ['message.destroy', 'message' => $messageHistory],
-                            'style' => 'display:inline',
-                            'class' => 'form-delete'
-                            ]) }}
-                            {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
-                            'type' => 'DELETE',
-                            'class' => 'btn btn-sm btn-danger delete-btn',
-                            'title' => 'Delete'
-                            ]) }}
-                        {{ Form::close() }}
-                    </td>
-                </tr>
-                 @endforeach
+                @if (count($messageHistories) <= 0)
+                    <p class="tbl-no-data"><i class="fa fa-info-circle"></i> No data</p>
+                @else
+                    @foreach ($messageHistories as $messageHistory)
+                    <tr class="item-{{ $messageHistory->id }}">
+                        <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
+                        <td>{{ $messageHistory->message_content }}</td>
+                        <td class="text-center">
+                            @if($messageHistory->status == MessageHistoryStatus::SUCCESS)
+                                <div class="label label-primary">Success</div>
+                            @else
+                                <div class="label label-warning">Failed</div>
+                            @endif
+                        </td>
+                        <td>{{ $messageHistory->log }}</td>
+                        <td class="text-center">
+                            {{ Form::open([
+                                'method' => 'DELETE',
+                                'route' => ['message.destroy', 'message' => $messageHistory],
+                                'style' => 'display:inline',
+                                'class' => 'form-delete'
+                                ]) }}
+                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                'type' => 'DELETE',
+                                'class' => 'btn btn-sm btn-danger delete-btn',
+                                'title' => 'Delete'
+                                ]) }}
+                            {{ Form::close() }}
+                        </td>
+                    </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
         <div class="pagination-wrapper"> {{ $messageHistories->appends(['search' => Request::get('search')])->render() }} </div>

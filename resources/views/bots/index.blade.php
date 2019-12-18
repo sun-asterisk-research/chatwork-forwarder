@@ -25,27 +25,31 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($bots as $bot)
-                    <tr>
-                        <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
-                        <td class="pl-20">{{ $bot->name }}</td>
-                        <td class="text-center">
-                            <a class="btn btn-sm btn-default" href="{{ route('bots.edit', $bot->id) }}"><i class="fa fa-pencil"></i> Edit</a>
+                @if (count($bots) <= 0)
+                    <p class="tbl-no-data"><i class="fa fa-info-circle"></i> No data</p>
+                @else
+                    @foreach($bots as $bot)
+                        <tr>
+                            <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
+                            <td class="pl-20">{{ $bot->name }}</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-default" href="{{ route('bots.edit', $bot->id) }}"><i class="fa fa-pencil"></i> Edit</a>
 
-                            {{ Form::open([
-                                'method' => 'DELETE',
-                                'route' => ['bots.destroy', 'bot' => $bot],
-                                'style' => 'display:inline',
-                                'class' => 'form-delete'
-                            ]) }}
-                            {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
-                                'type' => 'DELETE',
-                                'class' => 'btn btn-sm btn-danger delete-btn',
-                                'title' => 'Delete'
-                            ]) }}
-                        </td>
-                    </tr>
-                @endforeach
+                                {{ Form::open([
+                                    'method' => 'DELETE',
+                                    'route' => ['bots.destroy', 'bot' => $bot],
+                                    'style' => 'display:inline',
+                                    'class' => 'form-delete'
+                                ]) }}
+                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                    'type' => 'DELETE',
+                                    'class' => 'btn btn-sm btn-danger delete-btn',
+                                    'title' => 'Delete'
+                                ]) }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
         <div class="text-center pagination-wrapper"> {{ $bots->appends(['search' => Request::get('search')])->render() }} </div>
