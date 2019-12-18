@@ -25,10 +25,11 @@
     <div class="form-horizontal form-bordered">
         <div class="col-xs-12">
             <button id="update" type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
-            <a class="btn btn-sm btn-default float-right" href="{{ route('webhooks.edit', $webhook->id) }}">
+            <a class="btn btn-sm btn-default float-right cancel-btn" href="{{ route('webhooks.edit', $webhook->id) }}">
                 <i class="fa fa-times"></i> Cancel
             </a>
         </div>
+        @include('modals.cancel_modal')
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory required">Payload params</label>
