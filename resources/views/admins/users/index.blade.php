@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Users</li>
-    <li><a href="{{ route('users.index') }}">List</a></li>
 </ul>
 <!-- END Datatables Header -->
 

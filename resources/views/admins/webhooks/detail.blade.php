@@ -4,9 +4,8 @@
 @section('content')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
-    <li>Webhooks</li>
-    <li><a href="{{ route('webhooks.index') }}">List</a></li>
-    <li><a href="javascript:window.location.href=window.location.href">Detail webhook</a></li>
+    <li><a href="{{ route('admin.webhooks.index') }}">Webhooks</a></li>
+    <li>Detail</li>
 </ul>
 <!-- Simple Editor Block -->
 <div class="block">

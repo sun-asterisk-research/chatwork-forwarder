@@ -2,8 +2,7 @@
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
-    <li>Home</li>
-    <li><a href="">Bots</a></li>
+    <li>Bots</li>
 </ul>
 <!-- END Datatables Header -->
 

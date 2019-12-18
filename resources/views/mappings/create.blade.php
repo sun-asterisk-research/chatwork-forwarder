@@ -4,9 +4,9 @@
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 <ul class="breadcrumb breadcrumb-top">
-  <li><a href="{{ route('webhooks.index') }}">Webhook</a></li>
-  <li><a href="{{ route('webhooks.edit', $webhook) }}">Detail</a></li>
-  <li>Mapping Create</li>
+  <li><a href="{{ route('webhooks.index') }}">Webhooks</a></li>
+  <li><a href="{{ route('webhooks.edit', $webhook) }}">Mappings</a></li>
+  <li>Create</li>
 </ul>
 
 <!-- Simple Editor Block -->

@@ -4,15 +4,13 @@
 <?php use App\Enums\UserType; ?>
 
 <ul class="breadcrumb breadcrumb-top">
-    <li>Webhooks</li>
     @if (Auth::user()->role == UserType::ADMIN)
-    <li><a href="{{ route('admin.webhooks.index') }}">List</a></li>
+        <li><a href="{{ route('admin.webhooks.index') }}">Webhooks</a></li>
     @else
-    <li><a href="{{ route('webhooks.index') }}">List</a></li>
+        <li><a href="{{ route('webhooks.index') }}">Webhooks</a></li>
     @endif
-    <li><a href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}">Edit</a></li>
-    <li>Payloads</li>
-    <li><a href="javascript:window.location.href=window.location.href">Create</a></li>
+    <li><a href="{{ route('webhooks.edit', ['webhook' => $webhook]) }}">Payloads</a></li>
+    <li>Create</li>
 </ul>
 
 <!-- Simple Editor Block -->

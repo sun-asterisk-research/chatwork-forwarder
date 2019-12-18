@@ -5,9 +5,8 @@
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 <ul class="breadcrumb breadcrumb-top">
-    <li>Users</li>
-    <li><a href="{{ route('users.index') }}">List</a></li>
-    <li><a href="javascript:window.location.href=window.location.href">Edit</a></li>
+	<li><a href="{{ route('users.index') }}">Users</a></li>
+    <li>Detail</li>
 </ul>
 
 <!-- Simple Editor Block -->
