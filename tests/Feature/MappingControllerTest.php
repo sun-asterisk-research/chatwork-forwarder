@@ -60,7 +60,7 @@ class MappingControllerTest extends TestCase
         $mapping = factory(Mapping::class)->create(['webhook_id' => $webhook->id]);
         $response = $this->delete(route('webhooks.mappings.destroy', ['webhook' => $webhook, 'mapping' => $mapping]));
 
-        $response->assertLocation('/login');
+        $response->assertLocation('/');
         $response->assertStatus(302);
     }
 
@@ -319,7 +319,7 @@ class MappingControllerTest extends TestCase
         $response = $this->post(route('webhooks.mappings.store', $webhook), $data);
 
         $response->assertStatus(302)
-            ->assertRedirect('login');
+            ->assertRedirect('/');
     }
 
 
@@ -561,7 +561,7 @@ class MappingControllerTest extends TestCase
         $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
 
         $response->assertStatus(302)
-            ->assertRedirect('login');
+            ->assertRedirect('/');
     }
 
 

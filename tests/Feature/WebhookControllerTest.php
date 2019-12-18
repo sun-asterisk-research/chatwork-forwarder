@@ -139,7 +139,7 @@ class WebhookControllerTest extends TestCase
         $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "ENABLED"]);
 
         $response->assertStatus(302);
-        $response->assertRedirect('login');
+        $response->assertRedirect('/');
     }
 
     /**
@@ -198,7 +198,7 @@ class WebhookControllerTest extends TestCase
         $webhook = factory(Webhook::class)->create();
         $response = $this->get(route('webhooks.edit', ['webhook' => $webhook]));
         $response->assertStatus(302);
-        $response->assertRedirect('login');
+        $response->assertRedirect('/');
     }
 
     public function testUnauthorizationUserCannotSeeWebhook()
@@ -318,7 +318,7 @@ class WebhookControllerTest extends TestCase
         $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
         $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
 
-        $response->assertLocation('/login');
+        $response->assertLocation('/');
         $response->assertStatus(302);
     }
 
@@ -381,7 +381,7 @@ class WebhookControllerTest extends TestCase
 
         $response = $this->put(route('webhooks.update', $webhook->id), $params);
         $response->assertStatus(302);
-        $response->assertRedirect('login');
+        $response->assertRedirect('/');
     }
 
     /**

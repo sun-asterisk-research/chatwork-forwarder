@@ -46,7 +46,7 @@ class AdminPayloadHistoryController extends TestCase
 
         $response = $this->get(route('admin.history.index'));
         $response->assertStatus(302);
-        $response->assertLocation('/login');
+        $response->assertLocation('/');
     }
 
     /**

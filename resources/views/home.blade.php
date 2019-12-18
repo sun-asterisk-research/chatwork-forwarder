@@ -5,6 +5,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <title>Chatwork forwarder</title>
 </head>
 <body>
@@ -18,11 +19,47 @@
                 từ các service khác lên chatwork.</p>
 
             @if(Auth::guest())
-            <a href="/login" class="btn btn-default">Login</a>
+            <a data-toggle="modal" href='#modal-login' class="btn btn-default">Login</a>
             @else
             <a href="/dashboard" class="btn btn-default">Go to app</a>
             @endif
         </div>
     </div>
+    <div class="modal fade" id="modal-login">
+        <div class="modal-dialog">
+            <div class="login-form">
+                {{ Form::open(['method' => 'POST', 'id' => 'login_form']) }}
+                    @csrf
+                    <div class="login_title">
+                        <h1>Login</h1>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="uname"><b>Email</b></label>
+                        <input id="email" placeholder="Enter email" type="email" class="form-control" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
+                        <div class="has-error" id="error-email"></div>
+
+                        <label for="psw"><b>Password</b></label>
+                        <input id="password" placeholder="Enter password" type="password" class="form-control" name="password"  autocomplete="current-password">
+                        <div class="has-error" id="error-password"></div>
+
+                        <label>
+                          <input type="checkbox" checked="checked" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ __('Remember Me') }}
+                        </label>
+
+                        <a class="float_right" href="{{ route('password.request') }}">
+                            {{ __('Forgot Your Password?') }}
+                        </a>
+
+                        <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
+                        <a href="/redirect" class="google btn"><i class="fa fa-google fa-fw"></i> Login with Google+</a>
+                    </div>
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/login.js') }}"></script>
 </body>
 </html>

@@ -39,7 +39,7 @@ class UserControllerTest extends TestCase
        $response = $this->get(route('users.index'));
 
        $response->assertStatus(302);
-       $response->assertLocation('/login');
+       $response->assertLocation('/');
    }
 
    /**
@@ -138,7 +138,7 @@ class UserControllerTest extends TestCase
 
         $response = $this->get(route('users.create'));
         $response->assertStatus(302);
-        $response->assertRedirect('login');
+        $response->assertRedirect('/');
     }
 
     public function testUserNotAdminCannotSeeCreateView()
@@ -361,7 +361,7 @@ class UserControllerTest extends TestCase
 
         $response = $this->post(route('users.store'), $params);
         $response->assertStatus(302);
-        $response->assertRedirect('login');
+        $response->assertRedirect('/');
     }
 
     public function testUpdateUserSuccessFeature()
@@ -414,7 +414,7 @@ class UserControllerTest extends TestCase
         ];
         $response = $this->put(route('users.update', $user->id), $params);
         $response->assertStatus(302);
-        $response->assertRedirect('login');
+        $response->assertRedirect('/');
     }
 
     public function testUnauthorizationCannotUpdateUser()
@@ -707,7 +707,7 @@ class UserControllerTest extends TestCase
         $user = factory(User::class)->create();
 
         $response = $this->delete(route('users.destroy', ['user' => $user]));
-        $response->assertLocation('/login');
+        $response->assertLocation('/');
         $response->assertStatus(302);
     }
 
