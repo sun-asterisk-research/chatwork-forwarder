@@ -26,7 +26,7 @@
 
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
-                        <i class="fa fa-ban fa-fw pull-right"></i>
+                        <i class="fa fa-sign-out pull-right"></i>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf

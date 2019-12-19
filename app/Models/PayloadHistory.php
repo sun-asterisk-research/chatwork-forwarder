@@ -70,4 +70,23 @@ class PayloadHistory extends Model
             ->orderBy('date', 'ASC')
             ->pluck('quantity', 'date');
     }
+
+    public function scopeDataChartByUser($query, $statisticParams, $status, $userID)
+    {
+        $from = date('Y-m-d 00:00:00', strtotime($statisticParams['fromDate']));
+        $to = date('Y-m-d 23:59:59', strtotime($statisticParams['toDate']));
+
+        return $query
+            ->select(
+                DB::raw('DATE_FORMAT(payload_histories.created_at, "%d-%m-%Y") as date'),
+                DB::raw('count(*) as quantity')
+            )
+            ->join('webhooks', 'payload_histories.webhook_id', '=', 'webhooks.id')
+            ->where('webhooks.user_id', $userID)
+            ->where('payload_histories.status', $status)
+            ->whereBetween('payload_histories.created_at', [$from, $to])
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->pluck('quantity', 'date');
+    }
 }
