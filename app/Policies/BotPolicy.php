@@ -19,8 +19,8 @@ class BotPolicy
      */
     public function before($user, $ability)
     {
-        if ($user->role === UserType::ADMIN) {
-            return true;
+        if ($user->role == UserType::ADMIN) {
+            return false;
         }
     }
 
@@ -46,5 +46,27 @@ class BotPolicy
     public function update(User $user, Bot $bot)
     {
         return $user->id === $bot->user_id;
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function viewAny(User $user)
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function create(User $user)
+    {
+        return true;
     }
 }

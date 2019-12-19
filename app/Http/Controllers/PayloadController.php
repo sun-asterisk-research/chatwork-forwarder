@@ -20,22 +20,14 @@ class PayloadController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create(Webhook $webhook)
     {
+        $this->authorize('create', [new Payload(), $webhook]);
+
         return view('payloads.create', compact('webhook'));
     }
 
@@ -49,6 +41,8 @@ class PayloadController extends Controller
     public function store(PayloadCreateRequest $request, $webhookId)
     {
         $webhook = Webhook::findOrFail($webhookId);
+        $this->authorize('create', [new Payload(), $webhook]);
+
         $data = $request->only(['content', 'params']);
         $data['webhook_id'] = $webhook->id;
 
@@ -111,7 +105,7 @@ class PayloadController extends Controller
 
         $conditions = $request->only('conditions');
         $data = $request->only(['content', 'params']);
-        $ids = (array) $request->ids;
+        $ids = (array)$request->ids;
         DB::beginTransaction();
         try {
             $payload = $this->payloadRepository->update($payload->id, $data);

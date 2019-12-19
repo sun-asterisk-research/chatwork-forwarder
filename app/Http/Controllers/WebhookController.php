@@ -41,6 +41,8 @@ class WebhookController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Webhook::class);
+
         $bots = Bot::byUser(Auth::id());
 
         return view('webhooks.create', compact('bots'));
@@ -54,6 +56,8 @@ class WebhookController extends Controller
      */
     public function store(WebhookCreateRequest $request)
     {
+        $this->authorize('create', Webhook::class);
+
         $data = $request->except('_token');
         $data['token'] = md5(Auth::id() . '' . time());
         $data['user_id'] = Auth::id();
@@ -167,7 +171,7 @@ class WebhookController extends Controller
     public function changeStatus(Request $request)
     {
         $webhook = $this->webhookRepository->find($request->id);
-        $this->authorize('update', $webhook);
+        $this->authorize('changeStatus', $webhook);
 
         if ($request->status == WebhookStatus::ENABLED()->key) {
             $status = WebhookStatus::ENABLED;

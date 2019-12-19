@@ -68,17 +68,43 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
+     * test Feature admin cant store data webhook
+     *
+     * @return void
+     */
+    public function testAdminCantStoreWebhookFeature()
+    {
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $bot = factory(Bot::class)->create();
+        $params = [
+            'name' => 'string',
+            'description' => 'some thing successfully',
+            'bot_id' => $bot->id,
+            'room_name' => 'string',
+            'room_id' => 1
+        ];
+
+        $this->actingAs($user);
+        $response = $this->post(route('webhooks.store'), $params);
+
+        $response->assertStatus(403);
+    }
+
+    /**
      * test Feature store data webhook fail
      *
      * @return void
      */
     public function testStoreWebhookFailFeature()
     {
-        $this->withoutMiddleware();
-        $response = $this->post(route('webhooks.store'), ['name' => 'string', 'description' => 'some thing successfully', 'bot_id' => 1, 'room_name' => 'string', 'room_id' => 1]);
 
-        $response->assertRedirect();
-        $response->assertStatus(302);
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+
+        $this->actingAs($user);
+        $response = $this->post(route('webhooks.store'), ['name' => '', 'description' => 'some thing successfully', 'bot_id' => 1, 'room_name' => 'string', 'room_id' => 1]);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors(['name']);
     }
 
     /**
@@ -223,9 +249,24 @@ class WebhookControllerTest extends TestCase
 
         $this->actingAs($user);
         $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
-        $this->assertDatabaseMissing('webhooks', ['id' => $webhook->id, 'name' => 'test remove webhook success', 'deleted_at' => NULL]);
+        $this->assertDatabaseMissing('webhooks', ['id' => $webhook->id, 'name' => 'test remove webhook success', 'deleted_at' => null]);
         $response->assertRedirect(route('webhooks.index'));
         $response->assertStatus(302);
+    }
+
+    /**
+     * test Feature admmin can't remove webhook.
+     *
+     * @return void
+     */
+    public function testAdminCantRemoveWebhookFeature()
+    {
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create();
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
+        $response->assertStatus(403);
     }
 
     /**
@@ -250,10 +291,10 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove webhook has mapping.
-    *
-    * @return void
-    */
+     * test Feature remove webhook has mapping.
+     *
+     * @return void
+     */
     public function testRemoveWebhookHasMappingFeature()
     {
         $user = factory(User::class)->create();
@@ -271,10 +312,10 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove webhook has payload history.
-    *
-    * @return void
-    */
+     * test Feature remove webhook has payload history.
+     *
+     * @return void
+     */
     public function testRemoveWebhookHasPayloadHistoryFeature()
     {
         $user = factory(User::class)->create();
@@ -292,10 +333,10 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove webhook fail.
-    *
-    * @return void
-    */
+     * test Feature remove webhook fail.
+     *
+     * @return void
+     */
     public function testRemoveWebhookFailFeature()
     {
         $user = factory(User::class)->create();
@@ -423,7 +464,7 @@ class WebhookControllerTest extends TestCase
             'room_id' => 1
         ]);
         $params = [
-            'name' => NULL,
+            'name' => null,
             'description' => 'description Update',
             'bot_id' => 1,
             'room_name' => 'Name Update',
