@@ -19,8 +19,8 @@
     @include('modals.cancel_modal')
     {{ Form::open(['url' => route('bots.store'), 'method' => 'post', 'class' => 'bot-form form-horizontal form-bordered']) }}
         <div class="col-xs-12">
-            <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
             <button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
+            <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
         </div>
         <div class="form-group row">
             <div class="col-xs-4">

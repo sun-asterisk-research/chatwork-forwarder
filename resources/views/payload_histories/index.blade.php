@@ -73,7 +73,7 @@
                                 <div class="label label-danger">Failed</div>
                             @endif
                         </td>
-                        <td><a href="page_ready_user_profile.html">{{ $payloadHistory->log }}</a></td>
+                        <td><a href="{{ route('history.show', ['history' => $payloadHistory->id]) }}">{{ $payloadHistory->log }}</a></td>
                         <td class="text-center">{{ $payloadHistory->created_at }}</td>
                         <td class="text-center">
                             <a class="btn btn-sm btn-default" href="{{ route('history.show', ['history' => $payloadHistory->id]) }}">

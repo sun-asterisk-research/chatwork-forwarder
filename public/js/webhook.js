@@ -146,4 +146,18 @@ $(document).ready(function () {
             window.location.pathname = '/webhooks';
         });
     });
+
+    $('#copyUrl').on('click', function (e) {
+        e.preventDefault();
+        var copyText = document.getElementById("webhookUrl");
+        var btnCopy = document.getElementById('copyUrl');
+        copyText.select();
+        copyText.setSelectionRange(0, 99999)
+        document.execCommand("copy");
+        btnCopy.setAttribute('data-toggle', 'tooltip');
+        btnCopy.setAttribute('data-placement', 'top');
+        btnCopy.setAttribute('data-original-title', 'Copied!');
+        $('[data-toggle="tooltip"], .enable-tooltip').tooltip({container: 'body', animation: false});
+        $('#copyUrl').mouseover();
+    });
 });
