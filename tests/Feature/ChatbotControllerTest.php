@@ -58,7 +58,7 @@ class ChatbotControllerTest extends TestCase
 
         $response
             ->assertStatus(302)
-            ->assertRedirect('login');
+            ->assertRedirect('/');
     }
 
     /**
@@ -262,7 +262,7 @@ class ChatbotControllerTest extends TestCase
    {
        $response = $this->delete(route('bots.destroy', 1));
 
-       $response->assertLocation('/login');
+       $response->assertLocation('/');
        $response->assertStatus(302);
    }
 
@@ -326,7 +326,7 @@ class ChatbotControllerTest extends TestCase
         $response = $this->get(route('bots.edit', $bot->id));
         $response
             ->assertStatus(302)
-            ->assertRedirect('login');
+            ->assertRedirect('/');
     }
 
      /**

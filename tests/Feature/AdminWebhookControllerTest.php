@@ -85,7 +85,7 @@ class AdminWebhookControllerTest extends TestCase
 
         $response = $this->get(route('admin.webhooks.show', ['webhook' => $webhook]));
         $response->assertStatus(302);
-        $response->assertRedirect('login');
+        $response->assertRedirect('/');
     }
 
     public function testUnauthorizationUserCannotSeeWebhook()

@@ -57,7 +57,7 @@ class MessageHistoryControllerTest extends TestCase
    {
        $response = $this->delete(route('message.destroy', 1));
 
-       $response->assertLocation('/login');
+       $response->assertLocation('/');
        $response->assertStatus(302);
    }
 

@@ -11,7 +11,7 @@
 |
  */
 
-Route::get('/', 'Home');
+Route::get('/', 'Home')->name('home');
 
 Auth::routes([
     'register' => false,

@@ -75,7 +75,7 @@ class LoginTest extends TestCase
             'password' => $password,
         ]);
         $rp = $this->post('/logout', []);
-        $rp->assertRedirect('/login');
+        $rp->assertRedirect('/');
         $this->assertGuest();
     }
 

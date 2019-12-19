@@ -95,7 +95,7 @@ class PayloadHistoryControllerTest extends TestCase
 
         $response = $this->get(route('history.index'));
         $response->assertStatus(302);
-        $response->assertLocation('/login');
+        $response->assertLocation('/');
     }
 
     /**
@@ -252,7 +252,7 @@ class PayloadHistoryControllerTest extends TestCase
    {
        $response = $this->delete(route('history.destroy', 1));
 
-       $response->assertLocation('/login');
+       $response->assertLocation('/');
        $response->assertStatus(302);
    }
 
