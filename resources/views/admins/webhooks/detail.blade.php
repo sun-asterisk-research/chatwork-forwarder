@@ -16,17 +16,20 @@
     <!-- END Simple Editor Title -->
     <!-- Simple Editor Content -->
     <div class="form-group row">
-        <div class="col-xs-8">
+        <div class="col-xs-6">
+            <label class="field-compulsory">Url</label>
+            <div class="input-group">
+                <input type="text" id="webhookUrl" class="form-control" value="{{ config('app.url').'/api/v1/webhooks/'.$webhook->token }}" readonly>
+                <a class="input-group-addon" id="copyUrl" ><i class="fa fa-clipboard"></i></a>
+            </div>
+        </div>
+        <div class="mt-15 col-xs-8">
             <label class="field-compulsory required">Webhook name</label>
             <input type="text" class="form-control" value="{{  $webhook->name }}" readonly>
         </div>
-        <div class="col-xs-4">
+        <div class="mt-15 col-xs-4">
             <label class="field-compulsory required">Status</label>
             <input type="text" class="form-control" {{ $webhook->status == WebhookStatus::ENABLED ? 'value=Enabled' : 'value=Disabled' }} readonly>
-        </div>
-        <div class="mt-15 col-xs-12">
-            <label class="field-compulsory">Token</label>
-            <input type="text" class="form-control" value="{{ $webhook->token }}" readonly>
         </div>
         <div class="mt-15 col-xs-12">
             <label class="field-compulsory required">Description</label>

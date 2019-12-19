@@ -27,7 +27,14 @@
             <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
             <button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
         </div>
-        <div class="col-xs-8">
+        <div class="col-xs-6">
+            <label class="field-compulsory">Url</label>
+            <div class="input-group">
+                <input type="text" id="webhookUrl" class="form-control" value="{{ config('app.url').'/api/v1/webhooks/'.$webhook->token }}" readonly>
+                <a class="input-group-addon" id="copyUrl" ><i class="fa fa-clipboard"></i></a>
+            </div>
+        </div>
+        <div class="mt-15 col-xs-8">
             <label class="field-compulsory required" for="webhook_name">Webhook name</label>
             <input type="text" id="webhook_name" name="name" class="form-control" value="{{  $webhook->name }}" placeholder="Enter name">
             @error('name')
@@ -36,16 +43,12 @@
             </div>
             @enderror
         </div>
-        <div class="col-xs-4">
+        <div class="mt-15 col-xs-4">
             <label class="field-compulsory required" for="webhook_status">Status</label>
             <select id="webhook_status" name="status" class="form-control">
                 <option value="{{ WebhookStatus::ENABLED }}" {{ $webhook->status == WebhookStatus::ENABLED ? "selected" : "" }}>Enable</option>
                 <option value="{{ WebhookStatus::DISABLED }}" {{ $webhook->status == WebhookStatus::DISABLED ? "selected" : "" }}>Disable</option>
             </select>
-        </div>
-        <div class="mt-15 col-xs-12">
-            <label class="field-compulsory">Token</label>
-            <input type="text" class="form-control" value="{{ $webhook->token }}" readonly>
         </div>
         <div class="mt-15 col-xs-12">
             <label class="field-compulsory required" for="webhook_description">Description</label>

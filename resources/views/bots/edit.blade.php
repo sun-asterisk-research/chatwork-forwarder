@@ -19,8 +19,8 @@
     @include('modals.cancel_modal')
     {{ Form::open(['url' => route('bots.update', $bot->id), 'method' => 'PUT', 'class' => 'bot-form form-horizontal form-bordered']) }}
         <div class="col-xs-12">
-            <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
             <a class="btn btn-sm btn-default float-right cancel-btn" href="{{ route('bots.index') }}"><i class="fa fa-times"></i> Cancel</a>
+            <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
         </div>
         <div class="form-group row">
             <input type="hidden" name="id" value="{{ $bot->id }}">
