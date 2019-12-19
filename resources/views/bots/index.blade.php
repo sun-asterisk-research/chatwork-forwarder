@@ -16,7 +16,7 @@
 
     <div class="table-responsive">
         @include('bots.modal')
-        <table class="table table-vcenter table-striped">
+        <table class="table table-vcenter table-striped" data-form="deleteForm">
             <thead>
                 <tr>
                     <th>No.</th>

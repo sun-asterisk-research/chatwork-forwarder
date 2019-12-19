@@ -171,4 +171,13 @@ $(document).ready(function () {
             });
         }
     });
+
+    $('.cancel-btn').on('click', function (e) {
+        e.preventDefault();
+        $('#cancel-confirm').modal({ backdrop: 'static', keyboard: false })
+        .on('click', '#cancel-btn', function () {
+            var webhook_id = $("input[name='webhook_id']").val();
+            window.location.pathname = '/webhooks/' + webhook_id + '/edit';
+        });
+    });
 });

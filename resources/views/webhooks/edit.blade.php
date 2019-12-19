@@ -21,11 +21,11 @@
     </div>
     <!-- END Simple Editor Title -->
     <!-- Simple Editor Content -->
-    {{ Form::open(['url' => route('webhooks.update', ['webhook' => $webhook]), 'method' => 'PUT']) }}
+    {{ Form::open(['url' => route('webhooks.update', ['webhook' => $webhook]), 'method' => 'PUT', 'class' => 'webhook-form']) }}
     <div class="form-group row">
         <div class="col-xs-12">
             <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
-            <a class="btn btn-sm btn-default float-right" href="{{ route('webhooks.index') }}"><i class="fa fa-times"></i> Cancel</a>
+            <button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
         </div>
         <div class="col-xs-8">
             <label class="field-compulsory required" for="webhook_name">Webhook name</label>
@@ -102,7 +102,7 @@
         </div>
     </div>
     {{ Form::close() }}
-
+    @include('modals.cancel_modal')
     <br/>
     <div class="block">
         <!-- Simple Editor Title -->
