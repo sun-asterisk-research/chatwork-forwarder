@@ -138,4 +138,12 @@ $(document).ready(function () {
                 $form.submit();
             });
     });
+
+    $('.webhook-form').on('click', '.cancel-btn', function (e) {
+        e.preventDefault();
+        $('#cancel-confirm').modal({ backdrop: 'static', keyboard: false })
+        .on('click', '#cancel-btn', function () {
+            window.location.pathname = '/webhooks';
+        });
+    });
 });
