@@ -31,7 +31,9 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('webhooks', 'WebhookController@index')->name('admin.webhooks.index');
             Route::get('webhooks/{webhook}', 'WebhookController@show')->name('admin.webhooks.show');
             Route::get('history', 'PayloadHistoryController@index')->name('admin.history.index');
-            Route::get('history/{history} ', 'PayloadHistoryController@show')->name('admin.history.show');
+            Route::get('history/{history}', 'PayloadHistoryController@show')->name('admin.history.show');
+            Route::delete('history/{history}', 'PayloadHistoryController@destroy')->name('admin.history.destroy');
+            Route::delete('history/message/{message}', 'MessageHistoryController@destroy')->name('admin.message.destroy');
         });
     });
     Route::resource('bots', 'BotController')->except('show');
