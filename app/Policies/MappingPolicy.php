@@ -45,6 +45,6 @@ class MappingPolicy
      */
     public function update(User $user, Mapping $mapping, Webhook $webhook)
     {
-        return $user->id === $mapping->webhook->user_id;
+        return $user->id === $mapping->webhook->user_id && $webhook->id === $mapping->webhook->id;
     }
 }
