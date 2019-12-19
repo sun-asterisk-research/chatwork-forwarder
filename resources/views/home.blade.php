@@ -21,7 +21,11 @@
             @if(Auth::guest())
             <a data-toggle="modal" href='#modal-login' class="btn btn-default">Login</a>
             @else
-            <a href="/dashboard" class="btn btn-default">Go to app</a>
+                @admin
+                <a href="admin/dashboard" class="btn btn-default">Go to app</a>
+                @else
+                <a href="/dashboard" class="btn btn-default">Go to app</a>
+                @endadmin
             @endif
         </div>
     </div>

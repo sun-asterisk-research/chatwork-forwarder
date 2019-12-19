@@ -24,7 +24,6 @@ Route::namespace('Auth')->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::resource('dashboard', 'DashboardController')->only('index');
     Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
         Route::resource('users', 'UserController');
         Route::group(['namespace' => 'Admin'], function () {
@@ -34,7 +33,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('history/{history}', 'PayloadHistoryController@show')->name('admin.history.show');
             Route::delete('history/{history}', 'PayloadHistoryController@destroy')->name('admin.history.destroy');
             Route::delete('history/message/{message}', 'MessageHistoryController@destroy')->name('admin.message.destroy');
-        });
+            Route::resource('dashboard', 'DashboardController')->only('index');
+      });
     });
     Route::resource('bots', 'BotController')->except('show');
     Route::put('webhooks/change_status', 'WebhookController@changeStatus');
@@ -46,4 +46,5 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
     Route::resource('webhooks.payloads', 'PayloadController')->except('show');
     Route::resource('webhooks.mappings', 'MappingController')->except(['index', 'show']);
+    Route::resource('dashboard', 'DashboardController')->only('index');
 });

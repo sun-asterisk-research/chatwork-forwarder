@@ -63,4 +63,9 @@ class Webhook extends Model
             ->where('status', 'LIKE', '%' . $searchParams['status'] . '%')
             ->paginate($perPage);
     }
+
+    public function scopeByUser($query, $userID)
+    {
+        return $query->where('user_id', $userID);
+    }
 }

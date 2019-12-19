@@ -11,10 +11,10 @@
             </div>
             <!-- Sidebar Navigation -->
             <ul class="sidebar-nav">
-                <li>
-                    <a href="/dashboard"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
-                </li>
                 @admin
+                <li>
+                    <a href="/admin/dashboard"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
+                </li>
                 <li>
                     <a href="/admin/users"><i class="fa fa-users"></i> Users</a>
                 </li>
@@ -25,6 +25,9 @@
                     <a href="/admin/history"><i class="fa fa-history"></i> Payload histories</a>
                 </li>
                 @else
+                <li>
+                    <a href="/dashboard"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
+                </li>
                 <li>
                     <a href="/webhooks"><i class="fa fa-desktop"></i> Webhooks</a>
                 </li>

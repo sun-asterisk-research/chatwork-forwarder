@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Auth\LoginRequest;
+use Auth;
+use App\Enums\UserType;
 
 class LoginController extends Controller
 {
@@ -27,7 +29,14 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/dashboard';
+    protected function redirectPath()
+    {
+        if (Auth::user()->role == UserType::ADMIN) {
+            return '/admin/dashboard';
+        } else {
+            return '/dashboard';
+        }
+    }
 
     /**
      * Create a new controller instance.

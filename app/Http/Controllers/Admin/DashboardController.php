@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Exception;
 use Auth;
 use App\Models\User;
@@ -22,11 +23,18 @@ class DashboardController extends Controller
     {
         $statisticParams = $this->handleStatisticParam($request->get('statistic'));
 
+        $countData = [
+            'user' => User::count(),
+            'enabledWebhook' => Webhook::enable()->count(),
+            'disabledWebhook' => Webhook::disable()->count(),
+            'bot' => Bot::count(),
+        ];
+
         $period = $this->getDateFromRange($statisticParams['fromDate'], $statisticParams['toDate']);
-        $payloadFailded = PayloadHistory::dataChartByUser($statisticParams, PayloadHistoryStatus::FAILED, Auth::id());
-        $payloadSuccess = PayloadHistory::dataChartByUser($statisticParams, PayloadHistoryStatus::SUCCESS, Auth::id());
-        $messageFailed = MessageHistory::dataChartByUser($statisticParams, MessageHistoryStatus::FAILED, Auth::id());
-        $messageSuccess = MessageHistory::dataChartByUser($statisticParams, MessageHistoryStatus::SUCCESS, Auth::id());
+        $payloadFailded = PayloadHistory::dataChart($statisticParams, PayloadHistoryStatus::FAILED);
+        $payloadSuccess = PayloadHistory::dataChart($statisticParams, PayloadHistoryStatus::SUCCESS);
+        $messageFailed = MessageHistory::dataChart($statisticParams, MessageHistoryStatus::FAILED);
+        $messageSuccess = MessageHistory::dataChart($statisticParams, MessageHistoryStatus::SUCCESS);
 
         $payloadFaildedQuantity = $this->getDataChart($payloadFailded, $period);
         $payloadSuccessQuantity = $this->getDataChart($payloadSuccess, $period);
@@ -39,33 +47,22 @@ class DashboardController extends Controller
         $messageSuccessChart = $this->convertArrayChart($messageSuccessQuantity, $period);
         $dateChart = $this->convertArrayChart($period);
 
-        $payloadFaildedCount = array_sum($payloadFaildedQuantity);
-        $payloadSuccessCount = array_sum($payloadSuccessQuantity);
-        $messageFaildedCount = array_sum($messageFaildedQuantity);
-        $messageSuccessCount = array_sum($messageSuccessQuantity);
-
-        $countData = [
-            'webhook' => Webhook::byUser(Auth::id())->count(),
-            'payloadHistory' => ($payloadFaildedCount + $payloadSuccessCount),
-            'messageHistory' => ($messageFaildedCount + $messageSuccessCount),
-            'bot' => Bot::byUser(Auth::id())->count(),
-        ];
         $payloadChartData = [
-            'failedCases' => $payloadFaildedCount,
-            'successCases' => $payloadSuccessCount,
+            'failedCases' => array_sum($payloadFaildedQuantity),
+            'successCases' => array_sum($payloadSuccessQuantity),
             'dateChart' => $dateChart,
             'payloadFailedChart' => $payloadFailedChart,
             'payloadSuccessChart' => $payloadSuccessChart,
         ];
         $messageChartData = [
-            'failedCases' => $messageFaildedCount,
-            'successCases' => $messageSuccessCount,
+            'failedCases' => array_sum($messageFaildedQuantity),
+            'successCases' => array_sum($messageSuccessQuantity),
             'dateChart' => $dateChart,
             'messageFailedChart' => $messageFailedChart,
             'messageSuccessChart' => $messageSuccessChart,
         ];
         return view(
-            'dashboard',
+            'admins.dashboard',
             [
                 'countData' => $countData,
                 'payloadHistory' => $payloadChartData,
