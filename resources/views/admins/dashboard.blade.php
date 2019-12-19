@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
 <!-- Datatables Header -->
 <ul class="breadcrumb breadcrumb-top">
     <li>Dashboard</li>
@@ -75,10 +76,7 @@
         <div class="row">
             <form method="GET" action="{{ route('dashboard.index') }}">
                 <div class="col-sm-6 col-lg-3">
-                    <input type="text" id="fromDate" name="statistic[fromDate]" class="form-control input-datepicker" data-date-format="dd-mm-yyyy" placeholder="From Date" value="{{ request('statistic')['fromDate'] ?? '' }}">
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                    <input type="text" id="toDate" name="statistic[toDate]" class="form-control input-datepicker" data-date-format="dd-mm-yyyy" placeholder="To Date" value="{{ request('statistic')['toDate'] ?? '' }}">
+                    <input type="text" id="date-ranger" name="daterange" class="form-control input-datepicker" value="{{ request('statistic')['daterange'] ?? '' }}" />
                 </div>
                 <button class="btn btn-md btn-search"><i class="fa fa-bar-chart-o"></i> Statistic</button>
             </form>
@@ -166,6 +164,7 @@
     var messageHistory = {!! json_encode($messageHistory) !!};
 </script>
 <script src="{{ asset('js/chart.js') }}"></script>
+<script src="{{ asset('js/moment.min.js') }}"></script>
+<script src="{{ asset('js/daterangepicker.min.js') }}"></script>
 <script src="{{ asset('js/dashboard.js') }}"></script>
-
 @endsection
