@@ -21,7 +21,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $statisticParams = $this->handleStatisticParam($request->get('statistic'));
+        $statisticParams = $this->handleStatisticParam($request->get('daterange'));
 
         $countData = [
             'user' => User::count(),
@@ -71,10 +71,13 @@ class DashboardController extends Controller
         );
     }
 
-    private function handleStatisticParam($statisticParams)
+    private function handleStatisticParam($dateRange)
     {
-        if ($statisticParams == null) {
+        if ($dateRange == null) {
             $statisticParams = ['fromDate' => date('01-m-Y'), 'toDate' => date('d-m-Y')];
+        } else {
+            $dateRangeParams = explode(' - ', $dateRange, 2);
+            $statisticParams = ['fromDate' => $dateRangeParams[0], 'toDate' => $dateRangeParams[1]];
         }
 
         if ($statisticParams['fromDate'] == null) {
