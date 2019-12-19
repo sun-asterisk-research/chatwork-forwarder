@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MappingUpdateRequest extends FormRequest
 {
@@ -24,8 +25,20 @@ class MappingUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:100|unique:mappings,name,NULL,id,webhook_id,' . $this->webhook->id,
-            'key' => 'required|max:100|unique:mappings,key,NULL,id,webhook_id,' . $this->webhook->id,
+            'name' => [
+                'required',
+                'max:100',
+                Rule::unique('mappings')->ignore($this->mapping->id)->where(function ($query) {
+                    return $query->where('webhook_id', $this->webhook->id);
+                }),
+            ],
+            'key' => [
+                'required',
+                'max:100',
+                Rule::unique('mappings')->ignore($this->mapping->id)->where(function ($query) {
+                    return $query->where('webhook_id', $this->webhook->id);
+                }),
+            ],
             'value' => 'required|max:100',
         ];
     }

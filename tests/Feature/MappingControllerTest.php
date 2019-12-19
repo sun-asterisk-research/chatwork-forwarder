@@ -418,8 +418,9 @@ class MappingControllerTest extends TestCase
      */
     public function testUpdateMappingFailedNameDuplicateFeature()
     {
-        $mapping = factory(Mapping::class)->create(['name' => 'nguyen van a']);
-        $user = $mapping->webhook->user;
+        $mapping1 = factory(Mapping::class)->create(['name' => 'nguyen van a']);
+        $mapping2 = factory(Mapping::class)->create(['name' => 'nguyen van b', 'webhook_id' => $mapping1->webhook->id]);
+        $user = $mapping1->webhook->user;
         $data = [
             'name' => 'nguyen van a',
             'key' => 'tranvana',
@@ -427,7 +428,7 @@ class MappingControllerTest extends TestCase
         ];
 
         $this->actingAs($user);
-        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping1->webhook, 'mapping' => $mapping2]), $data);
 
         $response->assertStatus(302)
             ->assertSessionHasErrors('name');
@@ -484,8 +485,9 @@ class MappingControllerTest extends TestCase
      */
     public function testUpdateMappingFailedKeyDuplicateFeature()
     {
-        $mapping = factory(Mapping::class)->create(['key' => 'tranvana']);
-        $user = $mapping->webhook->user;
+        $mapping1 = factory(Mapping::class)->create(['key' => 'tranvana']);
+        $mapping2 = factory(Mapping::class)->create(['key' => 'tranvanb', 'webhook_id' => $mapping1->webhook->id]);
+        $user = $mapping1->webhook->user;
         $data = [
             'name' => 'tran van A',
             'key' => 'tranvana',
@@ -493,7 +495,7 @@ class MappingControllerTest extends TestCase
         ];
 
         $this->actingAs($user);
-        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping1->webhook, 'mapping' => $mapping2]), $data);
 
         $response->assertStatus(302)
             ->assertSessionHasErrors('key');
