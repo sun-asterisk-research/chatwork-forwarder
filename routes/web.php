@@ -47,4 +47,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('webhooks.payloads', 'PayloadController')->except('show');
     Route::resource('webhooks.mappings', 'MappingController')->except(['index', 'show']);
     Route::resource('dashboard', 'DashboardController')->only('index');
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('admin');
 });
