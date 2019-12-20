@@ -17,6 +17,7 @@
         "laravelcollective/html": "^5.8.0",
         "mpociot/laravel-apidoc-generator": "^4.0",
         "rap2hpoutre/laravel-log-viewer": "^1.3",
+        "s-ichikawa/laravel-sendgrid-driver": "^2.1",
         "sun-asterisk/chatwork-php": "^0.1.2"
     },
     "require-dev": {
