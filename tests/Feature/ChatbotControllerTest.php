@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Bot;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Webhook;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ChatbotControllerTest extends TestCase
@@ -193,7 +193,7 @@ class ChatbotControllerTest extends TestCase
             ->assertSessionHasErrors('bot_key');
     }
 
-     /**
+    /**
      * test bot bot_key have maximum length is 50 characters
      *
      * @return void
@@ -217,60 +217,81 @@ class ChatbotControllerTest extends TestCase
     }
 
     /**
-    * test Feature remove bot successfully.
-    *
-    * @return void
-    */
-   public function testRemoveChatbotFeature()
-   {
-       $bot = factory(Bot::class)->create(['name' => 'test remove bot']);
-       $user = $bot->user;
+     * test Feature remove bot successfully.
+     *
+     * @return void
+     */
+    public function testRemoveChatbotFeature()
+    {
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot']);
+        $user = $bot->user;
 
-       $this->actingAs($user);
-       $response = $this->delete(route('bots.destroy', $bot->id));
-       $this->assertDatabaseMissing('bots', [
-           'id' => $bot->id,
-           'name' => 'test remove bot',
-           'deleted_at' => NULL,
+        $this->actingAs($user);
+        $response = $this->delete(route('bots.destroy', $bot->id));
+        $this->assertDatabaseMissing('bots', [
+            'id' => $bot->id,
+            'name' => 'test remove bot',
+            'deleted_at' => NULL,
         ]);
-       $response->assertRedirect('/bots');
-       $response->assertStatus(302);
-   }
-
-   /**
-    * test Feature remove bot fail.
-    *
-    * @return void
-    */
-   public function testRemoveChatbotFailFeature()
-   {
-       $bot = factory(Bot::class)->create(['name' => 'test remove bot fail']);
-       $user = $bot->user;
-
-       $this->actingAs($user);
-       $response = $this->delete(route('bots.destroy', ($bot->id + 99)));
-       $this->assertDatabaseHas('bots', ['name' => 'test remove bot fail']);
-       $response->assertStatus(404);
-   }
-
-   /**
-    * test Feature remove bot unauthorized
-    *
-    * @return void
-    */
-   public function testRemoveChatbotUnauthorizedFeature()
-   {
-       $response = $this->delete(route('bots.destroy', 1));
-
-       $response->assertLocation('/');
-       $response->assertStatus(302);
-   }
+        $response->assertRedirect('/bots');
+        $response->assertStatus(302);
+    }
 
     /**
-    * test remove bot permission denine
-    *
-    * @return void
-    */
+     * test Feature remove bot fail.
+     *
+     * @return void
+     */
+    public function testRemoveChatbotFailFeature()
+    {
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot fail']);
+        $user = $bot->user;
+
+        $this->actingAs($user);
+        $response = $this->delete(route('bots.destroy', ($bot->id + 99)));
+        $this->assertDatabaseHas('bots', ['name' => 'test remove bot fail']);
+        $response->assertStatus(404);
+    }
+
+    /**
+     * test Feature remove bot fail.
+     *
+     * @return void
+     */
+    public function testRemoveChatbotAddedToWebhook()
+    {
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot fail']);
+        $user = $bot->user;
+        factory(Webhook::class)->create(['bot_id' => $bot->id]);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('bots.destroy', $bot->id));
+        $this->assertDatabaseHas('bots', ['id' => $bot->id]);
+        $response->assertStatus(302);
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'This bot has been added to some webhooks, please remove it first',
+        ]);
+    }
+
+    /**
+     * test Feature remove bot unauthorized
+     *
+     * @return void
+     */
+    public function testRemoveChatbotUnauthorizedFeature()
+    {
+        $response = $this->delete(route('bots.destroy', 1));
+
+        $response->assertLocation('/');
+        $response->assertStatus(302);
+    }
+
+    /**
+     * test remove bot permission denine
+     *
+     * @return void
+     */
     public function testRemoveBotPermissionDenine()
     {
         $bot = factory(Bot::class)->create();
@@ -283,10 +304,10 @@ class ChatbotControllerTest extends TestCase
     }
 
     /**
-    * test edit bot permission denine
-    *
-    * @return void
-    */
+     * test edit bot permission denine
+     *
+     * @return void
+     */
     public function testEditBotPermissionDenine()
     {
         $bot = factory(Bot::class)->create();
@@ -298,7 +319,7 @@ class ChatbotControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-   /**
+    /**
      * test user can see edit bot form
      *
      * @return void
@@ -329,7 +350,7 @@ class ChatbotControllerTest extends TestCase
             ->assertRedirect('/');
     }
 
-     /**
+    /**
      * test user authorized can edit bot
      *
      * @return void
@@ -349,7 +370,7 @@ class ChatbotControllerTest extends TestCase
         $this->assertDatabaseHas('bots', ['id' => $bot->id, 'name' => 'Updated Bot', 'bot_key' => 'asdg12asd3423adasdasd23sdasdas23']);
     }
 
-     /**
+    /**
      * test bot required name
      *
      * @return void
@@ -371,7 +392,7 @@ class ChatbotControllerTest extends TestCase
             ->assertSessionHasErrors('name');
     }
 
-     /**
+    /**
      * test bot unique name with a user
      *
      * @return void
@@ -436,6 +457,7 @@ class ChatbotControllerTest extends TestCase
             ->assertStatus(302)
             ->assertSessionHasErrors('bot_key');
     }
+
     /**
      * test bot unique bot_key with user
      *
@@ -456,7 +478,8 @@ class ChatbotControllerTest extends TestCase
             ->assertStatus(302)
             ->assertSessionHasErrors('bot_key');
     }
-     /**
+
+    /**
      * test bot bot_key have maximum length is 50 characters
      *
      * @return void

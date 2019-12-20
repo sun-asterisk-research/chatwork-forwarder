@@ -29,6 +29,13 @@ class BotController extends Controller
     public function destroy(Bot $bot)
     {
         $this->authorize('delete', $bot);
+        if ($bot->webhooks->count() > 0) {
+            return redirect()->back()
+                ->with('messageFail', [
+                    'status' => 'Delete failed',
+                    'message' => 'This bot has been added to some webhooks, please remove it first',
+                ]);
+        }
 
         try {
             $this->botRepository->delete($bot->id);
