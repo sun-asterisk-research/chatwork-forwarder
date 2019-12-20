@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    var current_root_path = window.location.pathname.split('/')[1];
+    var pathNames = window.location.pathname.split('/');
+    var current_root_path = window.location.pathname.includes('/admin') ? pathNames[2] : pathNames[1];
 
     $(".sidebar-content a").each(function (index, element) {
         $(element).removeClass('active');

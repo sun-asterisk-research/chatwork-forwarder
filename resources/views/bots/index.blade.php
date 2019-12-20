@@ -1,5 +1,4 @@
 @extends('layouts.app')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li>Bots</li>

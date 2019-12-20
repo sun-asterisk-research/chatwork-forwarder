@@ -1,10 +1,9 @@
 <?php use App\Enums\MessageHistoryStatus;
-      use App\Enums\PayloadHistoryStatus;
+use App\Enums\PayloadHistoryStatus;
 ?>
 
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="/history">Payload Histories</a></li>
     <li>Detail</li>

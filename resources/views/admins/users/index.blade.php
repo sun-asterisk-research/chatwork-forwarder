@@ -1,7 +1,6 @@
 @php use App\Enums\UserType; @endphp
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Users</li>
 </ul>

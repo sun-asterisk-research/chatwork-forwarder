@@ -1,7 +1,6 @@
 <?php use App\Enums\WebhookStatus; ?>
 
 @extends('layouts.app')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 @section('content')
 <ul class="breadcrumb breadcrumb-top">

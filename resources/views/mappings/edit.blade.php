@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
 @include('common.flash-message')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 <ul class="breadcrumb breadcrumb-top">
   <li><a href="{{ route('webhooks.index') }}">Webhooks</a></li>

@@ -3,7 +3,6 @@
 <?php use App\Enums\UserType; ?>
 <?php use App\Enums\WebhookStatus; ?>
 
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 <ul class="breadcrumb breadcrumb-top">
     @if (Auth::user()->role == UserType::ADMIN)

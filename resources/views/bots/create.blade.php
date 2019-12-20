@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="{{ route('bots.index') }}">Bots</a></li>

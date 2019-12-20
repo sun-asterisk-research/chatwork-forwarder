@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/themes.css') }}">
+    <link rel="stylesheet" href="{{ mix('/css/style.css') }}">
     <link href="{{ asset('css/toastr.css') }}" rel="stylesheet">
     <script src="{{ asset('js/modernizr-2.7.1-respond-1.4.2.min.js') }}"></script>
 </head>

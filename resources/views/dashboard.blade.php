@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
 <!-- Datatables Header -->
 <ul class="breadcrumb breadcrumb-top">
