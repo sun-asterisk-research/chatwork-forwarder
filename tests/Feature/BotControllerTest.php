@@ -6,9 +6,10 @@ use Tests\TestCase;
 use App\Models\Bot;
 use App\Models\User;
 use App\Models\Webhook;
+use App\Enums\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ChatbotControllerTest extends TestCase
+class BotControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -29,6 +30,21 @@ class ChatbotControllerTest extends TestCase
     }
 
     /**
+     * test Feature user is admin can't access list bot.
+     *
+     * @return void
+     */
+    public function testUserIsAdminCantViewListBotFeature()
+    {
+        factory(Bot::class, 2)->create();
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+
+        $this->actingAs($user);
+        $response = $this->get('/bots');
+        $response->assertStatus(403);
+    }
+
+    /**
      * test user can see create bot form
      *
      * @return void
@@ -43,6 +59,21 @@ class ChatbotControllerTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertViewIs('bots.create');
+    }
+
+    /**
+     * test admin cant see create bot form
+     *
+     * @return void
+     */
+    public function testAdminCantSeeCreateBotForm()
+    {
+        $user = factory(User::class)->make(['role' => UserType::ADMIN]);
+
+        $this->actingAs($user);
+        $response = $this->get(route('bots.create'));
+
+        $response->assertStatus(403);
     }
 
     /**
@@ -90,7 +121,7 @@ class ChatbotControllerTest extends TestCase
     {
         $user = factory(User::class)->create();
         $params = [
-            'name' => NULL,
+            'name' => null,
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
 
@@ -159,7 +190,7 @@ class ChatbotControllerTest extends TestCase
 
         $params = [
             'name' => 'asd',
-            'bot_key' => NULL,
+            'bot_key' => null,
         ];
 
         $this->actingAs($user);
@@ -231,7 +262,7 @@ class ChatbotControllerTest extends TestCase
         $this->assertDatabaseMissing('bots', [
             'id' => $bot->id,
             'name' => 'test remove bot',
-            'deleted_at' => NULL,
+            'deleted_at' => null,
         ]);
         $response->assertRedirect('/bots');
         $response->assertStatus(302);
@@ -336,6 +367,20 @@ class ChatbotControllerTest extends TestCase
     }
 
     /**
+     * test admin can't see edit bot form
+     *
+     * @return void
+     */
+    public function testAdminCantSeeEditBotForm()
+    {
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot fail', 'user_id' => $user->id]);
+        $this->actingAs($user);
+        $response = $this->get(route('bots.edit', $bot->id));
+        $response->assertStatus(403);
+    }
+
+    /**
      * test user unauthorized cannot see edit bot form
      *
      * @return void
@@ -380,7 +425,7 @@ class ChatbotControllerTest extends TestCase
         $user = factory(User::class)->create();
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
-            'name' => NULL,
+            'name' => null,
             'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
         ];
 
@@ -448,7 +493,7 @@ class ChatbotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => 'asd',
-            'bot_key' => NULL,
+            'bot_key' => null,
         ];
 
         $this->actingAs($user);

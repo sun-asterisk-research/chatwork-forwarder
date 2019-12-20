@@ -16,6 +16,12 @@ class BotController extends Controller
     public function __construct(BotRepository $botRepository)
     {
         $this->botRepository = $botRepository;
+        $this->authorizeResource(Bot::class);
+    }
+
+    protected function resourceAbilityMap()
+    {
+        return array_merge(parent::resourceAbilityMap(), ['index' => 'viewAny']);
     }
 
     public function index()
@@ -79,14 +85,11 @@ class BotController extends Controller
 
     public function edit(Bot $bot)
     {
-        $this->authorize('update', $bot);
-
         return view('bots.edit', compact('bot'));
     }
 
     public function update(BotUpdateRequest $request, Bot $bot)
     {
-        $this->authorize('update', $bot);
         $data = $request->except('_token');
 
         try {

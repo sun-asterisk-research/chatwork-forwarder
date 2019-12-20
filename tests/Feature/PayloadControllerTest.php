@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Webhook;
 use App\Models\Payload;
+use App\Enums\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PayloadControllerTest extends TestCase
@@ -29,10 +30,27 @@ class PayloadControllerTest extends TestCase
         $this->assertDatabaseMissing('payloads', [
             'id' => $payload->id,
             'content' => 'test remove payload',
-            'deleted_at' => NULL,
+            'deleted_at' => null,
         ]);
         $response->assertRedirect(route('webhooks.edit', $webhook));
         $response->assertStatus(302);
+    }
+
+    /**
+     * test Feature admin can't remove payload.
+     *
+     * @return void
+     */
+    public function testAdminCantRemovePayloadFeature()
+    {
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'test remove payload']);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload' => $payload]));
+
+        $response->assertStatus(403);
     }
 
     /**
@@ -143,6 +161,21 @@ class PayloadControllerTest extends TestCase
     }
 
     /**
+     * test Feature admin can't show create payload view
+     *
+     * @return void
+     */
+    public function testAdminCantShowCreateViewPayloadFeature()
+    {
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+        $response = $this->get(route('webhooks.payloads.create', $webhook));
+        $response->assertStatus(403);
+    }
+
+    /**
      * test Feature show create payload view when user not authorized
      *
      * @return void
@@ -194,6 +227,27 @@ class PayloadControllerTest extends TestCase
             'status' => 'Create success',
             'message' => 'This payload successfully created',
         ]);
+    }
+
+    /**
+     * test Feature admin can't store payload
+     *
+     * @return void
+     */
+    public function testAdminCantStorePayloadSuccessFeature()
+    {
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+
+        $response = $this->post(route('webhooks.payloads.store', $webhook), [
+            'content' => 'Hi my name is {{$params->name}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['$params->name', '$params->age'],
+            'operators' => ['==', '>'],
+            'values' => ['rammus', '30']
+        ]);
+        $response->assertStatus(403);
     }
 
     /**
@@ -392,6 +446,25 @@ class PayloadControllerTest extends TestCase
             'message' => 'This payload successfully updated',
         ]);
         $this->assertEquals($payload->content, 'Hi my name is {{$params->name}}');
+    }
+
+    /**
+     * test Feature admin cant update payload
+     *
+     * @return void
+     */
+    public function testAdminCantUpdatePayloadSuccessFeature()
+    {
+        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
+        $this->actingAs($user);
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'content' => 'Hi my name is {{$params->name}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
+        ]);
+
+        $response->assertStatus(403);
     }
 
     /**

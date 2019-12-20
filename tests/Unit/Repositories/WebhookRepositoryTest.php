@@ -79,25 +79,6 @@ class WebhookRepositoryTest extends TestCase
     }
 
     /**
-     * unit test store webhook controller count called function (create, auth)
-     */
-    public function testStoreWebhook()
-    {
-        $this->withoutMiddleware();
-        // mock instance Repository
-        $mock = Mockery::mock('App\Repositories\Interfaces\WebhookRepositoryInterface');
-
-        $this->app->instance('App\Repositories\Interfaces\WebhookRepositoryInterface', $mock);
-
-        $auth = Auth::shouldReceive('id')->andReturn(1);
-        $create = $mock->shouldReceive('create');
-        $response = $this->post('/webhooks', ['name' => 'string', 'description' => 'some thing successfully', 'bot_id' => 1, 'room_name' => 'string', 'room_id' => 1]);
-
-        $create->once();
-        $auth->times(3);
-    }
-
-    /**
      * test update webhook success with once attribute
      *
      * @return void
