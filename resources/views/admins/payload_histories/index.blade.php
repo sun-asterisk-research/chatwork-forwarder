@@ -2,7 +2,6 @@
 @extends('layouts.app')
 @section('content')
 @include('common.flash-message')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <ul class="breadcrumb breadcrumb-top">
     <li>Payload histories</li>
     <li><a href="{{ route('admin.history.index') }}">Lists</a></li>
@@ -83,7 +82,7 @@
                         <td class="text-center">{{ $payloadHistory->created_at }}</td>
                         <td class="text-center">
                             <a class="btn btn-sm btn-default" href="{{ route('admin.history.show', ['history' => $payloadHistory->id]) }}">
-                                <i class="fa fa-pencil"></i>Detail
+                                <i class="fa fa-pencil"></i> Detail
                             </a>
                             {{ Form::open([
                                 'method' => 'DELETE',

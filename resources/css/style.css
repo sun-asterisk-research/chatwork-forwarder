@@ -6,6 +6,10 @@
     margin-top: 15px !important;
 }
 
+.mt-4 {
+    margin-top: 4px;
+}
+
 .webhook-description {
     max-width: 350px !important;
 }

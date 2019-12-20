@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="{{ mix('/css/style.css') }}">
 <?php use App\Enums\UserType; ?>
 <?php use App\Enums\WebhookStatus; ?>
 
