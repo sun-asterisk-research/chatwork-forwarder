@@ -114,3 +114,7 @@
   margin-right: 5px;
   width: 35px;
 }
+.td_avatar {
+  width: 60px;
+  border-radius: 50%;
+}
