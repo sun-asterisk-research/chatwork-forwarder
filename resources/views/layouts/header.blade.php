@@ -19,11 +19,6 @@
             <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
                 <li class="dropdown-header text-center">Account</li>
                 <li>
-                    <a href="#modal-user-settings" data-toggle="modal">
-                        <i class="fa fa-cog fa-fw pull-right"></i>
-                        Settings
-                    </a>
-
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
                         <i class="fa fa-sign-out pull-right"></i>

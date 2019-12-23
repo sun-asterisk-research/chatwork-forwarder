@@ -50,12 +50,12 @@
                     <td class="text-center">
                         @if($user->avatar)
                             @if (substr($user->avatar, 0, 8) == 'https://')
-                            <img src="{{ $user->avatar }}" alt="avatar" width="60px;">
+                            <img src="{{ $user->avatar }}" alt="avatar" class="td_avatar">
                             @else
-                            <img src="/storage/{{ $user->avatar }}" alt="avatar" width="60px;">
+                            <img src="/storage/{{ $user->avatar }}" alt="avatar" class="td_avatar">
                             @endif
                         @else
-                        <img src="/img/avatar_default.png" alt="avatar" width="60px;">
+                        <img src="/img/avatar_default.png" alt="avatar" class="td_avatar">
                         @endif
                     </td>
                     <td><a href="{{ route('users.edit', ['user' => $user]) }}">{{ $user->name }}</a></td>
