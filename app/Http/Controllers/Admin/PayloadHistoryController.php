@@ -37,13 +37,17 @@ class PayloadHistoryController extends Controller
         $searchParams = $request->search;
         $perPage = config('paginate.perPage');
         $payloadHistories = $this->payloadHistoryRepository->getAllAndSearch($perPage, $searchParams);
-        $webhooks = $this->webhookRepository->getAll()->pluck('id', 'name');
-        $payloadHistoryStatuses = PayloadHistoryStatus::toArray();
+        if ($payloadHistories->count() == 0 && $payloadHistories->previousPageUrl()) {
+            return redirect($payloadHistories->previousPageUrl());
+        } else {
+            $webhooks = $this->webhookRepository->getAll()->pluck('id', 'name');
+            $payloadHistoryStatuses = PayloadHistoryStatus::toArray();
 
-        return view(
-            'admins.payload_histories.index',
-            compact('payloadHistories', 'webhooks', 'payloadHistoryStatuses')
-        );
+            return view(
+                'admins.payload_histories.index',
+                compact('payloadHistories', 'webhooks', 'payloadHistoryStatuses')
+            );
+        }
     }
 
     public function show(Request $request, $id)
@@ -61,16 +65,18 @@ class PayloadHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  App/models/PayloadHistory $history
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PayloadHistory $history)
+    public function destroy(Request $request, PayloadHistory $history)
     {
         $this->authorize('delete', $history);
+        $page = $request->page ? ['page' => $request->page] : null;
         try {
             $this->payloadHistoryRepository->delete($history->id);
 
-            return redirect(route('admin.history.index'))
+            return redirect(route('admin.history.index', $page))
                 ->with('messageSuccess', [
                     'status' => 'Delete success',
                     'message' => 'This payload history successfully deleted',

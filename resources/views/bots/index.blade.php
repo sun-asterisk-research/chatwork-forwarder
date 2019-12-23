@@ -36,7 +36,7 @@
 
                                 {{ Form::open([
                                     'method' => 'DELETE',
-                                    'route' => ['bots.destroy', 'bot' => $bot],
+                                    'route' => ['bots.destroy', 'bot' => $bot, 'page' => request('page')],
                                     'style' => 'display:inline',
                                     'class' => 'form-delete'
                                 ]) }}

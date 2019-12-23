@@ -30,6 +30,21 @@ class UserControllerTest extends TestCase
    }
 
    /**
+    * test Feature list user in page has no record.
+    *
+    * @return void
+    */
+   public function testListUserInNoRecordPageFeature()
+   {
+       $currentUser = factory(User::class)->create(['role' => UserType::ADMIN]);
+       factory(User::class, 3)->create();
+       $this->actingAs($currentUser);
+       $response = $this->get(route('users.index', ['page' => 2]));
+
+       $response->assertLocation(route('users.index', ['page' => 1]));
+   }
+
+   /**
     * test Feature list user when user not login
     *
     * @return void
@@ -686,6 +701,17 @@ class UserControllerTest extends TestCase
         $this->assertDatabaseMissing('users', ['id' => $user->id, 'name' => 'name remove', 'deleted_at' => NULL]);
         $response->assertRedirect(route('users.index'));
         $response->assertStatus(302);
+    }
+
+    public function testRemoveUserAtSecondPageFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $user = factory(User::class)->create(['role' => UserType::USER, 'name' => 'name remove']);
+        $this->actingAs($admin);
+        $response = $this->delete(route('users.destroy', ['page' => 2, 'user' => $user]));
+        
+        $this->assertDatabaseMissing('users', ['id' => $user->id, 'name' => 'name remove', 'deleted_at' => NULL]);
+        $response->assertRedirect(route('users.index', ['page' => 2]));
     }
 
     public function testRemoveUserFail()

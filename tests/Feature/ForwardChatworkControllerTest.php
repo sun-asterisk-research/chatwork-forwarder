@@ -10,6 +10,8 @@ use App\Models\Payload;
 
 class ForwardChatworkControllerTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /**
      * test forward message success
      *

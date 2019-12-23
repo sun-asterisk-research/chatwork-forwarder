@@ -60,7 +60,7 @@ use App\Enums\WebhookStatus; ?>
 
                                 {{ Form::open([
                                     'method' => 'DELETE',
-                                    'route' => ['webhooks.destroy', 'webhook' => $webhook],
+                                    'route' => ['webhooks.destroy', 'webhook' => $webhook, 'page' => request('page')],
                                     'style' => 'display:inline',
                                     'class' => 'form-delete'
                                 ]) }}

@@ -17,6 +17,22 @@ class AdminPayloadHistoryController extends TestCase
     use RefreshDatabase;
 
     /**
+     * test Feature admin list payload history in page has no record.
+     *
+     * @return void
+     */
+    public function testAdminListPayloadHistoryInNoRecordPageFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create();
+        factory(PayloadHistory::class, 2)->create(['webhook_id' => $webhook->id]);
+        $this->actingAs($admin);
+
+        $response = $this->get(route('admin.history.index', ['page' => 2]));
+        $response->assertLocation(route('admin.history.index', ['page' => 1]));
+    }
+
+    /**
      * test Feature admin list payload history success
      *
      * @return void
@@ -233,6 +249,29 @@ class AdminPayloadHistoryController extends TestCase
        $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
        $response->assertRedirect(route('admin.history.index'));
        $response->assertStatus(302);
+   }
+
+    /**
+    * test Feature admin remove payload history at second page successfully.
+    *
+    * @return void
+    */
+   public function testRemovePayloadHistoryAtSecondPageFeature()
+   {
+       $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history']);
+       factory(MessageHistory::class, 5)->create(['payload_history_id' => $payloadHistory->id]);
+
+       $user = factory(User::class)->create(['role' => 0]);
+       $this->actingAs($user);
+
+       $response = $this->delete(route('admin.history.destroy', ['page' => 2, 'payloadHistory' => $payloadHistory->id]));
+       $this->assertDatabaseMissing('payload_histories', [
+           'id' => $payloadHistory->id,
+           'params' => 'test remove payload history',
+           'deleted_at' => NULL,
+        ]);
+       $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
+       $response->assertRedirect(route('admin.history.index', ['page' => 2]));
    }
 
    /**
