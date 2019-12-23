@@ -39,9 +39,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="uname"><b>Email</b></label>
-                        <input id="email" placeholder="Enter email" type="email" class="form-control" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
                         <div class="has-error" id="error-email"></div>
+                        <label for="uname"><b>Email</b></label>
+                        <input id="email" placeholder="Enter email" type="email" class="form-control mb-5" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
 
                         <label for="psw"><b>Password</b></label>
                         <input id="password" placeholder="Enter password" type="password" class="form-control" name="password"  autocomplete="current-password">
