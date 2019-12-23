@@ -24,8 +24,11 @@ class UserController extends Controller
         $searchParams = $request->search;
         $perPage = config('paginate.perPage');
         $users = $this->userRepository->getAllAndSearch($perPage, $searchParams);
-
-        return view('admins.users.index', compact('users'));
+        if ($users->count() == 0 && $users->previousPageUrl()) {
+            return redirect($users->previousPageUrl());
+        } else {
+            return view('admins.users.index', compact('users'));
+        }
     }
 
     /**
@@ -122,10 +125,12 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
+        $page = $request->page ? ['page' => $request->page] : null;
         try {
             if ($user->id == Auth::user()->id) {
                 return redirect()->back()->with('messageFail', [
@@ -134,7 +139,7 @@ class UserController extends Controller
                 ]);
             } else {
                 $this->userRepository->delete($user->id);
-                return redirect('/admin/users')->with('messageSuccess', [
+                return redirect()->route('users.index', $page)->with('messageSuccess', [
                     'status' => 'Delete success',
                     'message' => 'This user successfully deleted',
                 ]);

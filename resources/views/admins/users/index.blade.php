@@ -71,7 +71,7 @@
                         <a class="btn btn-sm btn-default" href="{{ route('users.edit', ['user' => $user]) }}"><i class="fa fa-pencil"></i> Edit</a>
                         {{ Form::open([
                             'method' => 'DELETE',
-                            'route' => ['users.destroy', 'user' => $user],
+                            'route' => ['users.destroy', 'user' => $user, 'page' => request('page')],
                             'style' => 'display:inline',
                             'class' => 'form-delete'
                             ]) }}

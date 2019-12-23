@@ -45,6 +45,21 @@ class BotControllerTest extends TestCase
     }
 
     /**
+     * test Feature list bots in page has no record.
+     *
+     * @return void
+     */
+    public function testShowListChatbotInNoRecordPageFeature()
+    {
+        $chatbotList = factory(Bot::class, 2)->create();
+        $user = $chatbotList[0]->user;
+
+        $this->actingAs($user);
+        $response = $this->get(route('bots.index', ['page' => 2]));
+        $response->assertLocation(route('bots.index', ['page' => 1]));
+    }
+
+    /**
      * test user can see create bot form
      *
      * @return void
@@ -265,6 +280,27 @@ class BotControllerTest extends TestCase
             'deleted_at' => null,
         ]);
         $response->assertRedirect('/bots');
+        $response->assertStatus(302);
+    }
+
+    /**
+     * test Feature remove bot at second page successfully.
+     *
+     * @return void
+     */
+    public function testRemoveChatbotAtSecondPageFeature()
+    {
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot']);
+        $user = $bot->user;
+
+        $this->actingAs($user);
+        $response = $this->delete(route('bots.destroy', ['page' => 2, 'bot' => $bot->id]));
+        $this->assertDatabaseMissing('bots', [
+            'id' => $bot->id,
+            'name' => 'test remove bot',
+            'deleted_at' => NULL,
+        ]);
+        $response->assertRedirect(route('bots.index', ['page' => 2]));
         $response->assertStatus(302);
     }
 

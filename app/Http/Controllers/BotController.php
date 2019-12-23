@@ -8,6 +8,7 @@ use App\Models\Bot;
 use App\Repositories\Interfaces\BotRepositoryInterface as BotRepository;
 use App\Http\Requests\BotCreateRequest;
 use App\Http\Requests\BotUpdateRequest;
+use Illuminate\Http\Request;
 
 class BotController extends Controller
 {
@@ -28,12 +29,16 @@ class BotController extends Controller
     {
         $perPage = config('paginate.perPage');
         $bots = $this->botRepository->getAllByUser($perPage);
-
-        return view('bots.index', compact('bots'));
+        if ($bots->count() == 0 && $bots->previousPageUrl()) {
+            return redirect($bots->previousPageUrl());
+        } else {
+            return view('bots.index', compact('bots'));
+        }
     }
 
-    public function destroy(Bot $bot)
+    public function destroy(Request $request, Bot $bot)
     {
+        $page = $request->page ? ['page' => $request->page] : null;
         $this->authorize('delete', $bot);
         if ($bot->webhooks->count() > 0) {
             return redirect()->back()
@@ -46,7 +51,7 @@ class BotController extends Controller
         try {
             $this->botRepository->delete($bot->id);
 
-            return redirect('/bots')->with('messageSuccess', [
+            return redirect()->route('bots.index', $page)->with('messageSuccess', [
                 'status' => 'Delete success',
                 'message' => __('message.bot.notification.delete.success'),
             ]);

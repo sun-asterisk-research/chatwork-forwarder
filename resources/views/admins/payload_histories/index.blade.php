@@ -86,7 +86,7 @@
                             </a>
                             {{ Form::open([
                                 'method' => 'DELETE',
-                                'route' => ['admin.history.destroy', 'history' => $payloadHistory],
+                                'route' => ['admin.history.destroy', 'history' => $payloadHistory, 'page' => request('page')],
                                 'style' => 'display:inline',
                                 'class' => 'form-delete'
                                 ]) }}

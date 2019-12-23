@@ -34,6 +34,21 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
+     * test Feature list webhooks in page has no record.
+     *
+     * @return void
+     */
+    public function testShowListWebhookInNoRecordPageFeature()
+    {
+        $webhookLists = factory(Webhook::class, 2)->create();
+        $user = $webhookLists[0]->user;
+
+        $this->actingAs($user);
+        $response = $this->get(route('webhooks.index', ['page' => 2]));
+        $response->assertLocation(route('webhooks.index', ['page' => 1]));
+    }
+
+    /**
      * test Feature show create view webhook.
      *
      * @return void
@@ -267,6 +282,23 @@ class WebhookControllerTest extends TestCase
         $this->actingAs($user);
         $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
         $response->assertStatus(403);
+    }
+    
+    /**
+     * test Feature remove webhook at second page successfully.
+     *
+     * @return void
+     */
+    public function testRemoveWebhookAtSecondPageFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook success']);
+
+        $this->actingAs($user);
+        $response = $this->delete(route('webhooks.destroy', ['page' => 2, 'webhook' => $webhook]));
+
+        $this->assertDatabaseMissing('webhooks', ['id' => $webhook->id, 'name' => 'test remove webhook success', 'deleted_at' => NULL]);
+        $response->assertRedirect(route('webhooks.index', ['page' => 2]));
     }
 
     /**

@@ -9,7 +9,6 @@ use App\Enums\UserType;
 use App\Models\MessageHistory;
 use App\Models\PayloadHistory;
 use App\Models\Webhook;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PayloadHistoryControllerTest extends TestCase
@@ -82,6 +81,22 @@ class PayloadHistoryControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('payloadHistories');
         $this->assertCount(2, $responsePayloadHistories);
+    }
+
+    /**
+     * test Feature list payload history in page has no record.
+     *
+     * @return void
+     */
+    public function testListPayloadHistoryInNoRecordPageFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        factory(PayloadHistory::class, 2)->create(['webhook_id' => $webhook->id]);
+
+        $this->actingAs($user);
+        $response = $this->get(route('history.index', ['page' => 2]));
+        $response->assertLocation(route('history.index', ['page' => 1]));
     }
 
     /**
@@ -223,6 +238,23 @@ class PayloadHistoryControllerTest extends TestCase
        $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
        $response->assertRedirect(route('history.index'));
        $response->assertStatus(302);
+   }
+
+    /**
+    * test Feature remove payload history at second page successfully.
+    *
+    * @return void
+    */
+   public function testRemovePayloadHistoryAtSecondPageFeature()
+   {
+       $payloadHistory = factory(PayloadHistory::class)->create();
+
+       $user = $payloadHistory->webhook->user;
+       $this->actingAs($user);
+
+       $response = $this->delete(route('history.destroy', ['payloadHistory' => $payloadHistory->id, 'page' => 2]));
+       $this->assertDatabaseMissing('payload_histories', ['id' => $payloadHistory->id, 'deleted_at' => NULL]);
+       $response->assertRedirect(route('history.index', ['page' => 2]));
    }
 
    /**

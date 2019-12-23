@@ -30,8 +30,11 @@ class WebhookController extends Controller
     {
         $perPage = config('paginate.perPage');
         $webhooks = $this->webhookRepository->getAllByUser($perPage);
-
-        return view('webhooks.index', compact('webhooks'));
+        if ($webhooks->count() == 0 && $webhooks->previousPageUrl()) {
+            return redirect($webhooks->previousPageUrl());
+        } else {
+            return view('webhooks.index', compact('webhooks'));
+        }
     }
 
     /**
@@ -124,11 +127,13 @@ class WebhookController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Webhook  $webhook
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Webhook $webhook)
+    public function destroy(Request $request, Webhook $webhook)
     {
+        $page = $request->page ? ['page' => $request->page] : null;
         $this->authorize('delete', $webhook);
         if ($webhook->payloads->count() > 0) {
             return redirect()->back()
@@ -156,7 +161,7 @@ class WebhookController extends Controller
 
         try {
             $this->webhookRepository->delete($webhook->id);
-            return redirect('/webhooks')->with('messageSuccess', [
+            return redirect()->route('webhooks.index', $page)->with('messageSuccess', [
                 'status' => 'Delete success',
                 'message' => 'This webhook successfully deleted',
             ]);
