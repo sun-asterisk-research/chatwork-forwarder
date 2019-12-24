@@ -8,6 +8,11 @@ use App\Models\Webhook;
 use App\Models\Mapping;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use App\Enums\UserType;
+use Mockery;
+use Exception;
+use Illuminate\Database\QueryException;
+use App\Repositories\Interfaces\MappingRepositoryInterface as MappingRepository;
 
 class MappingControllerTest extends TestCase
 {
@@ -30,6 +35,35 @@ class MappingControllerTest extends TestCase
         $response->assertRedirect(route('webhooks.edit', $webhook));
         $response->assertStatus(302);
     }
+
+    /**
+     * test Feature delete mapping raise exception
+     *
+     * @return void
+     */
+     public function testDeleteMappingFailedRaiseException()
+     {
+         $mapping = factory(Mapping::class)->create();
+         $user = $mapping->webhook->user;
+         $data = [
+             'name' => 'Tran Van A',
+             'key' => 'tranvana',
+             'value' => '[To:123123] Tran Van A',
+         ];
+
+         $this->actingAs($user);
+
+         $mock = Mockery::mock(MappingRepository::class);
+         $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+         $this->app->instance(MappingRepository::class, $mock);
+
+         $response = $this->delete(route('webhooks.mappings.destroy', ['webhook' => $mapping->webhook, 'mapping' => $mapping]));
+
+         $response->assertSessionHas('messageFail', [
+             'status' => 'Delete failed',
+             'message' => 'Delete failed. Something went wrong',
+         ]);
+     }
 
     /**
      * test Feature delete mapping not exists.
@@ -101,6 +135,40 @@ class MappingControllerTest extends TestCase
     }
 
     /**
+     * test User can see create mapping form
+     *
+     * @return void
+     */
+    public function testUserCanSeeCreateMappingForm()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $user = $webhook->user;
+
+        $this->actingAs($user);
+        $response = $this->get(route('webhooks.mappings.create', $webhook));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('webhook');
+    }
+
+    /**
+     * test Admin can't see create mapping form
+     *
+     * @return void
+     */
+    public function testUserCantSeeCreateMappingForm()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $webhook = factory(Webhook::class)->create();
+        $user = $webhook->user;
+
+        $this->actingAs($admin);
+        $response = $this->get(route('webhooks.mappings.create', $webhook));
+
+        $response->assertStatus(403);
+    }
+
+    /**
      * test Feature create mapping successfully
      *
      * @return void
@@ -121,6 +189,35 @@ class MappingControllerTest extends TestCase
         $response->assertStatus(302)
             ->assertSessionHas('messageSuccess');
         $this->assertDatabaseHas('mappings', ['name' => 'Tran Van A', 'webhook_id' => $webhook->id]);
+    }
+
+    /**
+     * test Feature create mapping raise exception
+     *
+     * @return void
+     */
+    public function testCreateMappingFailedRaiseException()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $user = $webhook->user;
+        $data = [
+            'name' => 'tran van a',
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(MappingRepository::class);
+        $mock->shouldReceive('create')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(MappingRepository::class, $mock);
+
+        $response = $this->post(route('webhooks.mappings.store', $webhook), $data);
+
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Create failed',
+            'message' => 'Create failed. Something went wrong',
+        ]);
     }
 
     /**
@@ -345,6 +442,23 @@ class MappingControllerTest extends TestCase
     }
 
     /**
+     * test User can see edit mapping form
+     *
+     * @return void
+     */
+    public function testUserCanSeeEditMappingForm()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+
+        $this->actingAs($user);
+        $response = $this->get(route('webhooks.mappings.edit', ['webhook' => $mapping->webhook, 'mapping' => $mapping]));
+
+        $response->assertStatus(200);
+        $response->assertViewHas(['webhook', 'mapping']);
+    }
+
+    /**
      * test Feature update mapping successfully
      *
      * @return void
@@ -365,6 +479,35 @@ class MappingControllerTest extends TestCase
         $response->assertStatus(302)
             ->assertSessionHas('messageSuccess');
         $this->assertDatabaseHas('mappings', ['name' => 'Tran Van A', 'webhook_id' => $mapping->webhook->id]);
+    }
+
+    /**
+     * test Feature update mapping raise exception
+     *
+     * @return void
+     */
+    public function testUpdateMappingFailedRaiseException()
+    {
+        $mapping = factory(Mapping::class)->create();
+        $user = $mapping->webhook->user;
+        $data = [
+            'name' => 'Tran Van A',
+            'key' => 'tranvana',
+            'value' => '[To:123123] Tran Van A',
+        ];
+
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(MappingRepository::class);
+        $mock->shouldReceive('update')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(MappingRepository::class, $mock);
+
+        $response = $this->put(route('webhooks.mappings.update', ['webhook' => $mapping->webhook, 'mapping' => $mapping]), $data);
+
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Update failed',
+            'message' => 'Update failed. Something went wrong',
+        ]);
     }
 
     /**
