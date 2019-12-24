@@ -1,8 +1,10 @@
 $(document).ready(function () {
     $('#cw_rooms').prop('disabled', true);
 
-    load_room_name();
-    load_room_id();
+    if($("input[name='_method']").val() == 'PUT'){
+        load_room_name();
+        load_room_id();
+    }
 
     function load_room_name() {
         var room_name = document.getElementById("room_name");
@@ -16,6 +18,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $('#cw_rooms').find('option').remove().end();
+                $('#cw_rooms').append("<option></option>");
                 $.each(data, function (index, value) {
                     if (room_name != null && value['name'] == room_name.value) {
                         $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "' selected='selected'>" + value['name'] + "</option>");
