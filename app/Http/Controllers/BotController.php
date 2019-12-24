@@ -90,12 +90,17 @@ class BotController extends Controller
 
     public function edit(Bot $bot)
     {
+        unset($bot->bot_key);
+
         return view('bots.edit', compact('bot'));
     }
 
     public function update(BotUpdateRequest $request, Bot $bot)
     {
         $data = $request->except('_token');
+        if ($data['bot_key'] == '') {
+            $data['bot_key'] = $bot->bot_key;
+        }
 
         try {
             $bot = $this->botRepository->update($bot->id, $data);

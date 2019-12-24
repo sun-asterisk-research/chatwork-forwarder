@@ -519,27 +519,6 @@ class BotControllerTest extends TestCase
     }
 
     /**
-     * test bot required bot_key
-     *
-     * @return void
-     */
-    public function testUpdateBotRequiredBotKey()
-    {
-        $user = factory(User::class)->create();
-        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
-        $params = [
-            'name' => 'asd',
-            'bot_key' => null,
-        ];
-
-        $this->actingAs($user);
-        $response = $this->put(route('bots.update', $bot->id), $params);
-        $response
-            ->assertStatus(302)
-            ->assertSessionHasErrors('bot_key');
-    }
-
-    /**
      * test bot unique bot_key with user
      *
      * @return void

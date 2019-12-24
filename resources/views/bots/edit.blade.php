@@ -35,8 +35,8 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-4">
-                <label class="field-compulsory required" for="bot_key">Bot Key</label>
-                <input type="text" id="bot_key" name="bot_key" class="form-control" value="{{ $bot->bot_key }}" placeholder="Enter bot key">
+                <label class="field-compulsory" for="bot_key">Bot Key</label>
+                <input type="password" id="bot_key" name="bot_key" class="form-control" value="{{ $bot->bot_key }}" placeholder="Enter bot key if you want to change">
                 @error('bot_key')
                     <div class="has-error">
                         <span class="help-block">{{ $message }}</span>
