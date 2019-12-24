@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Models\Bot;
 use App\Models\MessageHistory;
 use Illuminate\Bus\Queueable;
+use App\Enums\MessageHistoryStatus;
 use SunAsterisk\Chatwork\Chatwork;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -16,7 +16,7 @@ class SendMessageToChatwork implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $bot;
+    protected $chatwork;
     protected $roomId;
     protected $messages;
     protected $payloadHistoryId;
@@ -25,9 +25,9 @@ class SendMessageToChatwork implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Bot $bot, $roomId, $messages, $payloadHistoryId)
+    public function __construct(Chatwork $chatwork, $roomId, $messages, $payloadHistoryId)
     {
-        $this->bot = $bot;
+        $this->chatwork = $chatwork;
         $this->roomId = $roomId;
         $this->messages = $messages;
         $this->payloadHistoryId = $payloadHistoryId;
@@ -40,7 +40,6 @@ class SendMessageToChatwork implements ShouldQueue
      */
     public function handle()
     {
-        $this->chatwork = Chatwork::withAPIToken($this->bot->bot_key);
         foreach ($this->messages as $message) {
             try {
                 // send message to chatwork
