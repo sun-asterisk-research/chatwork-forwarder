@@ -18,10 +18,12 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Webhook::class, function (Faker $faker) {
+$factory->define(Webhook::class, function (Faker $faker, $params) {
+    $user_id = (isset($params['user_id'])) ? $params['user_id'] : factory(User::class)->create()->id;
+    $bot_id = (isset($params['bot_id'])) ? $params['bot_id'] : factory(Bot::class)->create()->id;
     return [
-        'user_id' => factory(User::class)->create()->id,
-        'bot_id' => factory(Bot::class)->create()->id,
+        'user_id' => $user_id,
+        'bot_id' => $bot_id,
         'name' => $faker->name,
         'token' => Str::random(10),
         'status' => 1,

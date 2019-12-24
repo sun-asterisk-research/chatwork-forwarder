@@ -25,43 +25,45 @@ class DashboardControllerTest extends TestCase
     {
         $user = factory(User::class)->create(['role' => UserType::USER]);
 
-        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $chatbot = factory(Bot::class)->create(['user_id' => $user->id]);
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'bot_id' => $chatbot->id]);
         $payloadHistory = factory(PayloadHistory::class)->create(['webhook_id' => $webhook->id, 'status' => 1]);
+
         factory(PayloadHistory::class)->create(['webhook_id' => $webhook->id, 'status' => 0]);
         $messageHistory = factory(MessageHistory::class)->create(['payload_history_id' => $payloadHistory->id, 'status' => 1]);
         factory(MessageHistory::class)->create(['payload_history_id' => $payloadHistory->id, 'status' => 0]);
-        $chatbot = factory(Bot::class)->create(['user_id' => $user->id]);
 
         $this->actingAs($user);
         $response = $this->get('/dashboard');
-
         $response->assertStatus(200);
+        
         $response->assertViewHas('countData');
         $countDataResponse = $response->getOriginalContent()->getData()['countData'];
-        $this->assertTrue(1 == $countDataResponse['webhook']); 
-        $this->assertTrue(2 == $countDataResponse['payloadHistory']); 
-        $this->assertTrue(2 == $countDataResponse['messageHistory']); 
-        $this->assertTrue(1 == $countDataResponse['bot']);
+        $this->assertEquals(1, $countDataResponse['webhook']);
+        $this->assertEquals(2, $countDataResponse['payloadHistory']); 
+        $this->assertEquals(2, $countDataResponse['messageHistory']); 
+        $this->assertEquals(1, $countDataResponse['bot']);
 
         $response->assertViewHas('payloadHistory');
         $payloadHistoryResponse = $response->getOriginalContent()->getData()['payloadHistory'];
-        $this->assertTrue(1 == $payloadHistoryResponse['failedCases']); 
-        $this->assertTrue(1 == $payloadHistoryResponse['successCases']);
+        $indexLastArray = count($payloadHistoryResponse['payloadFailedChart']) - 1;
+        $this->assertEquals(1, $payloadHistoryResponse['failedCases']); 
+        $this->assertEquals(1, $payloadHistoryResponse['successCases']);
         $this->assertTrue(is_array($payloadHistoryResponse['dateChart']));
         $this->assertTrue(is_array($payloadHistoryResponse['payloadFailedChart']));
-        $this->assertTrue(1 == $payloadHistoryResponse['payloadFailedChart'][22][1]);
+        $this->assertEquals(1, $payloadHistoryResponse['payloadFailedChart'][$indexLastArray][1]);
         $this->assertTrue(is_array($payloadHistoryResponse['payloadSuccessChart']));
-        $this->assertTrue(1 == $payloadHistoryResponse['payloadSuccessChart'][22][1]);
+        $this->assertEquals(1, $payloadHistoryResponse['payloadSuccessChart'][$indexLastArray][1]);
 
         $response->assertViewHas('messageHistory');
         $messageHistoryResponse = $response->getOriginalContent()->getData()['messageHistory'];
-        $this->assertTrue(1 == $messageHistoryResponse['failedCases']); 
-        $this->assertTrue(1 == $messageHistoryResponse['successCases']);
+        $this->assertEquals(1, $messageHistoryResponse['failedCases']); 
+        $this->assertEquals(1, $messageHistoryResponse['successCases']);
         $this->assertTrue(is_array($messageHistoryResponse['dateChart']));
         $this->assertTrue(is_array($messageHistoryResponse['messageFailedChart']));
-        $this->assertTrue(1 == $messageHistoryResponse['messageFailedChart'][22][1]);
+        $this->assertEquals(1, $messageHistoryResponse['messageFailedChart'][$indexLastArray][1]);
         $this->assertTrue(is_array($messageHistoryResponse['messageSuccessChart']));
-        $this->assertTrue(1 == $messageHistoryResponse['messageSuccessChart'][22][1]);
+        $this->assertEquals(1, $messageHistoryResponse['messageSuccessChart'][$indexLastArray][1]);
     }
 
     /**
