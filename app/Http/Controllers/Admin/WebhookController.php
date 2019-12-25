@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Webhook;
 use App\Enums\WebhookStatus;
 use App\Models\Bot;
+use App\Models\User;
 use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 
 class WebhookController extends Controller
@@ -23,8 +24,9 @@ class WebhookController extends Controller
         $searchParams = $request->get('search');
         $perPage = config('paginate.perPage');
         $webhooks = $this->webhookRepository->getAllAndSearch($perPage, $searchParams);
-
-        return view('admins.webhooks.index', compact('webhooks'));
+        $users = User::all()->pluck('id', 'name');
+        
+        return view('admins.webhooks.index', compact('webhooks', 'users'));
     }
 
     public function show(Webhook $webhook)
