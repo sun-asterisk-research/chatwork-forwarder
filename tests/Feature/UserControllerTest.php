@@ -6,8 +6,12 @@ use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Enums\UserType;
+use App\Repositories\Eloquents\UserRepository;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Mockery;
 
 class UserControllerTest extends TestCase
 {
@@ -179,6 +183,28 @@ class UserControllerTest extends TestCase
 
         $response = $this->post(route('users.store'), $params);
         $response->assertRedirect();
+    }
+
+    public function testStoreUserExceptionFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $params = [
+            'name' => "Name Create",
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $mock = Mockery::mock(UserRepository::class);
+        $mock->shouldReceive('store')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(UserRepository::class, $mock);
+
+        $response = $this->post(route('users.store'), $params);
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Create failed',
+            'message' => 'Create failed. Something went wrong',
+        ]);
     }
 
     public function testCreateUserRequireName()
@@ -379,6 +405,16 @@ class UserControllerTest extends TestCase
         $response->assertRedirect('/');
     }
 
+    public function testShowDetailUser()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $user = factory(User::class)->create();
+        $this->actingAs($admin);
+        $response = $this->get(route('users.edit', $user->id));
+
+        $response->assertStatus(200);
+    }
+
     public function testUpdateUserSuccessFeature()
     {
         $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
@@ -405,6 +441,39 @@ class UserControllerTest extends TestCase
                 'status' => 'Update success',
                 'message' => 'This user successfully updated',
             ],
+        ]);
+    }
+
+    public function testUpdateUserExceptionFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+        $user = factory(User::class)->create(
+            [
+                'name' => 'Name Create',
+                'email' => 'email@gmail.com',
+                'password' => '12345678',
+                'role' => '1',
+                'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+            ]
+        );
+        $params = [
+            'name' => 'Name Update',
+            'email' => 'emaiupdatel@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $mock = Mockery::mock(UserRepository::class);
+        $mock->shouldReceive('update')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(UserRepository::class, $mock);
+        $response = $this->put(route('users.update', $user->id), $params);
+        $response->assertStatus(200)->assertJsonFragment([
+            'error' => true,
+                'messageFail' => [
+                    'status' => 'Update failed',
+                    'message' => 'Update failed. Something went wrong',
+                ],
         ]);
     }
 
@@ -703,13 +772,41 @@ class UserControllerTest extends TestCase
         $response->assertStatus(302);
     }
 
+    public function testRemoveUserExceptionFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $user = factory(User::class)->create(['role' => UserType::USER, 'name' => 'name remove']);
+        $this->actingAs($admin);
+        $mock = Mockery::mock(UserRepository::class);
+        $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(UserRepository::class, $mock);
+
+        $response = $this->delete(route('users.destroy', ['user' => $user]));
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'Delete failed. Something went wrong',
+        ]);
+    }
+
+    public function testUserSeftRemoveFeature()
+    {
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $this->actingAs($admin);
+
+        $response = $this->delete(route('users.destroy', ['user' => $admin]));
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'Delete failed, Cannot delete myself',
+        ]);
+    }
+
     public function testRemoveUserAtSecondPageFeature()
     {
         $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
         $user = factory(User::class)->create(['role' => UserType::USER, 'name' => 'name remove']);
         $this->actingAs($admin);
         $response = $this->delete(route('users.destroy', ['page' => 2, 'user' => $user]));
-        
+
         $this->assertDatabaseMissing('users', ['id' => $user->id, 'name' => 'name remove', 'deleted_at' => NULL]);
         $response->assertRedirect(route('users.index', ['page' => 2]));
     }

@@ -60,7 +60,7 @@
                 <p class="tbl-no-data "><i class="fa fa-info-circle"></i> No data</p>
                 @else
                     @foreach($payloadHistories as $payloadHistory)
-                    <tr class="item-{{ $payloadHistory->id }} user-item">
+                    <tr class="item-{{ $payloadHistory->id }} payload-history-item">
                         <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                         <td>
                             {{ $payloadHistory->webhook->name }}
@@ -104,6 +104,6 @@
 
 @endsection
 @section('script')
-    <script src="{{ asset('js/user.js') }}"></script>
+    <script src="{{ asset('js/payloadHistory.js') }}"></script>
     @include('common.flash-message')
 @endsection

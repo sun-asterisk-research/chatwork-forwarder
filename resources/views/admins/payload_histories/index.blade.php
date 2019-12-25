@@ -1,7 +1,6 @@
 @php use App\Enums\PayloadHistoryStatus; @endphp
 @extends('layouts.app')
 @section('content')
-@include('common.flash-message')
 <ul class="breadcrumb breadcrumb-top">
     <li>Payload histories</li>
     <li><a href="{{ route('admin.history.index') }}">Lists</a></li>
@@ -63,7 +62,7 @@
                 <p class="tbl-no-data "><i class="fa fa-info-circle"></i> No data</p>
                 @else
                     @foreach($payloadHistories as $payloadHistory)
-                    <tr class="item-{{ $payloadHistory->id }} user-item">
+                    <tr class="item-{{ $payloadHistory->id }} payload-history-item">
                         <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                         <td>
                             {{ $payloadHistory->webhook->name }}

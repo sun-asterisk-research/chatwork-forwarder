@@ -10,8 +10,13 @@ use App\Models\Mapping;
 use App\Models\PayloadHistory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Enums\UserType;
+use App\Enums\WebhookStatus;
 use App\Models\Payload;
+use App\Repositories\Eloquents\WebhookRepository;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
+use Mockery;
 
 class WebhookControllerTest extends TestCase
 {
@@ -83,6 +88,29 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
+     * test Feature store data webhook when an exception occur
+     *
+     * @return void
+     */
+    public function testStoreWebhookExceptionFeature()
+    {
+        $webhookLists = factory(Webhook::class, 2)->create();
+        factory(Bot::class, 2)->create();
+        $user = $webhookLists[0]->user;
+
+        $this->actingAs($user);
+        $mock = Mockery::mock(WebhookRepository::class);
+        $mock->shouldReceive('create')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(WebhookRepository::class, $mock);
+        $response = $this->post(route('webhooks.store'), ['name' => 'string', 'description' => 'some thing successfully', 'bot_id' => 1, 'room_name' => 'string', 'room_id' => 1]);
+
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Create failed',
+            'message' => 'Create failed. Something went wrong',
+        ]);
+    }
+
+    /**
      * test Feature admin cant store data webhook
      *
      * @return void
@@ -135,6 +163,22 @@ class WebhookControllerTest extends TestCase
         $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "DISABLED"]);
 
         $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'status' => 0]);
+        $response->assertSee('This webhook was updated successfully');
+    }
+
+    /**
+     * test user can change status webhook to enable
+     *
+     * @return  void
+     */
+    public function testAuthorizedUserCanChangeStatusToEnableWebhook()
+    {
+        $webhook = factory(Webhook::class)->create(['status' => WebhookStatus::DISABLED]);
+        $this->actingAs($webhook->user);
+
+        $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "ENABLED"]);
+
+        $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'status' => WebhookStatus::ENABLED]);
         $response->assertSee('This webhook was updated successfully');
     }
 
@@ -200,6 +244,27 @@ class WebhookControllerTest extends TestCase
 
         $this->assertDatabaseHas('webhooks', ['id' => $webhook->id, 'status' => 0]);
         $response->assertSee('This webhook was updated successfully');
+    }
+
+    /**
+     * test admin can change status of user's webhook
+     *
+     * @return  void
+     */
+    public function testUserChangeStatusWebhookFailed()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+        $mock = Mockery::mock(WebhookRepository::class);
+        $mock->shouldReceive('find')->andReturn($webhook);
+        $mock->shouldReceive('update')->andReturn(false);
+        $this->app->instance(WebhookRepository::class, $mock);
+
+        $response = $this->put('webhooks/change_status', ['id' => $webhook->id, 'status' => "DISABLED"]);
+        $response->assertStatus(400);
+        $response->assertSee('Updated failed. Something went wrong');
     }
 
     /**
@@ -270,6 +335,27 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
+     * test Feature remove webhook when an exception occur.
+     *
+     * @return void
+     */
+    public function testRemoveWebhookWithExceptionFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook success']);
+        $this->actingAs($user);
+        $mock = Mockery::mock(WebhookRepository::class);
+        $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(WebhookRepository::class, $mock);
+
+        $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'Delete failed. Something went wrong',
+        ]);
+    }
+
+    /**
      * test Feature admmin can't remove webhook.
      *
      * @return void
@@ -283,7 +369,7 @@ class WebhookControllerTest extends TestCase
         $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
         $response->assertStatus(403);
     }
-    
+
     /**
      * test Feature remove webhook at second page successfully.
      *
@@ -433,6 +519,42 @@ class WebhookControllerTest extends TestCase
                 'room_id' => 1, 'status' => 1,
             ]
         );
+    }
+
+    /**
+     * test update webhook when an exception occur
+     *
+     * @return void
+     */
+    public function testUpdateWebhookExceptionFeature()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create([
+            'name' => 'Created webhook',
+            'user_id' => $user->id,
+            'description' => 'description create',
+            'bot_id' => 1,
+            'room_name' => 'Name create',
+            'room_id' => 1
+        ]);
+        $params = [
+            'name' => "Name update",
+            'description' => 'description Update',
+            'bot_id' => 1,
+            'room_name' => 'Name Update',
+            'room_id' => 1,
+            'status' => 1,
+        ];
+        $this->actingAs($user);
+        $mock = Mockery::mock(WebhookRepository::class);
+        $mock->shouldReceive('update')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(WebhookRepository::class, $mock);
+        $response = $this->put(route('webhooks.update', $webhook->id), $params);
+
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Update failed',
+            'message' => 'Update failed. Something went wrong',
+        ]);
     }
 
     /**
