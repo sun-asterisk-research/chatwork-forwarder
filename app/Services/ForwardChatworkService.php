@@ -10,9 +10,12 @@ use App\Enums\PayloadHistoryStatus;
 use App\Enums\MessageHistoryStatus;
 use App\Jobs\SendMessageToChatwork;
 use SunAsterisk\Chatwork\Exceptions\APIException;
+use App\Support\Support;
 
 class ForwardChatworkService
 {
+    use Support;
+
     protected $webhook;
     protected $params;
     protected $payloadHistory;
@@ -41,12 +44,9 @@ class ForwardChatworkService
             $conditions = $payload->conditions;
             $isValid = true;
             foreach ($conditions as $condition) {
-                // 'return $payloads->fieldName == "value";'
                 try {
-                    $expression = 'return ' . $condition->field . ' '
-                        . $condition->operator
-                        . ' "' . $condition->value . '";';
-                    if (!eval($expression)) {
+                    $paramValue = $this->getValues($params, $condition->field);
+                    if (!$this->checkCondition($paramValue, $condition)) {
                         $isValid = false;
                         break;
                     }
@@ -83,6 +83,29 @@ class ForwardChatworkService
         }
     }
 
+    public function checkCondition($value, $condition)
+    {
+        switch ($condition->operator) {
+            case '==':
+                return $value == $condition->value;
+                break;
+            case '!=':
+                return $value != $condition->value;
+                break;
+            case '>':
+                return $value > $condition->value;
+                break;
+            case '>=':
+                return $value >= $condition->value;
+                break;
+            case '<=':
+                return $value <= $condition->value;
+                break;
+            default:
+                return false;
+        }
+    }
+
     /**
      * Create PayloadHistory
      * @param string $status
@@ -116,7 +139,7 @@ class ForwardChatworkService
             '#{{(.*?)}}#',
             function ($match) use ($params, &$isMatching) {
                 try {
-                    $requestValue = eval('return ' . $match[1] . ';');
+                    $requestValue = $this->getValues($params, $match[1]);
                     $mappingValue = $this->webhook->mappings()->byKey($requestValue)->first()['value'];
 
                     return $mappingValue ? $mappingValue : $requestValue;

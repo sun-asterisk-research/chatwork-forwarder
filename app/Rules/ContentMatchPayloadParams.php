@@ -5,9 +5,12 @@ namespace App\Rules;
 use ErrorException;
 use Illuminate\Contracts\Validation\Rule;
 use Throwable;
+use App\Support\Support;
 
 class ContentMatchPayloadParams implements Rule
 {
+    use Support;
+
     private $errorFields;
     private $payloadParams;
     /**
@@ -31,10 +34,11 @@ class ContentMatchPayloadParams implements Rule
     public function passes($attribute, $value)
     {
         $value = $this->getStringsBetweebBrackets($value);
-        $params = json_decode($this->payloadParams);
+        $params = json_decode(json_encode(json_decode($this->payloadParams)), true);
+
         for ($i = 0; $i < count($value); $i++) {
             try {
-                eval('return ' . $value[$i] . ';');
+                $this->getValues($params, $value[$i]);
             } catch (Throwable | ErrorException $err) {
                 array_push($this->errorFields, $value[$i]);
                 continue;

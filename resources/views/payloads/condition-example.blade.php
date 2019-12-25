@@ -28,7 +28,7 @@
                         <li>User name equal annv</li>
                         <div class="form-group row">
                             <div class="col-xs-6">
-                                <input type="text" class="form-control" value="$params->user->name" disabled>
+                                <input type="text" class="form-control" value="$params.user.name" disabled>
                             </div>
                             <div class="col-xs-2">
                                 <select class="form-control" disabled>
@@ -42,7 +42,7 @@
                         <li>User number of post greater than 5</li>
                         <div class="form-group row">
                             <div class="col-xs-6">
-                                <input type="text" class="form-control" value="$params->user->number_of_posts" disabled>
+                                <input type="text" class="form-control" value="$params.user.number_of_posts" disabled>
                             </div>
                             <div class="col-xs-2">
                                 <select class="form-control" disabled>

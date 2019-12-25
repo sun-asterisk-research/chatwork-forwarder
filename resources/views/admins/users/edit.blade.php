@@ -28,8 +28,12 @@
 			<input type="hidden" name="" id="id_user" value="{{$user->id}}">
 			<div class="col-md-4">
 				<div class="form-group padding-bottom-30">
-					@if($user->avatar)
-					<img class="crusor width350 avatar_show_edit" src="/storage/{{ $user->avatar }}">
+                    @if($user->avatar)
+                        @if(strpos($user->avatar, 'https') !== false)
+                            <img class="crusor width350 avatar_show_edit" src="{{ $user->avatar }}">
+                        @else
+					        <img class="crusor width350 avatar_show_edit" src="/storage/{{ $user->avatar }}">
+                        @endif
 					@else
 					<img class="crusor width350 avatar_show_edit" src="/img/avatar_default.png">
 					@endif

@@ -45,7 +45,7 @@ class ForwardChatworkController extends Controller
      */
     public function forwardMessage(Request $request, $token)
     {
-        $params = json_decode(json_encode((object)$request->all()), false);
+        $params = json_decode(json_encode($request->all()), true);
         $webhook = Webhook::enable()->where('token', $token)->first();
 
         if ($webhook) {

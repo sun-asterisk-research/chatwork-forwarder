@@ -5,9 +5,12 @@ namespace App\Rules;
 use ErrorException;
 use Illuminate\Contracts\Validation\Rule;
 use Throwable;
+use App\Support\Support;
 
 class ConditionFieldMatchPayloadParams implements Rule
 {
+    use Support;
+
     private $errors;
     private $payloadParams;
     /**
@@ -29,10 +32,10 @@ class ConditionFieldMatchPayloadParams implements Rule
      */
     public function passes($attribute, $value)
     {
-        $params = json_decode($this->payloadParams);
+        $params = json_decode(json_encode(json_decode($this->payloadParams)), true);
         for ($i = 0; $i < count($value); $i++) {
             try {
-                eval('return ' . $value[$i] . ';');
+                $this->getValues($params, $value[$i]);
             } catch (Throwable | ErrorException $err) {
                 $this->errors['field' . $i] = 'This field is not match with params';
                 continue;
