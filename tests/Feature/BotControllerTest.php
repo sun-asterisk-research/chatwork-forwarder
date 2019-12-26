@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Models\Webhook;
 use App\Enums\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Repositories\Eloquents\BotRepository;
+use Exception;
+use Mockery;
 
 class BotControllerTest extends TestCase
 {
@@ -125,6 +128,25 @@ class BotControllerTest extends TestCase
 
         $response->assertRedirect('bots/' . Bot::first()->id . '/edit');
         $this->assertEquals(1, Bot::all()->count());
+    }
+
+    public function testCreateChatbotWithExceptionFeature()
+    {
+        $user = factory(User::class)->create();
+        $params = [
+            'name' => 'Test Bot',
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(BotRepository::class);
+        $mock->shouldReceive('create')->once()->andReturn(false)->andThrow(new Exception());
+        $this->app->instance(BotRepository::class, $mock);
+        $response = $this->post(route('bots.store'), $params);
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Create failed',
+            'message' => 'Create failed. Something went wrong',
+        ]);
     }
 
     /**
@@ -281,6 +303,23 @@ class BotControllerTest extends TestCase
         ]);
         $response->assertRedirect('/bots');
         $response->assertStatus(302);
+    }
+
+    public function testRemoveChatbotWithExceptionFeature()
+    {
+        $bot = factory(Bot::class)->create(['name' => 'test remove bot']);
+        $user = $bot->user;
+
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(BotRepository::class);
+        $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(BotRepository::class, $mock);
+        $response = $this->delete(route('bots.destroy', $bot->id));
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'Delete failed. Something went wrong',
+        ]);
     }
 
     /**
@@ -449,6 +488,38 @@ class BotControllerTest extends TestCase
         $response = $this->put(route('bots.update', $bot->id), $params);
         $response->assertRedirect('bots/' . $bot->id . '/edit');
         $this->assertDatabaseHas('bots', ['id' => $bot->id, 'name' => 'Updated Bot', 'bot_key' => 'asdg12asd3423adasdasd23sdasdas23']);
+    }
+    public function testUserCanEditBotBotKeyRequire()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'Updated Bot',
+            'bot_key' => '',
+        ];
+
+        $this->actingAs($user);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response->assertRedirect('bots/' . $bot->id . '/edit');
+        $this->assertDatabaseHas('bots', ['id' => $bot->id, 'name' => 'Updated Bot', 'bot_key' => $bot->bot_key]);
+    }
+    public function testUpdateChatbotWithExceptionFeature()
+    {
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
+        $params = [
+            'name' => 'Updated Bot',
+            'bot_key' => 'asdg12asd3423adasdasd23sdasdas23',
+        ];
+        $this->actingAs($user);
+        $mock = Mockery::mock(BotRepository::class);
+        $mock->shouldReceive('update')->once()->andReturn(false)->andThrow(new Exception());
+        $this->app->instance(BotRepository::class, $mock);
+        $response = $this->put(route('bots.update', $bot->id), $params);
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Update failed',
+            'message' => 'Update failed. Something went wrong',
+        ]);
     }
 
     /**
