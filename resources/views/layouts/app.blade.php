@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <div id="page-wrapper">
+    <div id="page-wrapper" class="full-height">
         <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
             @include('layouts.sidebar')
             <div id="main-container">

@@ -2,16 +2,26 @@
 
 namespace Tests\Unit\Services;
 
+use Mockery as m;
 use Tests\TestCase;
 use App\Models\Webhook;
 use App\Models\Payload;
+use App\Models\Mapping;
 use App\Models\Condition;
+use App\Models\PayloadHistory;
+use App\Models\MessageHistory;
+use App\Jobs\SendMessageToChatwork;
 use App\Services\ForwardChatworkService;
+use App\Repositories\Eloquents\MessageHistoryRepository;
+use App\Repositories\Eloquents\PayloadHistoryRepository;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Repositories\Eloquents\PayloadHistoryRepository;
-use App\Repositories\Eloquents\MessageHistoryRepository;
-use App\Models\Mapping;
+use SunAsterisk\Chatwork\Chatwork;
+use SunAsterisk\Chatwork\Endpoints\Room;
+use SunAsterisk\Chatwork\Endpoints\Rooms\Messages;
+use SunAsterisk\Chatwork\Exceptions\APIException;
+use App\Enums\MessageHistoryStatus;
 
 class ForwardChatworkServiceTest extends TestCase
 {
@@ -149,7 +159,7 @@ class ForwardChatworkServiceTest extends TestCase
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
         factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => '$params->name', 'value' => 'qtv']);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => '$params->age', 'value' => '30']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'asd', 'value' => '30']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -161,5 +171,91 @@ class ForwardChatworkServiceTest extends TestCase
         $forwardChatworkService->call();
 
         $this->assertDatabaseHas('payload_histories', ['webhook_id' => $webhook->id, 'status' => 1, 'log' => 'Not found payload.']);
+    }
+
+    /**
+     * test send message success
+     *
+     * @return void
+     */
+    public function testSendMessagesSuccess()
+    {
+        $params = json_decode('{"name" : "qtv", "age" : 20}');
+        $webhook = factory(Webhook::class)->create();
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $payloadHistory = factory(PayloadHistory::class)->create();
+
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            $params,
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+
+        $mock = m::mock(Chatwork::class);
+        $room = m::mock(Room::class);
+        $messages = m::mock(Messages::class);
+        $messages->shouldReceive('create')->andReturn('123123');
+        $room->shouldReceive('messages')->andReturn($messages);
+        $mock->shouldReceive('room')->andReturn($room);
+
+        $response = $forwardChatworkService->sendMessages(['asd', 'vxcv'], $mock, $payloadHistory->id);
+
+        $this->assertDatabaseHas('message_histories', ['payload_history_id' => $payloadHistory->id, 'status' => MessageHistoryStatus::SUCCESS]);
+    }
+
+    /**
+     * test send message failed by permission
+     *
+     * @return void
+     */
+    public function testSendMessagesPermission()
+    {
+        $params = json_decode('{"name" : "qtv", "age" : 20}');
+        $webhook = factory(Webhook::class)->create();
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $payloadHistory = factory(PayloadHistory::class)->create();
+
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            $params,
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+
+        $mock = m::mock(Chatwork::class);
+        $mock->shouldReceive('room')->andThrow(new APIException(403, ['errors' => ['Permission']]));
+
+        $response = $forwardChatworkService->sendMessages(['asd'], $mock, $payloadHistory->id);
+
+        $this->assertDatabaseHas('message_histories', ['log' => 'Permission']);
+    }
+
+    /**
+     * test send message method failed by limit request
+     *
+     * @return void
+     */
+    public function testSendMessagesLimitRequest()
+    {
+        Queue::fake();
+        $params = json_decode('{"name" : "qtv", "age" : 20}');
+        $webhook = factory(Webhook::class)->create();
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $payloadHistory = factory(PayloadHistory::class)->create();
+
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            $params,
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+
+        $mock = m::mock(Chatwork::class);
+        $mock->shouldReceive('room')->andThrow(new APIException(429, ['errors' => ['Permission']]));
+
+        $response = $forwardChatworkService->sendMessages(['asd'], $mock, $payloadHistory->id);
+
+        Queue::assertPushed(SendMessageToChatwork::class);
     }
 }

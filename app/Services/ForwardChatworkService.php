@@ -72,9 +72,10 @@ class ForwardChatworkService
             }
 
             if ($messages) {
-                $this->payloadHistory = $this->savePayloadHistory(PayloadHistoryStatus::SUCCESS);
+                $payloadHistory = $this->savePayloadHistory(PayloadHistoryStatus::SUCCESS);
                 // send messages to chatwork
-                $this->sendMessages($messages);
+                $chatwork = Chatwork::withAPIToken($this->webhook->bot->bot_key);
+                $this->sendMessages($messages, $chatwork, $payloadHistory->id);
             }
         } else {
             $log = 'Not found payload.';
@@ -136,46 +137,52 @@ class ForwardChatworkService
         return '';
     }
 
-    public function sendMessages($messages)
+    public function sendMessages($messages, Chatwork $chatwork, $payloadHistoryId)
     {
-        $bot = $this->webhook->bot;
         $roomId = $this->webhook->room_id;
-        $chatwork = Chatwork::withAPIToken($bot->bot_key);
 
         foreach ($messages as $key => $message) {
             try {
                 $chatwork->room($roomId)->messages()->create($message);
                 array_splice($messages, $key, 1);
                 // save success message_history
-                $this->saveMessageHistory($message, MessageHistoryStatus::SUCCESS);
+                $this->saveMessageHistory($message, MessageHistoryStatus::SUCCESS, $payloadHistoryId);
             } catch (APIException $error) {
                 switch ($error->getStatus()) {
                     case 403:
                         // permission denined
-                        $this->saveMessageHistory($message, MessageHistoryStatus::FAILED, 'Permission');
+                        $this->saveMessageHistory(
+                            $message,
+                            MessageHistoryStatus::FAILED,
+                            $payloadHistoryId,
+                            'Permission'
+                        );
                         break 2;
                     case 429:
                         // limit request
                         // add to queue and excute this job after 5 minutes
-                        SendMessageToChatwork::dispatch($bot, $roomId, $messages, $this->payloadHistory->id)
+                        SendMessageToChatwork::dispatch($chatwork, $roomId, $messages, $payloadHistoryId)
                             ->onQueue('high')
                             ->delay(now()->addMinutes(5));
                         break 2;
                     case 401:
                         // authorized
-                        $this->saveMessageHistory($message, MessageHistoryStatus::FAILED, 'Unauthorized');
+                        $this->saveMessageHistory(
+                            $message,
+                            MessageHistoryStatus::FAILED,
+                            $payloadHistoryId,
+                            'Unauthorized'
+                        );
                         break 2;
-                    default:
-                        // handle timeout error
                 }
             }
         }
     }
 
-    public function saveMessageHistory($message, $status, $log = '')
+    public function saveMessageHistory($message, $status, $payloadHistoryId, $log = '')
     {
         $this->messageHistoryRepository->create([
-            'payload_history_id' => $this->payloadHistory->id,
+            'payload_history_id' => $payloadHistoryId,
             'message_content' => $message,
             'status' => $status,
             'log' => $log,
