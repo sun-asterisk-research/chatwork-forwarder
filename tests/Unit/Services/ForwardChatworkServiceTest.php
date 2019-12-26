@@ -91,13 +91,13 @@ class ForwardChatworkServiceTest extends TestCase
             new PayloadHistoryRepository(),
             new MessageHistoryRepository()
         );
-        $content = 'Hello, my name is {{$params->not_exist}}';
+        $content = 'Hello, my name is {{$params.not_exist}}';
         $params = json_decode('{"name" : "qtv"}');
 
         $result = $forwardChatworkService->generateMessage($content, $params);
 
         $this->assertEquals('', $result);
-        $this->assertDatabaseHas('payload_histories', ['log' => 'Not found $params->not_exist ']);
+        $this->assertDatabaseHas('payload_histories', ['log' => 'Not found $params.not_exist ']);
     }
 
     /**
@@ -158,8 +158,8 @@ class ForwardChatworkServiceTest extends TestCase
         $params = ["name" => 'qtv', "age" => 20];
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'age', 'value' => '30']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => '$params.name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'asd', 'value' => '30']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -171,6 +171,42 @@ class ForwardChatworkServiceTest extends TestCase
         $forwardChatworkService->call();
 
         $this->assertDatabaseHas('payload_histories', ['webhook_id' => $webhook->id, 'status' => 1, 'log' => 'Not found payload.']);
+    }
+
+    public function testCheckCondition()
+    {
+        $params = ["name" => 'qtv', "age" => 20];
+        $webhook = factory(Webhook::class)->create();
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+        $conditionEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
+        $conditionNotEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '!=', 'field' => 'name', 'value' => 'qtv']);
+        $conditionGreater = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'name', 'value' => 20]);
+        $conditionGreaterOrEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>=', 'field' => 'name', 'value' => 20]);
+        $conditionLess = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '<', 'field' => 'name', 'value' => 10]);
+        $conditionLessOrEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '<=', 'field' => 'name', 'value' => 10]);
+        $conditionNotExist = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '<>', 'field' => 'name', 'value' => 10]);
+
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            $params,
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+
+        $this->assertEquals(true, $forwardChatworkService->checkCondition('qtv', $conditionEqual));
+        $this->assertEquals(false, $forwardChatworkService->checkCondition('asd', $conditionEqual));
+        $this->assertEquals(true, $forwardChatworkService->checkCondition('tvq', $conditionNotEqual));
+        $this->assertEquals(false, $forwardChatworkService->checkCondition('qtv', $conditionNotEqual));
+        $this->assertEquals(true, $forwardChatworkService->checkCondition(21, $conditionGreater));
+        $this->assertEquals(false, $forwardChatworkService->checkCondition(20, $conditionGreater));
+        $this->assertEquals(true, $forwardChatworkService->checkCondition(20, $conditionGreaterOrEqual));
+        $this->assertEquals(false, $forwardChatworkService->checkCondition(19, $conditionGreaterOrEqual));
+        $this->assertEquals(true, $forwardChatworkService->checkCondition(9, $conditionLess));
+        $this->assertEquals(false, $forwardChatworkService->checkCondition(11, $conditionLess));
+        $this->assertEquals(true, $forwardChatworkService->checkCondition(9, $conditionLessOrEqual));
+        $this->assertEquals(true, $forwardChatworkService->checkCondition(10, $conditionLessOrEqual));
+        $this->assertEquals(false, $forwardChatworkService->checkCondition(11, $conditionLessOrEqual));
+        $this->assertEquals(false, $forwardChatworkService->checkCondition(11, $conditionNotExist));
     }
 
     /**

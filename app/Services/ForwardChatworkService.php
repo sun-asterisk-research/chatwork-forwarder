@@ -98,6 +98,9 @@ class ForwardChatworkService
             case '>=':
                 return $value >= $condition->value;
                 break;
+            case '<':
+                return $value < $condition->value;
+                break;
             case '<=':
                 return $value <= $condition->value;
                 break;
