@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\MessageHistory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
+use Exception;
+use App\Repositories\Interfaces\MessageHistoryRepositoryInterface as MessageHistoryRepository;
 
 class MessageHistoryControllerTest extends TestCase
 {
@@ -30,6 +33,30 @@ class MessageHistoryControllerTest extends TestCase
         ]);
        $response->assertRedirect(route('history.show', ['history' => $payloadHistoryId]));
        $response->assertStatus(302);
+   }
+
+   /**
+   * test Feature remove message history raise exception
+   *
+   * @return void
+   */
+   public function testRemoveMessageHistoryFailRaiseException()
+   {
+       $messageHistory = factory(MessageHistory::class)->create(['message_content' => 'test remove message history']);
+       $user = $messageHistory->payloadHistory->webhook->user;
+       $payloadHistoryId = $messageHistory->payloadHistory->id;
+       $this->actingAs($user);
+
+       $mock = Mockery::mock(MessageHistoryRepository::class);
+       $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+       $this->app->instance(MessageHistoryRepository::class, $mock);
+
+       $response = $this->delete(route('message.destroy', $messageHistory));
+
+       $response->assertSessionHas('messageFail', [
+           'status' => 'Delete failed',
+           'message' => 'Delete failed. Something went wrong',
+       ]);
    }
 
    /**

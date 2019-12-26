@@ -9,6 +9,10 @@ use App\Models\Webhook;
 use App\Models\Payload;
 use App\Enums\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
+use Exception;
+use Illuminate\Database\QueryException;
+use App\Repositories\Interfaces\PayloadRepositoryInterface as PayloadRepository;
 
 class PayloadControllerTest extends TestCase
 {
@@ -34,6 +38,31 @@ class PayloadControllerTest extends TestCase
         ]);
         $response->assertRedirect(route('webhooks.edit', $webhook));
         $response->assertStatus(302);
+    }
+
+    /**
+    * test Feature remove payload raise exception
+    *
+    * @return void
+    */
+    public function testRemovePayloadFailRaiseException()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'test remove payload']);
+
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(PayloadRepository::class);
+        $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(PayloadRepository::class, $mock);
+
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload' => $payload]));
+
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'Delete failed. Something went wrong',
+        ]);
     }
 
     /**
@@ -227,6 +256,33 @@ class PayloadControllerTest extends TestCase
             'status' => 'Create success',
             'message' => 'This payload successfully created',
         ]);
+    }
+
+    /**
+     * test Feature create payload raise exception
+     *
+     * @return void
+     */
+    public function testCreatePayloadFailedRaiseException()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(PayloadRepository::class);
+        $mock->shouldReceive('create')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(PayloadRepository::class, $mock);
+
+        $response = $this->post(route('webhooks.payloads.store', $webhook), [
+            'content' => 'Hi my name is {{$params->name}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['$params->name', '$params->age'],
+            'operators' => ['==', '>'],
+            'values' => ['rammus', '30']
+        ]);
+
+        $this->assertEquals(0, Payload::all()->count());
+        $this->assertEquals(0, Condition::all()->count());
     }
 
     /**
@@ -449,6 +505,30 @@ class PayloadControllerTest extends TestCase
     }
 
     /**
+     * test Feature update payload raise exception
+     *
+     * @return void
+     */
+    public function testUpdatePayloadFailedRaiseException()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(PayloadRepository::class);
+        $mock->shouldReceive('update')->andThrowExceptions([new QueryException('', [], new Exception)]);
+        $this->app->instance(PayloadRepository::class, $mock);
+
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'content' => 'Hi my name is {{$params->name}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
+        ]);
+
+        $this->assertEquals('old content', Payload::first()->content);
+    }
+
+    /**
      * test Feature admin cant update payload
      *
      * @return void
@@ -488,12 +568,20 @@ class PayloadControllerTest extends TestCase
             'ids' => [$condition->id],
             'params' => '{"name": "rasmus", "age": "30"}',
             'fields' => ['$params->age'],
-            'conditions' => [[
+            'conditions' => [
+              [
                 'id' => $condition->id,
                 'field' => '$params->age',
                 'operator' => '>=',
                 'value' => '18'
-            ]]
+              ],
+              [
+                'id' => '',
+                'field' => '$params->age',
+                'operator' => '>=',
+                'value' => '30'
+              ]
+            ]
         ];
         $this->actingAs($user);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), $params);

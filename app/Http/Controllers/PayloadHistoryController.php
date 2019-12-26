@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\PayloadHistory;
 use App\Enums\PayloadHistoryStatus;
-use SebastianBergmann\CodeCoverage\Exception;
 use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 use App\Repositories\Interfaces\MessageHistoryRepositoryInterface as MessageHistoryRepository;
 use App\Repositories\Interfaces\PayloadHistoryRepositoryInterface as PayloadHistoryRepository;
