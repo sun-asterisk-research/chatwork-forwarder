@@ -42,8 +42,8 @@ class ForwardChatworkServiceTest extends TestCase
             new PayloadHistoryRepository(),
             new MessageHistoryRepository()
         );
-        $content = 'Hello, my name is {{ $params->name }}';
-        $params = json_decode('{"name" : "qtv"}');
+        $content = 'Hello, my name is {{ name }}';
+        $params = ['name' => 'qtv'];
 
 
         $result = $forwardChatworkService->generateMessage($content, $params);
@@ -67,8 +67,8 @@ class ForwardChatworkServiceTest extends TestCase
             new PayloadHistoryRepository(),
             new MessageHistoryRepository()
         );
-        $content = 'Hello, my name is {{ $params->name }}';
-        $params = json_decode('{"name" : "qtv"}');
+        $content = 'Hello, my name is {{ name }}';
+        $params = ['name' => 'qtv'];
 
 
         $result = $forwardChatworkService->generateMessage($content, $params);
@@ -107,10 +107,10 @@ class ForwardChatworkServiceTest extends TestCase
      */
     public function testCallFoundPayload()
     {
-        $params = json_decode('{"name" : "qtv"}');
+        $params = ["name" => 'qtv'];
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => '$params->name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -131,10 +131,10 @@ class ForwardChatworkServiceTest extends TestCase
      */
     public function testCallNotFoundPayloadWithOneCondtion()
     {
-        $params = json_decode('{"name" : "no name"}');
+        $params = ["name" => 'no name'];;
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => '$params->name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -155,11 +155,11 @@ class ForwardChatworkServiceTest extends TestCase
      */
     public function testCallNotFoundPayloadWithMultiCondition()
     {
-        $params = json_decode('{"name" : "qtv", "age" : 20}');
+        $params = ["name" => 'qtv', "age" => 20];
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => '$params->name', 'value' => 'qtv']);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'asd', 'value' => '30']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'age', 'value' => '30']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
