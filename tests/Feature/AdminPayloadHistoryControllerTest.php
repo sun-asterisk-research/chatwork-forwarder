@@ -11,6 +11,9 @@ use App\Models\PayloadHistory;
 use App\Enums\PayloadHistoryStatus;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Repositories\Eloquents\PayloadHistoryRepository;
+use Exception;
+use Mockery;
 
 class AdminPayloadHistoryController extends TestCase
 {
@@ -40,6 +43,11 @@ class AdminPayloadHistoryController extends TestCase
     public function testAdminListPayloadHistoryFeature()
     {
         $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        factory(PayloadHistory::class, 2)->create(['webhook_id' => $webhook->id]);
+
         $this->actingAs($admin);
 
         $response = $this->get(route('admin.history.index'));
@@ -232,47 +240,44 @@ class AdminPayloadHistoryController extends TestCase
     *
     * @return void
     */
-   public function testRemovePayloadHistoryFeature()
-   {
-       $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history']);
-       factory(MessageHistory::class, 5)->create(['payload_history_id' => $payloadHistory->id]);
+    public function testRemovePayloadHistoryFeature()
+    {
+        $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history']);
+        factory(MessageHistory::class, 5)->create(['payload_history_id' => $payloadHistory->id]);
 
-       $user = factory(User::class)->create(['role' => 0]);
-       $this->actingAs($user);
+        $user = factory(User::class)->create(['role' => 0]);
+        $this->actingAs($user);
 
-       $response = $this->delete(route('admin.history.destroy', $payloadHistory));
-       $this->assertDatabaseMissing('payload_histories', [
+        $response = $this->delete(route('admin.history.destroy', $payloadHistory));
+        $this->assertDatabaseMissing('payload_histories', [
            'id' => $payloadHistory->id,
            'params' => 'test remove payload history',
            'deleted_at' => NULL,
         ]);
-       $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
-       $response->assertRedirect(route('admin.history.index'));
-       $response->assertStatus(302);
-   }
+        $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
+        $response->assertRedirect(route('admin.history.index'));
+        $response->assertStatus(302);
+    }
 
     /**
     * test Feature admin remove payload history at second page successfully.
     *
     * @return void
     */
-   public function testRemovePayloadHistoryAtSecondPageFeature()
-   {
-       $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history']);
-       factory(MessageHistory::class, 5)->create(['payload_history_id' => $payloadHistory->id]);
+    public function testRemovePayloadHistoryAtSecondPageFeature()
+    {
+        $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history']);
+        $admin = factory(User::class)->create(['role' => 0]);
+        $this->actingAs($admin);
 
-       $user = factory(User::class)->create(['role' => 0]);
-       $this->actingAs($user);
-
-       $response = $this->delete(route('admin.history.destroy', ['page' => 2, 'payloadHistory' => $payloadHistory->id]));
-       $this->assertDatabaseMissing('payload_histories', [
-           'id' => $payloadHistory->id,
-           'params' => 'test remove payload history',
-           'deleted_at' => NULL,
+        $response = $this->delete(route('admin.history.destroy', ['payloadHistory' => $payloadHistory->id, 'page' => 2]));
+        $this->assertDatabaseMissing('payload_histories', [
+            'id' => $payloadHistory->id,
+            'params' => 'test remove payload history',
+            'deleted_at' => NULL
         ]);
-       $this->assertDatabaseMissing('message_histories', ['payload_history_id' => $payloadHistory->id, 'deleted_at' => NULL]);
-       $response->assertRedirect(route('admin.history.index', ['page' => 2]));
-   }
+        $response->assertRedirect(route('admin.history.index', ['page' => 2]));
+    }
 
    /**
     * test Feature admin remove payload history fail.
@@ -301,7 +306,7 @@ class AdminPayloadHistoryController extends TestCase
    {
        $response = $this->delete(route('admin.history.destroy', 1));
 
-       $response->assertLocation('/login');
+       $response->assertLocation('/');
        $response->assertStatus(302);
    }
 
@@ -317,7 +322,23 @@ class AdminPayloadHistoryController extends TestCase
 
         $this->actingAs($user);
         $response = $this->delete(route('admin.history.destroy', $payloadHistory));
+        $response->assertStatus(302);
+    }
 
-        $response->assertStatus(403);
+    public function testRemovePayloadHistoryWithExceptionFeature()
+    {
+        $payloadHistory = factory(PayloadHistory::class)->create(['params' => 'test remove payload history fail']);
+        factory(MessageHistory::class, 5)->create(['payload_history_id' => $payloadHistory->id]);
+        $user = factory(User::class)->create(['role' => 0]);
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(PayloadHistoryRepository::class);
+        $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(PayloadHistoryRepository::class, $mock);
+        $response = $this->delete(route('admin.history.destroy', $payloadHistory));
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'Delete failed. Something went wrong',
+        ]);
     }
 }
