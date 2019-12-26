@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Exception;
 use App\Repositories\Interfaces\MessageHistoryRepositoryInterface as MessageHistoryRepository;
+use App\Enums\UserType;
 
 class MessageHistoryControllerTest extends TestCase
 {
@@ -102,5 +103,28 @@ class MessageHistoryControllerTest extends TestCase
         $response = $this->delete(route('message.destroy', $messageHistory));
 
         $response->assertStatus(403);
+    }
+
+    /**
+    * test admin account can remove message history
+    *
+    * @return void
+    */
+    public function testAdminCanRemoveMessageHistory()
+    {
+        $messageHistory = factory(MessageHistory::class)->create(['message_content' => 'test remove message history']);
+        $payloadHistoryId = $messageHistory->payloadHistory->id;
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+
+        $this->actingAs($admin);
+
+        $response = $this->delete(route('message.destroy', $messageHistory));
+        $this->assertDatabaseMissing('message_histories', [
+            'id' => $messageHistory->id,
+            'message_content' => 'test remove message history',
+            'deleted_at' => NULL,
+         ]);
+        $response->assertRedirect(route('history.show', ['history' => $payloadHistoryId]));
+        $response->assertStatus(302);
     }
 }

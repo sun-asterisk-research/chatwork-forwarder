@@ -51,11 +51,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $data['password'] = bcrypt($request->password);
         }
         $data['role'] = $request->role;
-        $result = User::findOrFail($id);
+        $result = User::find($id);
         if ($result) {
             $result->update($data);
 
             return $result;
         }
+
+        return false;
     }
 }

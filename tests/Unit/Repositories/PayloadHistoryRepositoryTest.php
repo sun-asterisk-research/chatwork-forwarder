@@ -44,6 +44,36 @@ class PayloadHistoryRepositoryTest extends TestCase
     }
 
     /**
+     * get all and search by user Payload History
+     *
+     * @return void
+     */
+    public function testgetAllByUserAndSearch()
+    {
+        $payloadHistoryRepo = new PayloadHistoryRepository;
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        factory(PayloadHistory::class)->create();
+        factory(PayloadHistory::class)->create([
+            'webhook_id' => $webhook->id
+        ]);
+        $this->actingAs($user);
+        $searchParams = ['webhook' => $webhook->id];
+        $searchParamsNotFound = ['webhook' => -1];
+
+        $perPage = config('paginate.perPage');
+        $result = $payloadHistoryRepo->getAllByUserAndSearch($perPage, $searchParams);
+
+        $this->assertCount(1, $result);
+
+        $resultNotFound = $payloadHistoryRepo->getAllByUserAndSearch($perPage, $searchParamsNotFound);
+        $this->assertCount(0, $resultNotFound);
+
+        $result = $payloadHistoryRepo->getAllByUserAndSearch($perPage, null);
+        $this->assertCount(1, $result);
+    }
+
+    /**
      * get find Payload History
      *
      * @return void
@@ -68,5 +98,8 @@ class PayloadHistoryRepositoryTest extends TestCase
 
         $resultNotFound = $payloadHistoryRepo->getAllAndSearch($perPage, $searchParamsNotFound);
         $this->assertCount(0, $resultNotFound);
+
+        $result = $payloadHistoryRepo->getAllAndSearch($perPage, null);
+        $this->assertCount(2, $result);
     }
 }

@@ -6,6 +6,8 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Repositories\Eloquents\UserRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+$request = new \Illuminate\Http\Request();
 
 class UserRepositoryTest extends TestCase
 {
@@ -22,6 +24,28 @@ class UserRepositoryTest extends TestCase
 
         $data = $userRepository->getModel();
         $this->assertEquals(User::class, $data);
+    }
+
+    /**
+     * test store function model
+     *
+     * @return void
+     */
+    public function testStore()
+    {
+        $userRepository = new UserRepository;
+        $params = [
+            'name' => 'abc',
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $request = new \Illuminate\Http\Request();
+        $request->replace($params);
+
+        $result = $userRepository->store($request);
+        $this->assertEquals(1, User::all()->count());
     }
 
     /**
@@ -63,5 +87,50 @@ class UserRepositoryTest extends TestCase
         $this->assertCount(2, $userRepository->getAllAndSearch($perPage, null));
 
         $this->assertCount(2, $userRepository->getAllAndSearch($perPage, ['name' => '', 'email' => '']));
+    }
+
+    /**
+     * test update function
+     *
+     * @return void
+     */
+    public function testUpdate()
+    {
+        $user = factory(User::class)->create();
+        $userRepository = new UserRepository;
+        $params = [
+            'name' => 'abc',
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $request = new \Illuminate\Http\Request();
+        $request->replace($params);
+
+        $result = $userRepository->update($user->id, $request);
+        $this->assertEquals(1, User::all()->count());
+    }
+
+    /**
+     * test update function when not found id
+     *
+     * @return void
+     */
+    public function testUpdateNotFoundID()
+    {
+        $userRepository = new UserRepository;
+        $params = [
+            'name' => 'abc',
+            'email' => 'email@gmail.com',
+            'password' => '12345678',
+            'role' => '1',
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ];
+        $request = new \Illuminate\Http\Request();
+        $request->replace($params);
+
+        $result = $userRepository->update(-1, $request);
+        $this->assertEquals(false, $result);
     }
 }
