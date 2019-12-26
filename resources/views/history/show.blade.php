@@ -52,16 +52,15 @@ use App\Enums\PayloadHistoryStatus;
     <div class="block-title">
         <h2><strong>Message History list</strong></h2>
     </div>
-    <div class="table-responsive">
-
-        <div class="form-group row">
+    <div class="form-group row">
             <form method="GET" action="{{ route('history.show', ['history' => $payloadHistory->id]) }}">
                 <div class="col-xs-4">
-                    <input type="text" type="submit" name="search" class="form-control" placeholder="message content" value="{{ request('search') }}">
+                    <input type="text" type="submit" name="search" class="form-control" placeholder="Search by message content" value="{{ request('search') }}">
                 </div>
                 <button class="btn btn-md btn-search"><i class="fa fa-search"></i> search</button>
             </form>
         </div>
+    <div class="table-responsive">
         <table class="table table-vcenter table-condensed table-bordered">
             <thead>
                 <tr>

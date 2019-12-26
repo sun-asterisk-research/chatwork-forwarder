@@ -11,6 +11,7 @@ use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Auth;
+use Exception;
 
 class WebhookController extends Controller
 {
@@ -75,7 +76,7 @@ class WebhookController extends Controller
                 ]);
         } catch (QueryException $exception) {
             return redirect()->back()->with('messageFail', [
-                'status' => 'Create success',
+                'status' => 'Create failed',
                 'message' => 'Create failed. Something went wrong',
             ])->withInput();
         }
@@ -120,7 +121,7 @@ class WebhookController extends Controller
             return redirect()->back()->with('messageFail', [
                 'status' => 'Update failed',
                 'message' => 'Update failed. Something went wrong',
-            ])->withInput();
+            ]);
         }
     }
 
@@ -190,6 +191,9 @@ class WebhookController extends Controller
             return 'This webhook was updated successfully';
         }
 
-        return 'Updated failed. Something went wrong';
+        return response()->json([
+            'status' => 'Updated failed',
+            'message' => 'Updated failed. Something went wrong',
+        ], 400);
     }
 }

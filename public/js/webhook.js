@@ -110,8 +110,9 @@ $(document).ready(function () {
                 $(webhook_status).text(status_change).css('text-transform', 'capitalize');
                 toastr.success(data, 'Update Successfully', {timeOut: 4000, showEasing: 'linear'});
             },
-            error: function() {
-                toastr.error('Something went wrong. Please try again!', 'Update Failed', {timeOut: 4000});
+            error: function(error) {
+                error = error.responseJSON;
+                toastr.error(error['message'], error['status'], {timeOut: 4000});
             }
         })
     }

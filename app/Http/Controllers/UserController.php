@@ -9,6 +9,8 @@ use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use Auth;
+use Illuminate\Database\QueryException;
+use Exception;
 
 class UserController extends Controller
 {
@@ -63,21 +65,10 @@ class UserController extends Controller
                 ]);
         } catch (QueryException $exception) {
             return redirect()->back()->with('messageFail', [
-                'status' => 'Create success',
+                'status' => 'Create failed',
                 'message' => 'Create failed. Something went wrong',
             ])->withInput();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -114,7 +105,7 @@ class UserController extends Controller
             return response()->json([
                 'error' => true,
                 'messageFail' => [
-                    'status' => 'Update success',
+                    'status' => 'Update failed',
                     'message' => 'Update failed. Something went wrong',
                 ],
             ]);

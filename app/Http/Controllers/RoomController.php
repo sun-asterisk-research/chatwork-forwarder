@@ -6,9 +6,18 @@ use App\Models\Bot;
 use Illuminate\Http\Request;
 
 use SunAsterisk\Chatwork\Chatwork;
+use SunAsterisk\Chatwork\Exceptions\APIException;
+use App\Repositories\Interfaces\ChatworkRepositoryInterface as ChatworkRepository;
 
 class RoomController extends Controller
 {
+    private $chatworkRepository;
+
+    public function __construct(ChatworkRepository $chatworkRepository)
+    {
+        $this->chatworkRepository = $chatworkRepository;
+    }
+
     /**
      * Return a listing of the resource.
      *
@@ -16,16 +25,14 @@ class RoomController extends Controller
      */
     public function index(Request $request)
     {
-        $bot = Bot::findOrFail($request->bot_id);
-        $chatwork = Chatwork::withAPIToken($bot->bot_key);
-        $rooms = $chatwork->rooms()->list();
-        $groupBoxs = [];
-        foreach ($rooms as $room) {
-            if ($room['type'] == 'group') {
-                array_push($groupBoxs, $room);
-            }
-        }
+        try {
+            $bot = Bot::findOrFail($request->bot_id);
+            $chatwork = Chatwork::withAPIToken($bot->bot_key);
+            $rooms = $this->chatworkRepository->getRooms($chatwork);
 
-        return $groupBoxs;
+            return $rooms;
+        } catch (APIException $e) {
+            return [];
+        }
     }
 }
