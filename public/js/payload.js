@@ -1,16 +1,25 @@
+var hasValueChanged = false;
+
+function setChangeStatus(status) {
+    hasValueChanged = status;
+}
+
 function addFields() {
     if (checkData()) {
         var counter = $(".mult-condition").children().length;
         var operators = ["==", "!=", ">", ">=", "<", "<="]
         var fieldInput = $("<input>")
             .attr({ name: "field[]", id: "field" + counter, placeholder: "Contidion field" })
-            .addClass("form-control col-md-4 field");
+            .addClass("form-control col-md-4 field")
+            .attr('onchange', 'setChangeStatus(true)');
         var valueInput = $("<input>")
             .attr({ name: "value[]", id: "value" + counter, placeholder: "Contidion value" })
-            .addClass("form-control col-md-4 value");
+            .addClass("form-control col-md-4 value")
+            .attr('onchange', 'setChangeStatus(true)');
         var operatorsDropdown = $("<select/>")
             .attr({ name: "operator[]", id: "operator" + counter })
-            .addClass("form-control col-md-2 operator");
+            .addClass("form-control col-md-2 operator")
+            .attr('onchange', 'setChangeStatus(true)');
         var btnDelete = $("<button/>")
             .attr({ name: "action[]", id: "action" + counter })
             .addClass("btn btn--link-danger font-weight-normal")
@@ -67,6 +76,7 @@ function removeCondition(row) {
     $("#operator" + row).remove();
     $("#value" + row).remove();
     $("#action" + row).remove();
+    setChangeStatus(true);
 }
 
 function clearOldErrorMessage() {
@@ -90,6 +100,30 @@ function printErrorMsg(errors) {
 
 function getValues(items) {
     return items.map(function () { return $(this).val(); }).get();
+}
+
+function showCopiedTitle(element) {
+    element.setAttribute('data-toggle', 'tooltip');
+    element.setAttribute('data-placement', 'top');
+    element.setAttribute('data-original-title', 'Copied!');
+    $('[data-toggle="tooltip"], .enable-tooltip').tooltip({ container: 'body', animation: false });
+    $('#' + element.id).mouseover();
+}
+
+function getPrettyParams() {
+    var params = $("textarea[name='params']").val();
+    try {
+        return JSON.stringify(JSON.parse(params), null, 2);
+    }
+    catch (error) {
+        $(".params").html("Payload params is invalid JSON format");
+        toastr.error('There are some invalid inputs. Please check the fields and fix them.', {
+            timeOut: 4000
+        });
+
+        return false;
+    }
+
 }
 
 $(document).ready(function () {
@@ -175,9 +209,41 @@ $(document).ready(function () {
     $('.cancel-btn').on('click', function (e) {
         e.preventDefault();
         $('#cancel-confirm').modal({ backdrop: 'static', keyboard: false })
-        .on('click', '#cancel-btn', function () {
-            var webhook_id = $("input[name='webhook_id']").val();
-            window.location.pathname = '/webhooks/' + webhook_id + '/edit';
-        });
+            .on('click', '#cancel-btn', function () {
+                var webhook_id = $("input[name='webhook_id']").val();
+                window.location.pathname = '/webhooks/' + webhook_id + '/edit';
+            });
+    });
+
+    $("textarea[name='content']").on('change', function () {
+        setChangeStatus(true);
+    });
+
+    $("textarea[name='params']").on('change', function () {
+        setChangeStatus(true);
+    });
+
+    $('#copyAsCurl').on('click', function (e) {
+        e.preventDefault();
+        var webhookUrl = $("#webhookUrl").val();
+        var params = getPrettyParams();
+        if (params && !hasValueChanged) {
+            var copiedContent = "curl -d '" + params + "' -H 'Content-Type: application/json' -X POST " + webhookUrl;
+            var tempElement = document.createElement('textarea');
+
+            tempElement.value = copiedContent;
+            tempElement.setAttribute('readonly', '');
+            tempElement.style = { position: 'absolute', left: '-9999px' };
+            document.body.appendChild(tempElement);
+            tempElement.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempElement);
+
+            showCopiedTitle(document.getElementById('copyAsCurl'));
+        } else if (hasValueChanged) {
+            toastr.error('Cannot copy, Please save all data first', {
+                timeOut: 4000
+            });
+        }
     });
 });
