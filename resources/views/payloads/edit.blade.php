@@ -50,17 +50,17 @@
                 @for($i = 0; $i < count($conditions); $i++) <div class="row">
                     <div class="col-md-2">
                         <input class="form-control field" id="field{{ $i }}" value="{{ $conditions[$i]->field }}"
-                            data-id="{{ $conditions[$i]->id }}" name="field[]">
+                            data-id="{{ $conditions[$i]->id }}" name="field[]" onchange="setChangeStatus(true)">
                     </div>
                     <div class="col-md-1">
                         {!! Form::select(
                         'operator[]',
                         ['==' => '==', '!=' => '!=', '>' => '>', '>=' => '>=', '<'=> '<', '<='=> '<=' ], $conditions[$i]->operator,
-                                    ['class'=>'form-control operator', 'id' => 'operator'.$i]
+                                    ['class'=>'form-control operator', 'id' => 'operator'.$i, 'onchange' => "setChangeStatus(true)"]
                                     ) !!}
                     </div>
                     <div class="col-md-2">
-                        <input class="form-control value" id="value{{ $i }}" value="{{ $conditions[$i]->value }}" name="value[]">
+                        <input class="form-control value" id="value{{ $i }}" value="{{ $conditions[$i]->value }}" name="value[]" onchange="setChangeStatus(true)">
                     </div>
                     <div class="col-md-1">
                         <button class="btn btn--link-danger font-weight-normal" id="action{{ $i }}" onclick="removeCondition({{ $i }});">
@@ -93,6 +93,15 @@
             <div class="has-error">
                 <span class="help-block content"></span>
             </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="webhookUrl" class="form-control" value="{{ config('app.url').'/api/v1/webhooks/'.$webhook->token }}">
+
+    <div class="form-group row">
+        <div class="col-xs-12">
+            <label class="field-compulsory" for="webhook_description">Test with cURL</label>
+            <a href="JavaScript:Void(0)" id="copyAsCurl"><i class="fa fa-clipboard"></i> copy as cURL</a>
         </div>
     </div>
     <!-- END Simple Editor Content -->
