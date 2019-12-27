@@ -80,7 +80,7 @@ class BotController extends Controller
                     'status' => 'Create success',
                     'message' => 'This bot successfully created',
                 ]);
-        } catch (QueryException $exception) {
+        } catch (Exception $exception) {
             return redirect()->back()->with('messageFail', [
                 'status' => 'Create failed',
                 'message' => 'Create failed. Something went wrong',
@@ -109,7 +109,7 @@ class BotController extends Controller
                     'status' => 'Update success',
                     'message' => 'This bot successfully updated',
                 ]);
-        } catch (QueryException $exception) {
+        } catch (Exception $exception) {
             return redirect()->back()->with('messageFail', [
                 'status' => 'Update failed',
                 'message' => 'Update failed. Something went wrong',
