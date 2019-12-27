@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\MessageHistory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Repositories\Eloquents\MessageHistoryRepository;
+use Exception;
+use Mockery;
 
 class AdminMessageHistoryController extends TestCase
 {
@@ -57,7 +60,7 @@ class AdminMessageHistoryController extends TestCase
    {
        $response = $this->delete(route('admin.message.destroy', 1));
 
-       $response->assertLocation('/login');
+       $response->assertLocation('/');
        $response->assertStatus(302);
    }
 
@@ -74,6 +77,22 @@ class AdminMessageHistoryController extends TestCase
         $this->actingAs($user);
         $response = $this->delete(route('admin.message.destroy', $messageHistory));
 
-        $response->assertStatus(403);
+        $response->assertStatus(302);
+    }
+
+    public function testRemoveMessageHistoryWithExceptionFeature()
+    {
+        $messageHistory = factory(MessageHistory::class)->create();
+        $user = factory(User::class)->create(['role' => 0]);
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(MessageHistoryRepository::class);
+        $mock->shouldReceive('delete')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(MessageHistoryRepository::class, $mock);
+        $response = $this->delete(route('admin.message.destroy', $messageHistory));
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Delete failed',
+            'message' => 'Delete failed. Something went wrong',
+        ]);
     }
 }
