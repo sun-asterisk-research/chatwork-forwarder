@@ -126,18 +126,18 @@ class WebhookRepositoryTest extends TestCase
      */
     public function testGetAllAndSearch()
     {
-        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 0]);
-        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 1]);
-        factory(Webhook::class)->create(['name' => 'example', 'status' => 0]);
+        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 0, 'user_id' => 1]);
+        factory(Webhook::class)->create(['name' => 'keyword', 'status' => 1, 'user_id' => 1]);
+        factory(Webhook::class)->create(['name' => 'example', 'status' => 0, 'user_id' => 2]);
 
         $webhookRepository = new WebhookRepository;
         $perPage = config('paginate.perPage');
-        $searchParams = ['name' => 'key', 'status' => '0'];
+        $searchParams = ['name' => 'key', 'status' => '0', 'user' => 1];
         $result = $webhookRepository->getAllAndSearch($perPage, $searchParams);
 
         $this->assertCount(1, $result);
 
-        $searchParamsNotFound = ['name' => 'not found', 'status' => '0'];
+        $searchParamsNotFound = ['name' => 'not found', 'status' => '0', 'user' => 0];
         $resultNotFound = $webhookRepository->getAllAndSearch($perPage, $searchParamsNotFound);
         $this->assertCount(0, $resultNotFound);
     }

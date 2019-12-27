@@ -58,10 +58,18 @@ class Webhook extends Model
 
     public function scopeSearch($query, $searchParams, $perPage)
     {
-        return $query
-            ->where('name', 'LIKE', '%' . $searchParams['name'] . '%')
-            ->where('status', 'LIKE', '%' . $searchParams['status'] . '%')
-            ->paginate($perPage);
+        if ($searchParams['user']) {
+            return $query
+                ->where('name', 'LIKE', '%' . $searchParams['name'] . '%')
+                ->where('status', 'LIKE', '%' . $searchParams['status'] . '%')
+                ->where('webhooks.user_id', $searchParams['user'])
+                ->paginate($perPage);
+        } else {
+            return $query
+                ->where('name', 'LIKE', '%' . $searchParams['name'] . '%')
+                ->where('status', 'LIKE', '%' . $searchParams['status'] . '%')
+                ->paginate($perPage);
+        }
     }
 
     public function scopeByUser($query, $userID)

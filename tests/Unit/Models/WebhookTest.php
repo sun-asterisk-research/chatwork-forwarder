@@ -115,6 +115,7 @@ class WebhookTest extends TestCase
         factory(Webhook::class, 2)->create(['name' => 'abc']);
         $searchParams['name'] = $webhook->name;
         $searchParams['status'] = $webhook->status;
+        $searchParams['user'] = $webhook->user->id;
         $result = Webhook::search($searchParams, $perPage);
 
         $this->assertEquals(1, $result->count());

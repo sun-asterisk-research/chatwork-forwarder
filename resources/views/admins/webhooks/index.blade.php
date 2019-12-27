@@ -13,8 +13,18 @@
 <div class="block">
     <div class="form-group row">
         <form method="GET" action="{{ route('admin.webhooks.index') }}">
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 <input type="text" name="search[name]" class="form-control" placeholder="Enter webhook's name" value="{{ request('search')['name'] ?? '' }}">
+            </div>
+            <div class="col-xs-3">
+            <select name="search[user]" class="select-select2" style="width: 100%;" data-placeholder="Choose a user">
+                    <option></option>
+                    @foreach($users as $key => $value)
+                        <option value="{{ $value }}" {{ (request('search')['user'] ?? '') == $value ? 'selected' : '' }}>
+                            {{ $key }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-xs-2">
                 <select name="search[status]" class="form-control">
