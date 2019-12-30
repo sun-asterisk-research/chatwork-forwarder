@@ -78,7 +78,7 @@ class ForwardChatworkService
                 $this->sendMessages($messages, $chatwork, $payloadHistory->id);
             }
         } else {
-            $log = 'Not found payload.';
+            $log = 'This payload does not match any conditions in this webhook.';
             $this->savePayloadHistory(PayloadHistoryStatus::FAILED, $log);
         }
     }
