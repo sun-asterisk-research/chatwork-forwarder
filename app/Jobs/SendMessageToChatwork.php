@@ -51,7 +51,7 @@ class SendMessageToChatwork implements ShouldQueue
                     $this->payloadHistoryId,
                     $message,
                     MessageHistoryStatus::FAILED,
-                    $error->getResponse()
+                    $error->getResponse()['errors'][0]
                 );
             }
         }
