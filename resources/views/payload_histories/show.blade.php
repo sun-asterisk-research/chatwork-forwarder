@@ -24,8 +24,12 @@ use App\Enums\PayloadHistoryStatus;
         <label class="col-md-1 text-right">
             Status:
         </label>
-        <div class="col-md-11">
-            {{ $payloadHistory->status == PayloadHistoryStatus::SUCCESS ? 'Success' : 'Failed' }}
+        <div class="col-md-11 mt-4">
+            @if($payloadHistory->status === PayloadHistoryStatus::SUCCESS)
+                <div class="label label-success">Success</div>
+            @else
+                <div class="label label-danger">Failed</div>
+            @endif
         </div>
     </div>
     <div class="row">
