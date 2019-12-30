@@ -61,4 +61,40 @@ class ChatworkRepositoryTest extends TestCase
         $data = $chatworkRepository->getRooms($mock);
         $this->assertEquals([$rooms[0], $rooms[1]], $data);
     }
+
+    /**
+     * test room name escape html
+     *
+     * @return void
+     */
+    public function testGetRoomEscapeHtml()
+    {
+        $chatworkRepository = new ChatworkRepository;
+        $rooms = [
+            [
+                "room_id" => 12345678,
+                "name" => "<script>alert(1);</script>",
+                "type" => "group",
+                "role" => "member",
+                "icon_path" => "https://chatwork.com/avatar/some_avatar.png",
+            ],
+            [
+                "room_id" => 12345679,
+                "name" => "Chatwork forwarder",
+                "type" => "group",
+                "role" => "member",
+                "sticky" => false,
+                "icon_path" => "https://chatwork.com/avatar/some_avatar.png",
+            ]
+        ];
+        $roomsApi = m::mock(Rooms::class);
+        $mock = m::mock(Chatwork::class);
+        $roomsApi->shouldReceive('list')->andReturn($rooms);
+        $mock->shouldReceive('rooms')->andReturn($roomsApi);
+        $this->app->instance(Rooms::class, $roomsApi);
+
+        $data = $chatworkRepository->getRooms($mock);
+        $this->assertEquals($data[0]['name'], '&lt;script&gt;alert(1);&lt;/script&gt;');
+        $this->assertCount(2, $data);
+    }
 }

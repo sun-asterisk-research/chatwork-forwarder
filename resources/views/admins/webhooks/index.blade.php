@@ -98,46 +98,42 @@
 
 <!-- Modal -->
 <div class="modal fade" id="enableModal" tabindex="-1" role="dialog" aria-labelledby="enableModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <input type="hidden" name="id">
-        <h4 class="modal-title" id="enableModalLabel">Enable webhook: <span class="webhook-name"></span></h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p class="model-content">Are you sure you want to enable this webhook?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success btn-confirm-enable">Enable</button>
-      </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <input type="hidden" name="id">
+                <h4 class="modal-title" id="enableModalLabel">Enable webhook: <span class="webhook-name"></span></h4>
+            </div>
+            <div class="modal-body">
+                <p class="model-content">Are you sure you want to enable this webhook?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btn-confirm-enable">Enable</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="disableModal" tabindex="-1" role="dialog" aria-labelledby="disableModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <input type="hidden" name="id">
-        <h4 class="modal-title" id="disableModalLabel">Disable webhook: <span class="webhook-name"></span></h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p class="model-content">Are you sure you want to disable this webhook?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-warning btn-confirm-disable">Disable</button>
-      </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <input type="hidden" name="id">
+                <h4 class="modal-title" id="disableModalLabel">Disable webhook: <span class="webhook-name"></span></h4>
+            </div>
+            <div class="modal-body">
+                <p class="model-content">Are you sure you want to disable this webhook?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning btn-confirm-disable">Disable</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 @section('js')
     <script src="{{ asset('/js/webhook.js') }}"></script>
