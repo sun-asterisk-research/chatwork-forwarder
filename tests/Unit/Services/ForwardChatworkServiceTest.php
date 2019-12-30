@@ -145,7 +145,10 @@ class ForwardChatworkServiceTest extends TestCase
 
         $forwardChatworkService->call();
 
-        $this->assertDatabaseHas('payload_histories', ['webhook_id' => $webhook->id, 'status' => 1, 'log' => 'Not found payload.']);
+        $this->assertDatabaseHas(
+            'payload_histories',
+            ['webhook_id' => $webhook->id, 'status' => 1, 'log' => 'This payload does not match any conditions in this webhook.']
+        );
     }
 
     /**
@@ -170,7 +173,10 @@ class ForwardChatworkServiceTest extends TestCase
 
         $forwardChatworkService->call();
 
-        $this->assertDatabaseHas('payload_histories', ['webhook_id' => $webhook->id, 'status' => 1, 'log' => 'Not found payload.']);
+        $this->assertDatabaseHas(
+            'payload_histories',
+            ['webhook_id' => $webhook->id, 'status' => 1, 'log' => 'This payload does not match any conditions in this webhook.']
+        );
     }
 
     public function testCheckCondition()

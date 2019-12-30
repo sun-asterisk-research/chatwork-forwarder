@@ -11,7 +11,7 @@ use App\Models\Payload;
 class ForwardChatworkControllerTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /**
      * test forward message success
      *
@@ -58,7 +58,7 @@ class ForwardChatworkControllerTest extends TestCase
         $this->assertDatabaseHas('payload_histories', [
             'webhook_id' => $webhook->id,
             'status' => 1,
-            'log' => 'Not found payload.'
+            'log' => 'This payload does not match any conditions in this webhook.'
         ]);
     }
 
