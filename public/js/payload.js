@@ -22,7 +22,7 @@ function addFields() {
             .attr('onchange', 'setChangeStatus(true)');
         var btnDelete = $("<button/>")
             .attr({ name: "action[]", id: "action" + counter })
-            .addClass("btn btn--link-danger font-weight-normal")
+            .addClass("btn btn--link-danger font-weight-normal action")
             .append("<i/>").addClass("fa fa-minus-circle")
             .attr('onClick', 'removeCondition(' + counter + ')');
         var conditions = $('.mult-condition');
@@ -70,16 +70,29 @@ function checkData() {
 }
 
 function removeCondition(row) {
-    $(".error-field").html("");
-    $(".error-value").html("");
-    $("#field" + row).remove();
-    $("#operator" + row).remove();
-    $("#value" + row).remove();
-    $("#action" + row).remove();
+    $("#field" + row).parent().parent().remove();
     setChangeStatus(true);
+    rerenderConditions();
+}
+
+function rerenderConditions() {
+    var counter = $(".mult-condition").children().length;
+    fields = $('.field').toArray();
+    operators = $('.operator').toArray();
+    values = $('.value').toArray();
+    actions = $('.action').toArray();
+    
+    for (i = 0; i < counter; i++) {
+        fields[i].id = 'field' + i;
+        operators[i].id = 'operator' + i;
+        values[i].id = 'value' + i;
+        actions[i].id = 'action' + i;
+        actions[i].setAttribute('onclick', 'removeCondition(' + i + ')');
+    }
 }
 
 function clearOldErrorMessage() {
+    $(".params").html("");
     $(".webhook_id").html("");
     $(".content").html("");
     $(".fields").remove();

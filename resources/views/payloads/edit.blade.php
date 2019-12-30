@@ -63,7 +63,7 @@
                         <input class="form-control value" id="value{{ $i }}" value="{{ $conditions[$i]->value }}" name="value[]" onchange="setChangeStatus(true)">
                     </div>
                     <div class="col-md-1">
-                        <button class="btn btn--link-danger font-weight-normal" id="action{{ $i }}" onclick="removeCondition({{ $i }});">
+                        <button class="btn btn--link-danger font-weight-normal action" id="action{{ $i }}" onclick="removeCondition({{ $i }});">
                             <i class="fa fa-minus-circle"></i>
                         </button>
                     </div>

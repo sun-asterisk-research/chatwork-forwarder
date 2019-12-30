@@ -57,10 +57,7 @@ use App\Enums\PayloadHistoryStatus;
     <div class="block-title">
         <h2><strong>Message History list</strong></h2>
     </div>
-    @include('common.flash-message')
-    <div class="table-responsive">
-
-        <div class="form-group row">
+    <div class="form-group row">
             <form method="GET" action="{{ route('admin.history.show', ['history' => $payloadHistory->id]) }}">
                 <div class="col-xs-4">
                     <input type="text" type="submit" name="search" class="form-control" placeholder="message content" value="{{ request('search') }}">
@@ -68,6 +65,8 @@ use App\Enums\PayloadHistoryStatus;
                 <button class="btn btn-md btn-search"><i class="fa fa-search"></i> search</button>
             </form>
         </div>
+    @include('common.flash-message')
+    <div class="table-responsive">
         <table class="table table-vcenter table-condensed table-bordered">
             <thead>
                 <tr>
