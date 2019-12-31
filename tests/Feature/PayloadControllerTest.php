@@ -274,10 +274,10 @@ class PayloadControllerTest extends TestCase
         $this->app->instance(PayloadRepository::class, $mock);
 
         $response = $this->post(route('webhooks.payloads.store', $webhook), [
-            'content' => 'Hi my name is {{$params->name}}',
+            'content' => 'Hi my name is {{name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'fields' => ['$params->name', '$params->age'],
-            'operators' => ['==', '>'],
+            'fields' => ['name', 'age'],
+            'operators' => ['==', '>='],
             'values' => ['rammus', '30']
         ]);
 
@@ -521,7 +521,7 @@ class PayloadControllerTest extends TestCase
         $this->app->instance(PayloadRepository::class, $mock);
 
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
-            'content' => 'Hi my name is {{$params->name}}',
+            'content' => 'Hi my name is {{name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
         ]);
 

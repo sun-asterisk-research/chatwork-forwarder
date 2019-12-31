@@ -11,6 +11,7 @@ class ChatworkRepository implements ChatworkRepositoryInterface
         $rooms = $chatwork->rooms()->list();
         $groupBoxs = [];
         foreach ($rooms as $room) {
+            $room['name'] = htmlspecialchars($room['name']);
             if ($room['type'] == 'group') {
                 array_push($groupBoxs, $room);
             }
