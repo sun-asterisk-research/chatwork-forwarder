@@ -69,4 +69,15 @@ class BotPolicy
     {
         return true;
     }
+
+    /**
+     * Determine whether the user can get room of bot.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function getRoom(User $user, $bot)
+    {
+        return $user->id === $bot->user_id;
+    }
 }

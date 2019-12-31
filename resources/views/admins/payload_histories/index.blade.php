@@ -81,7 +81,7 @@
                         <td class="text-center">{{ $payloadHistory->created_at }}</td>
                         <td class="text-center">
                             <a class="btn btn-sm btn-default" href="{{ route('admin.history.show', ['history' => $payloadHistory->id]) }}">
-                                <i class="fa fa-pencil"></i> Detail
+                                <i class="fa fa-eye"></i> Detail
                             </a>
                             {{ Form::open([
                                 'method' => 'DELETE',

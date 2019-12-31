@@ -64,7 +64,7 @@ class PayloadHistoryController extends Controller
 
         $messageHistories = $this->messageHistoryRepository->getAllAndSearch($id, $keyword);
 
-        return view('history.show', compact('payloadHistory', 'messageHistories'));
+        return view('payload_histories.show', compact('payloadHistory', 'messageHistories'));
     }
 
     /**
