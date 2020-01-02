@@ -53,6 +53,30 @@ class ForwardChatworkServiceTest extends TestCase
     }
 
     /**
+     * test generate message with field in content is an array
+     *
+     * @return void
+     */
+    public function testGenerateMessageWithFieldIsArray()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'Hello, my name is {{ student }}';
+        $params = ['student' => ['name' => 'qtv']];
+
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+
+        $this->assertEquals('Hello, my name is {"name":"qtv"}', $result);
+    }
+
+    /**
      * test generate message unmatching with mapping table
      *
      * @return void
