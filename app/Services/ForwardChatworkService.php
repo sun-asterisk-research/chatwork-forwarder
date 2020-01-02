@@ -143,6 +143,10 @@ class ForwardChatworkService
             function ($match) use ($params, &$isMatching) {
                 try {
                     $requestValue = $this->getValues($params, $match[1]);
+                    if (is_array($requestValue)) {
+                        $requestValue = json_encode($this->getValues($params, $match[1]));
+                    }
+
                     $mappingValue = $this->webhook->mappings()->byKey($requestValue)->first()['value'];
 
                     return $mappingValue ? $mappingValue : $requestValue;
