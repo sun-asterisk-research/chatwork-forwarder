@@ -84,4 +84,24 @@ class BotRepositoryTest extends TestCase
 
         $this->assertDatabaseHas('bots', ['name' => 'Bot Name', 'user_id' => $user->id]);
     }
+
+    public function testDeleteBot()
+    {
+        $botRepository = new BotRepository;
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Bot Name', 'user_id' => $user->id]);
+        $result = $botRepository->delete($bot->id);
+        $this->assertSoftDeleted('bots', [
+            'id' => $bot->id,
+        ]);
+    }
+
+    public function testDeleteNotFoundID()
+    {
+        $botRepository = new BotRepository;
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['name' => 'Bot Name', 'user_id' => $user->id]);
+        $result = $botRepository->delete(-1);
+        $this->assertEquals(false, $result);
+    }
 }

@@ -94,7 +94,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         if ($result) {
             $result->delete();
 
-            return true;
+            return $result;
         }
 
         return false;

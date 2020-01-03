@@ -75,8 +75,12 @@ class PayloadController extends Controller
             ]);
 
             return $payload->id;
-        } catch (QueryException $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Create failed',
+                'message' => 'Create failed. Something went wrong',
+            ]);
         }
     }
 
@@ -129,8 +133,12 @@ class PayloadController extends Controller
             ]);
 
             return $payload->id;
-        } catch (QueryException $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Update failed',
+                'message' => 'Update failed. Something went wrong',
+            ]);
         }
     }
 

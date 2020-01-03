@@ -258,6 +258,30 @@ class PayloadControllerTest extends TestCase
         ]);
     }
 
+    public function testStorePayloadFailException()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(PayloadRepository::class);
+        $mock->shouldReceive('create')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(PayloadRepository::class, $mock);
+
+        $response = $this->post(route('webhooks.payloads.store', $webhook), [
+            'content' => 'Hi my name is {{name}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
+            'fields' => ['name', 'age'],
+            'operators' => ['==', '>='],
+            'values' => ['rammus', '30']
+        ]);
+
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Create failed',
+            'message' => 'Create failed. Something went wrong',
+        ]);
+    }
+
     /**
      * test Feature create payload raise exception
      *
@@ -502,6 +526,28 @@ class PayloadControllerTest extends TestCase
             'message' => 'This payload successfully updated',
         ]);
         $this->assertEquals($payload->content, 'Hi my name is {{name}}');
+    }
+
+    public function testUpdatePayloadFailException()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
+        $this->actingAs($user);
+
+        $mock = Mockery::mock(PayloadRepository::class);
+        $mock->shouldReceive('create')->andThrowExceptions([new Exception('Exception', 100)]);
+        $this->app->instance(PayloadRepository::class, $mock);
+
+        $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
+            'content' => 'Hi my name is {{name}}',
+            'params' => '{"name": "rasmus", "age": "30"}',
+        ]);
+
+        $response->assertSessionHas('messageFail', [
+            'status' => 'Update failed',
+            'message' => 'Update failed. Something went wrong',
+        ]);
     }
 
     /**
