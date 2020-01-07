@@ -36,12 +36,12 @@
             <div class="list-feature">
                 <div class="box-items">
                     <div class="item">
-                        <h2>Statistic</h2>
+                        <h2>Easy to track Statistic</h2>
                         <img src="{{asset('img/cw-feature1.png')}}" alt="">
                     </div>
 
                     <div class="item">
-                        <h2>Webhook setting</h2>
+                        <h2>Various webhook setting with customizable message</h2>
                         <img src="{{asset('img/cw-feature2.png')}}" alt="">
                     </div>
 
@@ -56,7 +56,7 @@
 
         <div class="box-content use-case">
             <div class="title">
-                <span>Use case</span>
+                <span>Use cases</span>
             </div>
             <div class="list-use-case">
                 <div class="box-items">
@@ -84,7 +84,7 @@
         <div class="footer">
             <div class="content-footer">
                 <p><span>Made by </span><a href="https://research.sun-asterisk.com/en"><img src="{{asset('img/Sun-logo.png')}}" alt=""></a> <span>R&D Lab</span></p>
-                <p>We love Open Source</p>
+                <p>We &#9829; Open Source</p>
                 <p>This service is open-sourced at <a href="https://github.com/sun-asterisk-research/chatwork-forwarder"><img src="{{asset('img/github.png')}}" alt=""></a></p>
             </div>
         </div>
