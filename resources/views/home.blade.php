@@ -15,8 +15,7 @@
                 <img src="{{asset('img/logo.png')}}" alt="">
             </div>
             <div class="content">
-                <h1>ABOUT SYSTEM</h1>
-                <p>The application assists the demand using API Chatwork of projects in sending messages or forwarding the payload data which is received from another service.</p>
+                <p>Easily forwarding payload to Chatwork with Customizable Message </p>
 
                 @if(Auth::guest())
                     <a data-toggle="modal" href='#modal-login' class="btn btn-default">Login</a>
