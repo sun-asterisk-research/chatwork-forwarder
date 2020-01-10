@@ -29,7 +29,7 @@ class RoomController extends Controller
             $bot = Bot::findOrFail($request->bot_id);
             $this->authorize('getRoom', $bot);
             $chatwork = Chatwork::withAPIToken($bot->bot_key);
-            $rooms = $this->chatworkRepository->getRooms($chatwork);
+            $rooms = $this->chatworkRepository->getRooms($chatwork, $request->type);
 
             return $rooms;
         } catch (APIException $e) {

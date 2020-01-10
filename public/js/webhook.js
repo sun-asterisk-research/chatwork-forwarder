@@ -1,10 +1,10 @@
 $(document).ready(function () {
     $('#cw_rooms').prop('disabled', true);
 
-    load_room_name();
+    load_room_name('all');
     load_room_id();
 
-    function load_room_name() {
+    function load_room_name(type) {
         var room_name = document.getElementById("room_name");
         var bot_id = $('#cw_bots').val();
         $('#cw_room_id').val('');
@@ -12,7 +12,7 @@ $(document).ready(function () {
         if (bot_id) {
             $.ajax({
                 type: 'GET',
-                url: '/rooms',
+                url: '/rooms?type=' + type,
                 data: {
                     '_token': $("input[name='_token']").val(),
                     'bot_id': bot_id
@@ -62,7 +62,17 @@ $(document).ready(function () {
 
     $('#cw_bots').change(function () {
         $('#cw_rooms').select2('data', {id: '', text: 'Choose one...'});
-        load_room_name();
+        var type_room = $('#type_room').val();
+        if ( type_room == ''){
+            load_room_name('group');
+        } else {
+            load_room_name(type_room);
+        }
+    });
+
+    $('#type_room').change(function () {
+        var type_room = $('#type_room').val();
+        load_room_name(type_room);
     });
 
     $('#cw_rooms').change(function () {

@@ -79,6 +79,14 @@
                 </div>
                 @enderror
             </div>
+            <div class="col-xs-1">
+                <label class="field-compulsory" for="type_rooms">Type room</label>
+                <select id="type_room" name="room_type" class="form-control" style="width: 100%;">
+                    <option value="all">All</option>
+                    <option value="group">Group</option>
+                    <option value="direct">Private</option>
+                </select>
+            </div>
             <div class="col-xs-4">
                 <input type="hidden" id="room_name" value="{{ $webhook->room_name }}">
                 <label class="field-compulsory required" for="cw_rooms">Chatwork room</label>
@@ -91,7 +99,7 @@
                 </div>
                 @enderror
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 <label class="field-compulsory required" for="cw_room_id">Chatwork room id</label>
                 <input type="hidden" id="room_id" value="{{ $webhook->room_id }}">
                 <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
