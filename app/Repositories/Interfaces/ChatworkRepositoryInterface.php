@@ -8,5 +8,5 @@ interface ChatworkRepositoryInterface
      * Get rooms by bot key
      * @return mixed
      */
-    public function getRooms($chatwork);
+    public function getRooms($chatwork, $type);
 }

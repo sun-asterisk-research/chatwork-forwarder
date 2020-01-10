@@ -69,6 +69,15 @@
                     </div>
                 @enderror
             </div>
+            <div class="col-xs-1">
+                <label class="field-compulsory" for="type_rooms">Type room</label>
+                <input type="hidden" id="room_type" value="{{ old('room_type') }}">
+                <select id="type_room" name="room_type" class="form-control" style="width: 100%;">
+                    <option value="group" {{ old('room_type') == 'group' ? "selected" : "" }}>Group</option>
+                    <option value="direct" {{ old('room_type') == 'direct' ? "selected" : "" }}>Private</option>
+                    <option value="all" {{ old('room_type') == 'all' ? "selected" : "" }}>All</option>
+                </select>
+            </div>
             <div class="col-xs-4">
                 <input type="hidden" id="room_name" value="{{ old('room_name') }}">
                 <label class="field-compulsory required" for="cw_rooms">Chatwork room</label>
@@ -81,7 +90,7 @@
                     </div>
                 @enderror
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 <label class="field-compulsory required" for="cw_room_id">Chatwork room id</label>
                 <input type="hidden" id="room_id" value="{{ old('room_id') }}">
                 <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">

@@ -58,7 +58,7 @@ class ChatworkRepositoryTest extends TestCase
         $mock->shouldReceive('rooms')->andReturn($roomsApi);
         $this->app->instance(Rooms::class, $roomsApi);
 
-        $data = $chatworkRepository->getRooms($mock);
+        $data = $chatworkRepository->getRooms($mock, 'group');
         $this->assertEquals([$rooms[0], $rooms[1]], $data);
     }
 
@@ -93,7 +93,7 @@ class ChatworkRepositoryTest extends TestCase
         $mock->shouldReceive('rooms')->andReturn($roomsApi);
         $this->app->instance(Rooms::class, $roomsApi);
 
-        $data = $chatworkRepository->getRooms($mock);
+        $data = $chatworkRepository->getRooms($mock, 'group');
         $this->assertEquals($data[0]['name'], '&lt;script&gt;alert(1);&lt;/script&gt;');
         $this->assertCount(2, $data);
     }
