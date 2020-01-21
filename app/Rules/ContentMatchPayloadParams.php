@@ -60,9 +60,12 @@ class ContentMatchPayloadParams implements Rule
 
     private function getStringsBetweebBrackets($str)
     {
-        $regex = '#{{(.*?)}}#';
-        preg_match_all($regex, $str, $matches);
+        $regex1 = '#{{(.*?)}}#';
+        preg_match_all($regex1, $str, $matches1);
 
-        return $matches[1];
+        $regex2 = '#{!!(.*?)!!}#';
+        preg_match_all($regex2, $str, $matches2);
+
+        return array_merge($matches1[1], $matches2[1]);
     }
 }
