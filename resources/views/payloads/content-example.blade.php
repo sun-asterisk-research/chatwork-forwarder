@@ -28,9 +28,11 @@
                     TO ALL >>> <br>
                     <br>
                     There is a new post from <strong>@{{$params.user.display_name}}</strong><br>
+                    There is a mapping syntax <strong>@{!! $params.user.display_name !!}</strong><br>
                     <br>
                     To see how to improve your code in javascript, click the link below:<br>
-                    <strong>@{{$params.post.post_title}}</strong> <strong>@{{$params.post.post_url}}</strong>
+                    <strong>@{{$params.post.post_title}}</strong> <strong>@{{$params.post.post_url}}</strong><br><br>
+                    <i>Note: use</i> <strong style="color: red">$params.user.display_name</strong> or <strong style="color: red">user.display_name</strong>
                 </p>
             </div>
             <div class="modal-footer">

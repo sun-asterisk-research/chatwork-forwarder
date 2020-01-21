@@ -46,6 +46,10 @@ class ForwardChatworkService
             foreach ($conditions as $condition) {
                 try {
                     $paramValue = $this->getValues($params, $condition->field);
+                    if (is_bool($paramValue)) {
+                        $paramValue = $paramValue ? 'true' : 'false';
+                    }
+
                     if (!$this->checkCondition($paramValue, $condition)) {
                         $isValid = false;
                         break;
@@ -138,6 +142,28 @@ class ForwardChatworkService
     public function generateMessage($content, $params)
     {
         $isMatching = true;
+
+        $contentMapping = preg_replace_callback(
+            '#{!!(.*?)!!}#',
+            function ($match) use ($params, &$isMatching) {
+                try {
+                    $requestValue = $this->getValues($params, $match[1]);
+                    if (is_array($requestValue)) {
+                        $requestValue = json_encode($this->getValues($params, $match[1]));
+                    }
+
+                    return $requestValue;
+                } catch (Throwable | ErrorException $e) {
+                    // create a failed payload_history when values in payload's content not matching with params payload
+                    $isMatching = false;
+                    $log = 'Not found ' . $match[1];
+                    $this->savePayloadHistory(PayloadHistoryStatus::FAILED, $log);
+                }
+            },
+            $content
+        );
+
+
         $message = preg_replace_callback(
             '#{{(.*?)}}#',
             function ($match) use ($params, &$isMatching) {
@@ -157,7 +183,7 @@ class ForwardChatworkService
                     $this->savePayloadHistory(PayloadHistoryStatus::FAILED, $log);
                 }
             },
-            $content
+            $contentMapping
         );
 
         if ($isMatching) {
