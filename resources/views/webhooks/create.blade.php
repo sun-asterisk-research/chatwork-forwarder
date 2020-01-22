@@ -45,7 +45,7 @@
                 </select>
             </div>
             <div class="mt-15 col-xs-12">
-                <label class="field-compulsory required" for="webhook_description">Description</label>
+                <label class="field-compulsory" for="webhook_description">Description</label>
                 <textarea class="form-control" rows="5" name="description" id="webhook_description" placeholder="Enter description">{{ old('description') }}</textarea>
                 @error('description')
                     <div class="has-error">

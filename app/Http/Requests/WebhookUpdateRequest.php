@@ -25,13 +25,14 @@ class WebhookUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'required|min:10|max:1000|',
+            'description' => 'max:1000|',
             'bot_id' => 'required',
             'room_name' => 'required',
             'room_id' => 'required',
             'name' => [
                 'required',
                 'max:50',
+                'min:3',
                 Rule::unique('webhooks')->ignore($this->id)->where(function ($query) {
                     return $query->where('user_id', \Auth::id());
                 }),
@@ -41,12 +42,11 @@ class WebhookUpdateRequest extends FormRequest
     public function messages()
     {
         return [
+            'name.min' => 'Name is too short (minimum is 3 characters)',
             'name.required' => 'Please enter name',
             'name.max' => 'Name is too long (maximum is 50 characters)',
             'name.unique' => 'This webhook name has already been used by another webhook',
-            'description.required' => 'Please enter description',
             'description.max' => 'Description is too long (maximum is 1000 characters)',
-            'description.min' => 'Description is too short (minimum is 10 characters)',
             'bot_id.required' => 'Please choose chatbot',
             'room_name.required' => 'Please choose room',
             'room_id.required' => 'Please enter room id',

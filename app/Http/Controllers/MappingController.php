@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use App\Http\Requests\MappingCreateRequest;
 use App\Http\Requests\MappingUpdateRequest;
 use App\Repositories\Interfaces\MappingRepositoryInterface as MappingRepository;
+use Illuminate\Support\Facades\DB;
 
 class MappingController extends Controller
 {
@@ -39,24 +40,41 @@ class MappingController extends Controller
      * @param  \Illuminate\Http\Request  $request, Webhook $webhook
      * @return \Illuminate\Http\Response
      */
-    public function store(MappingCreateRequest $request, Webhook $webhook)
+    public function store(MappingCreateRequest $request, $webhookId)
     {
+        $webhook = Webhook::findOrFail($webhookId);
         $this->authorize('create', [new Mapping(), $webhook]);
 
-        $attributes = $request->except('_token');
-        $attributes['webhook_id'] = $webhook->id;
-
+        DB::beginTransaction();
         try {
-            $mapping = $this->mappingRepository->create($attributes);
+            $keys = $request->keys;
+            $values = $request->values;
+            if ($keys && $values) {
+                for ($i = 0; $i < count($keys); $i++) {
+                    $attributes['webhook_id'] = $webhookId;
+                    $attributes['key'] = $keys[$i];
+                    $attributes['value'] = $values[$i];
+                    $mapping = Mapping::where('webhook_id', $webhookId)->updateOrCreate([
+                        'key' => $attributes['key'],
+                    ], $attributes);
+                }
+            }
 
-            return redirect()->route('webhooks.mappings.edit', ['webhook' => $webhook, 'mapping' => $mapping])
-                ->with('messageSuccess', [
-                    'status' => 'Create success',
-                    'message' => 'This mapping successfully created',
-                ]);
-        } catch (QueryException $e) {
-            return back()->with('messageFail', [
-                'status' => 'Create failed',
+            DB::commit();
+            $request->session()->flash('messageSuccess', [
+                'status' => 'Create success',
+                'message' => 'This mapping successfully created',
+            ]);
+
+            return response()->json([
+                'error' => false,
+                'webhook_id' => $webhook->id,
+
+            ]);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return response()->json([
+                'error' => true,
                 'message' => 'Create failed. Something went wrong',
             ]);
         }
@@ -68,9 +86,10 @@ class MappingController extends Controller
      * @param  Webhook $webhook, Mapping $mapping
      * @return \Illuminate\Http\Response
      */
-    public function edit(Webhook $webhook, Mapping $mapping)
+    public function edit(Webhook $webhook)
     {
-        return view('mappings.edit', compact('webhook', 'mapping'));
+        $mappings = $webhook->mappings()->get();
+        return view('mappings.edit', compact('webhook', 'mappings'));
     }
 
     /**
@@ -80,24 +99,42 @@ class MappingController extends Controller
      * @param  Webhook $webhook, Mapping $mapping
      * @return \Illuminate\Http\Response
      */
-    public function update(MappingUpdateRequest $request, Webhook $webhook, Mapping $mapping)
+    public function update(MappingCreateRequest $request, $webhookId)
     {
-        $this->authorize('update', [$mapping, $webhook]);
+        $webhook = Webhook::findOrFail($webhookId);
+        $this->authorize('update', $webhook);
 
-        $attributes = $request->except('_token');
-        $attributes['webhook_id'] = $webhook->id;
-
+        DB::beginTransaction();
         try {
-            $mapping = $this->mappingRepository->update($mapping->id, $attributes);
+            $mappings = $webhook->mappings()->delete();
+            $keys = $request->keys;
+            $values = $request->values;
+            if ($keys && $values) {
+                for ($i = 0; $i < count($keys); $i++) {
+                    $attributes['webhook_id'] = $webhookId;
+                    $attributes['key'] = $keys[$i];
+                    $attributes['value'] = $values[$i];
+                    $mapping = Mapping::where('webhook_id', $webhookId)->updateOrCreate([
+                        'key' => $attributes['key'],
+                    ], $attributes);
+                }
+            }
 
-            return redirect()->route('webhooks.mappings.edit', ['webhook' => $webhook, 'mapping' => $mapping])
-                ->with('messageSuccess', [
-                    'status' => 'Update success',
-                    'message' => 'This mapping successfully updated',
-                ]);
-        } catch (QueryException $e) {
-            return back()->with('messageFail', [
-                'status' => 'Update failed',
+            DB::commit();
+            $request->session()->flash('messageSuccess', [
+                'status' => 'Update success',
+                'message' => 'This mapping successfully updated',
+            ]);
+
+            return response()->json([
+                'error' => false,
+                'webhook_id' => $webhook->id,
+
+            ]);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return response()->json([
+                'error' => true,
                 'message' => 'Update failed. Something went wrong',
             ]);
         }

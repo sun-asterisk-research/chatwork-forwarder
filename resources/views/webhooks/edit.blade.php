@@ -50,7 +50,7 @@
             </select>
         </div>
         <div class="mt-15 col-xs-12">
-            <label class="field-compulsory required" for="webhook_description">Description</label>
+            <label class="field-compulsory" for="webhook_description">Description</label>
             <textarea class="form-control" rows="5" name="description" id="webhook_description" placeholder="Enter description">{{ $webhook->description }}</textarea>
             @error('description')
             <div class="has-error">
@@ -183,7 +183,10 @@
     <div class="block">
         <div class="block-title">
             <h2><strong>Mappings</strong></h2>
-            <a href="{{ route('webhooks.mappings.create', $webhook) }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
+            <span class="btn-pull-right">
+            <a href="{{ route('webhooks.mappings.create', $webhook) }}" class="btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
+            <a href="{{ route('webhooks.edit.mappings', $webhook) }}" class="btn btn-md btn-default"><i class="fa fa-pencil"></i> Edit</a>
+            </span>
         </div>
 
         @if (count($mappings) <= 0)
@@ -195,12 +198,9 @@
         @else
             <div class="form-group row">
                 <div class="col-xs-5">
-                    <label class="field-compulsory" for="cw_room_id">Name</label>
-                </div>
-                <div class="col-xs-2">
                     <label class="field-compulsory" for="cw_room_id">Key</label>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-5">
                     <label class="field-compulsory" for="cw_room_id">Value</label>
                 </div>
                 <div class="col-xs-2 text-center">
@@ -211,18 +211,12 @@
             @foreach($mappings as $key => $mapping)
                 <div class="form-group row">
                     <div class="col-xs-5">
-                        <input type="text" class="form-control" value="{{ $mapping->name }}" readonly>
-                    </div>
-                    <div class="col-xs-2">
                         <input type="text" class="form-control" value="{{ $mapping->key }}" readonly>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-5">
                         <input type="text" class="form-control" value="{{ $mapping->value }}" readonly>
                     </div>
                     <div class="col-xs-2 text-center mapping-item">
-                        <a class="btn btn-sm btn-default" href="{{ route('webhooks.mappings.edit', ['webhook' => $webhook, 'mapping' => $mapping]) }}">
-                            <i class="fa fa-pencil"></i> Edit
-                        </a>&nbsp
                         {{ Form::open([
 		                    'method' => 'DELETE',
 		                    'url' => route('webhooks.mappings.destroy', ['webhook' => $webhook, 'mapping' => $mapping]),
