@@ -25,7 +25,7 @@
 }
 
 .btn-pull-right {
-  margin-left: 85% !important;
+  margin-left: 80% !important;
   margin-bottom: 5px !important;
 }
 
@@ -128,4 +128,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
+}
+.key {
+  margin: 3px;
 }
