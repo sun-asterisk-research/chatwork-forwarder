@@ -45,7 +45,9 @@ Route::group(['middleware' => ['auth']], function () {
         'index'
     ]);
     Route::resource('webhooks.payloads', 'PayloadController')->except('show');
-    Route::resource('webhooks.mappings', 'MappingController')->except(['index', 'show']);
+    Route::resource('webhooks.mappings', 'MappingController')->except(['index', 'show', 'update']);
+    Route::get('webhooks/{webhook}/mappings', 'MappingController@edit')->name('webhooks.edit.mappings');
+    Route::post('webhooks/{webhook}/mappings/update', 'MappingController@update')->name('webhooks.update.mappings');
     Route::resource('dashboard', 'DashboardController')->only('index');
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('admin');
 });

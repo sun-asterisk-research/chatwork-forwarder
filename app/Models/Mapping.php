@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mapping extends Model
 {
-    use SoftDeletes;
 
     protected $fillable = [
         'webhook_id',
