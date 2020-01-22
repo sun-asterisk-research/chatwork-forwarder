@@ -37,10 +37,10 @@
                 @foreach($mappings as $index => $mapping)
                 <div class="row">
                     <div class="col-md-5">
-                        <input name="key[]" id="{{ 'key'. $index }}" value={{ $mapping->key }} class="form-control col-md-5 key" onchange="setChangeStatus(true)">
+                        <input name="key[]" id="{{ 'key'. $index }}" value="{{ $mapping->key }}" class="form-control col-md-5 key" onchange="setChangeStatus(true)">
                     </div>
                     <div class="col-md-5">
-                        <input name="value[]" id="{{ 'value'. $index }}" value={{ $mapping->value }} class="form-control col-md-5 value" onchange="setChangeStatus(true)">
+                        <input name="value[]" id="{{ 'value'. $index }}" value="{{ $mapping->value }}" class="form-control col-md-5 value" onchange="setChangeStatus(true)">
                     </div>
                     <div class="col-md-2">
                         <button name="action[]" id="{{ 'action'. $index }}" class="btn btn--link-danger font-weight-normal action fa fa-minus-circle" onclick="removeCondition({{ $index }})"></button>
