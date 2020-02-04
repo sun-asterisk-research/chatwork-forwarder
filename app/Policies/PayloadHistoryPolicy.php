@@ -47,4 +47,9 @@ class PayloadHistoryPolicy
     {
         return $user->id === $payloadHistory->webhook->user_id;
     }
+
+    public function recheck(User $user, PayloadHistory $payloadHistory)
+    {
+        return $user->id === $payloadHistory->webhook->user_id;
+    }
 }
