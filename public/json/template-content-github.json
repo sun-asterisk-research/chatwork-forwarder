@@ -1,0 +1,5 @@
+TO ALL >>>
+
+{!! $params.pull_request.user.login !!} Có một pull mới, mọi người vào review giúp PR này với ạ.
+
+{{$params.pull_request.html_url}}

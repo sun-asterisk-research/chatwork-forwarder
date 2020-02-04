@@ -1,0 +1,20 @@
+{
+    "action": "new_post",
+    "receiver": {
+        "id": 1,
+        "username": "username",
+        "name": "fullname"
+    },
+    "data": {
+        "post": {
+            "url": "https://viblo.asia/p/hash_post",
+            "title": "this is post title",
+            "author": {
+                "id": 1,
+                "username": "username",
+                "name": "fullname"
+            },
+            "published_at": 1576719727000
+        }
+    }
+}

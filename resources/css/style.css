@@ -132,3 +132,10 @@
 .key {
   margin: 3px;
 }
+.fill{
+  margin-left: 6px;
+  font-size: 18px;
+  border: red solid 1.5px;
+  color: red;
+  padding: 0px 16px;
+}
