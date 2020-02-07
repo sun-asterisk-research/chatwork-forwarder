@@ -24,6 +24,8 @@
     <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
     <div class="form-horizontal form-bordered">
         <div class="col-xs-12">
+            <span class="fill" id="github">Github</span>
+            <span class="fill" id="viblo"> Viblo</span>
             <button id="submit" type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
             <a class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</a>
         </div>
@@ -31,7 +33,7 @@
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory required">Payload params</label>
-                <textarea class="form-control" rows="5" name="params" placeholder="Enter payload params"></textarea>
+                <textarea class="form-control" id="payload_params" rows="5" name="params" placeholder="Enter payload params"></textarea>
                 <div class="has-error">
                     <span class="help-block params"></span>
                 </div>
@@ -62,7 +64,7 @@
             <div class="col-xs-12">
                 <label class="field-compulsory required" for="webhook_description">Content</label>
                 <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> example</a>
-                <textarea class="form-control" rows="5" name="content" placeholder="Enter Content message"></textarea>
+                <textarea class="form-control" id="payload_content" rows="5" name="content" placeholder="Enter Content message"></textarea>
                 <div class="has-error">
                     <span class="help-block content"></span>
                 </div>

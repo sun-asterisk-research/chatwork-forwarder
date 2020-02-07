@@ -1,0 +1,4 @@
+TO ALL >>>
+
+{{$params.data.post.author.username}} vừa mới publish một bài viết trên Viblo. Mọi người cùng vào vote up, hay comment nhé.
+{{$params.data.post.title}} {{$params.data.post.url}}
