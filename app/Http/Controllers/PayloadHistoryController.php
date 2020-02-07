@@ -93,4 +93,62 @@ class PayloadHistoryController extends Controller
             ]);
         }
     }
+
+    public function recheck(Request $request)
+    {
+        $errorFields = [];
+        $result = [];
+        $payloadHistory = PayloadHistory::findOrFail($request->id);
+        $this->authorize('recheck', $payloadHistory);
+        $params = json_decode($payloadHistory->params, true);
+        $payloads = $payloadHistory->webhook->payloads;
+        foreach ($payloads as $payload) {
+            $content = $payload->content;
+            $value = $this->getStringsBetweebBrackets($content);
+            $result = array_merge($result, $value);
+        }
+        foreach ($result as $value) {
+            try {
+                $this->getValues($params, $value);
+            } catch (\Throwable $th) {
+                array_push($errorFields, trim($value));
+                continue;
+            }
+        }
+        if (count($errorFields) != 0) {
+            return response()->json([
+                'error' => true,
+                'data' => array_unique($errorFields),
+            ]);
+        } else {
+            return response()->json([
+                'error' => false,
+            ]);
+        }
+    }
+
+    private function getStringsBetweebBrackets($str)
+    {
+        $regex1 = '#{{(.*?)}}#';
+        preg_match_all($regex1, $str, $matches1);
+
+        $regex2 = '#{!!(.*?)!!}#';
+        preg_match_all($regex2, $str, $matches2);
+
+        return array_merge($matches1[1], $matches2[1]);
+    }
+
+    public function getValues($data, $field)
+    {
+        $attributes = explode('.', trim($field));
+        if ($attributes[0] === '$params') {
+            array_shift($attributes);
+        }
+        $currentValue = $data;
+        foreach ($attributes as $attr) {
+            $currentValue = $currentValue[$attr];
+        }
+
+        return $currentValue;
+    }
 }

@@ -51,6 +51,12 @@ use App\Enums\PayloadHistoryStatus;
             {{ $payloadHistory->log }}
         </div>
     </div>
+    <div class="row">
+        <label class="col-md-1 text-right">
+            <input type="hidden" id="history_id" value="{{ $payloadHistory->id }}">
+            <button class="btn btn-sm btn-warning" id="recheck" data-id="{{ $payloadHistory->id }}"><i class="fa fa-reply-all"></i> Re check</button>
+        </label>
+    </div>
 </div>
 <div class="block full">
     <div class="block-title">
@@ -117,6 +123,6 @@ use App\Enums\PayloadHistoryStatus;
 @endsection
 @section('js')
     @include('common.flash-message')
+    <script src="{{ asset('js/payloadHistory.js') }}"></script>
 @endsection
 <script src="{{ mix('/js/custom.js') }}"></script>
-
