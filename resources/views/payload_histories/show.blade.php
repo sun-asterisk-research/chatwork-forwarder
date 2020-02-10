@@ -54,7 +54,7 @@ use App\Enums\PayloadHistoryStatus;
     <div class="row">
         <label class="col-md-1 text-right">
             <input type="hidden" id="history_id" value="{{ $payloadHistory->id }}">
-            <button class="btn btn-sm btn-warning" id="recheck" data-id="{{ $payloadHistory->id }}"><i class="fa fa-reply-all"></i> Re check</button>
+            <button class="btn btn-sm btn-warning" id="recheck" data-toggle="tooltip" data-placement="top" title="Recheck the payload again"><i class="fa fa-repeat" aria-hidden="true"></i> Recheck</button>
         </label>
     </div>
 </div>
