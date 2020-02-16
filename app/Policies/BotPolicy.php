@@ -12,7 +12,7 @@ class BotPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine  if the current user is admin can do anything
+     * Determine if the current user is admin can do anything
      *
      * @param App\Models\User
      * @return bool
@@ -25,7 +25,7 @@ class BotPolicy
     }
 
     /**
-     * Determine  if the given bot can be deleted by user
+     * Determine if the given bot can be deleted by user
      *
      * @param App\Models\User
      * @param App\Models\Bot
@@ -37,7 +37,7 @@ class BotPolicy
     }
 
     /**
-     * Determine  if the given bot can be updated by user
+     * Determine if the given bot can be updated by user
      *
      * @param App\Models\User
      * @param App\Models\Bot
@@ -49,7 +49,7 @@ class BotPolicy
     }
 
     /**
-     * Determine whether the user can view any models.
+     * Determine if the user can view any models.
      *
      * @param  \App\Models\User  $user
      * @return mixed
@@ -60,7 +60,7 @@ class BotPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine if the user can create models.
      *
      * @param  \App\Models\User  $user
      * @return mixed
@@ -71,7 +71,7 @@ class BotPolicy
     }
 
     /**
-     * Determine whether the user can get room of bot.
+     * Determine if the user can get room of bot.
      *
      * @param  \App\Models\User  $user
      * @return mixed

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Exception;
-use Auth;
 use App\Models\User;
 use App\Models\Webhook;
 use App\Models\Bot;

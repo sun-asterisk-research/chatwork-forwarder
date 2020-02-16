@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Mapping;
 use App\Models\Webhook;
-use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 use App\Http\Requests\MappingCreateRequest;
-use App\Http\Requests\MappingUpdateRequest;
 use App\Repositories\Interfaces\MappingRepositoryInterface as MappingRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -54,7 +51,7 @@ class MappingController extends Controller
                     $attributes['webhook_id'] = $webhookId;
                     $attributes['key'] = $keys[$i];
                     $attributes['value'] = $values[$i];
-                    $mapping = Mapping::where('webhook_id', $webhookId)->updateOrCreate([
+                    Mapping::where('webhook_id', $webhookId)->updateOrCreate([
                         'key' => $attributes['key'],
                     ], $attributes);
                 }
@@ -69,7 +66,6 @@ class MappingController extends Controller
             return response()->json([
                 'error' => false,
                 'webhook_id' => $webhook->id,
-
             ]);
         } catch (Exception $exception) {
             DB::rollBack();
@@ -106,7 +102,7 @@ class MappingController extends Controller
 
         DB::beginTransaction();
         try {
-            $mappings = $webhook->mappings()->delete();
+            $webhook->mappings()->delete();
             $keys = $request->keys;
             $values = $request->values;
             if ($keys && $values) {
@@ -114,7 +110,7 @@ class MappingController extends Controller
                     $attributes['webhook_id'] = $webhookId;
                     $attributes['key'] = $keys[$i];
                     $attributes['value'] = $values[$i];
-                    $mapping = Mapping::where('webhook_id', $webhookId)->updateOrCreate([
+                    Mapping::where('webhook_id', $webhookId)->updateOrCreate([
                         'key' => $attributes['key'],
                     ], $attributes);
                 }
@@ -129,7 +125,6 @@ class MappingController extends Controller
             return response()->json([
                 'error' => false,
                 'webhook_id' => $webhook->id,
-
             ]);
         } catch (Exception $exception) {
             DB::rollBack();

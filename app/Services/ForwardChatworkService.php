@@ -31,7 +31,7 @@ class ForwardChatworkService
     }
 
     /**
-     * forward message to chatwork
+     * Forward message to chatwork
      *
      * @return void
      */

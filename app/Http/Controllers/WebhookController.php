@@ -82,7 +82,7 @@ class WebhookController extends Controller
         }
     }
 
-    /**\
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Webhook  $webhook
@@ -164,7 +164,7 @@ class WebhookController extends Controller
             $this->webhookRepository->delete($webhook->id);
             return redirect()->route('webhooks.index', $page)->with('messageSuccess', [
                 'status' => 'Delete success',
-                'message' => 'This webhook successfully deleted',
+                'message' => 'This webhook was successfully deleted',
             ]);
         } catch (Exception $exception) {
             return redirect()->back()->with('messageFail', [
@@ -188,7 +188,7 @@ class WebhookController extends Controller
         $result = $this->webhookRepository->update($request->id, ['status' => $status]);
 
         if ($result) {
-            return 'This webhook was updated successfully';
+            return 'This webhook was successfully updated';
         }
 
         return response()->json([

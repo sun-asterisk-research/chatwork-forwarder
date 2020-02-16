@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Auth;
-use App\Models\User;
 use App\Models\Webhook;
 use App\Models\Bot;
 use App\Models\PayloadHistory;
@@ -33,7 +31,7 @@ class DashboardController extends Controller
         $messageFaildedQuantity = $this->getDataChart($messageFailed, $period);
         $messageSuccessQuantity = $this->getDataChart($messageSuccess, $period);
 
-        $payloadFailedChart =  $this->convertArrayChart($payloadFaildedQuantity, $period);
+        $payloadFailedChart = $this->convertArrayChart($payloadFaildedQuantity, $period);
         $payloadSuccessChart = $this->convertArrayChart($payloadSuccessQuantity, $period);
         $messageFailedChart = $this->convertArrayChart($messageFaildedQuantity, $period);
         $messageSuccessChart = $this->convertArrayChart($messageSuccessQuantity, $period);

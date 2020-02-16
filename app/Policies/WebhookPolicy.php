@@ -12,7 +12,7 @@ class WebhookPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can update the webhook.
+     * Determine if the user can update the webhook.
      *
      * @param  \App\Models\User  $user
      * @param  \App\Webhook  $webhook
@@ -24,7 +24,7 @@ class WebhookPolicy
     }
 
     /**
-     * Determine whether the user can create the webhook.
+     * Determine if the user can create the webhook.
      *
      * @param  \App\Models\User  $user
      * @param  \App\Webhook  $webhook
@@ -36,7 +36,7 @@ class WebhookPolicy
     }
 
     /**
-     * Determine whether the user can enable/disable the webhook.
+     * Determine if the user can enable/disable the webhook.
      *
      * @param  \App\Models\User  $user
      * @param  \App\Webhook  $webhook
@@ -48,7 +48,7 @@ class WebhookPolicy
     }
 
     /**
-     * Determine whether the user can delete the webhook.
+     * Determine if the user can delete the webhook.
      *
      * @param  \App\Models\User  $user
      * @param  \App\Webhook  $webhook

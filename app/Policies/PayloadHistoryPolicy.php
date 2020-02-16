@@ -12,7 +12,7 @@ class PayloadHistoryPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine  if the current user is admin can do anything
+     * Determine if the current user is admin can do anything
      *
      * @param App\Models\User
      * @return bool
@@ -25,7 +25,7 @@ class PayloadHistoryPolicy
     }
 
     /**
-     * Determine  if the given payload history can be showed by user
+     * Determine if the given payload history can be showed by user
      *
      * @param App\Models\User
      * @param App\Models\PayloadHistory
@@ -37,7 +37,7 @@ class PayloadHistoryPolicy
     }
 
     /**
-     * Determine  if the given payload history can be showed by user
+     * Determine if the given payload history can be deleted by user
      *
      * @param App\Models\User
      * @param App\Models\PayloadHistory
@@ -48,6 +48,13 @@ class PayloadHistoryPolicy
         return $user->id === $payloadHistory->webhook->user_id;
     }
 
+    /**
+     * Determine if the given payload history can be rechecked by user
+     *
+     * @param App\Models\User
+     * @param App\Models\PayloadHistory
+     * @return bool
+     */
     public function recheck(User $user, PayloadHistory $payloadHistory)
     {
         return $user->id === $payloadHistory->webhook->user_id;

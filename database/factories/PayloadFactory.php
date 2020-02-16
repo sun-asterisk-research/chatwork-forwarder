@@ -3,7 +3,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 use App\Models\Payload;
 use App\Models\Webhook;
-use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
 /*

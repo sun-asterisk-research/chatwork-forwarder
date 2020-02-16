@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Auth;
 use App\Enums\UserType;
-use App\Models\Webhook;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,8 +31,8 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * register repositories class dependency.
-     * example change drive to call method only change.
+     * Register repositories class dependency.
+     * Example change drive to call method only change.
      */
     private function registerRepositories()
     {

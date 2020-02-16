@@ -12,7 +12,7 @@ class MessageHistoryPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine  if the current user is admin can do anything
+     * Determine if the current user is admin can do anything
      *
      * @param App\Models\User
      * @return bool

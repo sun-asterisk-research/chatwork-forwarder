@@ -12,7 +12,7 @@ class MappingPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine  if the given mapping can be deleted by user
+     * Determine if the given mapping can be deleted by user
      *
      * @param App\Models\User
      * @param App\Models\Webhook
@@ -25,7 +25,7 @@ class MappingPolicy
     }
 
     /**
-     * Determine if the given mapping can be create by user and webhook
+     * Determine if the given mapping can be created by user and webhook
      *
      * @param App\Models\User
      * @param App\Models\Webhook
@@ -37,7 +37,7 @@ class MappingPolicy
     }
 
     /**
-     * Determine if the given mapping can be update by user and webhook
+     * Determine if the given mapping can be updated by user and webhook
      *
      * @param App\Models\User
      * @param App\Models\Webhook

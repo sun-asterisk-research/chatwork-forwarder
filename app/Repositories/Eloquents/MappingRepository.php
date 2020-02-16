@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories\Eloquents;
 
 use App\Models\Mapping;

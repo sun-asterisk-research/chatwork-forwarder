@@ -52,13 +52,13 @@ class MappingUpdateRequest extends FormRequest
     {
         return [
             'name.required' => 'Please enter name',
-            'name.max' => 'Name is too long(maximum is 100 characters)',
+            'name.max' => 'Name is too long (maximum is 100 characters)',
             'name.unique' => 'This mapping name has already been used by another mapping',
             'key.required' => 'Please enter key',
-            'key.max' => 'Key is too long(maximum is 100 characters)',
+            'key.max' => 'Key is too long (maximum is 100 characters)',
             'key.unique' => 'This mapping key has already been used by another mapping',
             'value.required' => 'Please enter value',
-            'value.max' => 'Value is too long(maximum is 100 characters)',
+            'value.max' => 'Value is too long (maximum is 100 characters)',
         ];
     }
 }

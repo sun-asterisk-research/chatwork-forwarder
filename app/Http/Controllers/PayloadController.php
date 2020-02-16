@@ -10,7 +10,6 @@ use App\Models\Webhook;
 use App\Repositories\Interfaces\PayloadRepositoryInterface as PayloadRepository;
 use Illuminate\Support\Facades\DB;
 use Exception;
-use Illuminate\Database\QueryException;
 
 class PayloadController extends Controller
 {

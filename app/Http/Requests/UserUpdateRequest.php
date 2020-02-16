@@ -51,7 +51,7 @@ class UserUpdateRequest extends FormRequest
             'email.max' => 'Email is too long (maximum is 200 characters)',
             'password.required' => 'Please enter password',
             'password.min' => 'Password is too short (minimum is 8 characters)',
-            'password.max' => 'password is too long (maximum is 50 characters)',
+            'password.max' => 'Password is too long (maximum is 50 characters)',
             'avatar.image' => 'The avatar is not in the correct format',
             'avatar.max' => 'Maximum file size to upload is 5MB (5120 KB)',
         ];

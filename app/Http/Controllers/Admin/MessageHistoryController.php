@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
-use Illuminate\Http\Request;
 use App\Models\MessageHistory;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\MessageHistoryRepositoryInterface as MessageHistoryRepository;

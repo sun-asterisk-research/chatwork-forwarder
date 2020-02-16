@@ -92,7 +92,7 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, $id)
     {
         try {
-            $user = $this->userRepository->update($id, $request);
+            $this->userRepository->update($id, $request);
 
             return response()->json([
                 'error' => false,

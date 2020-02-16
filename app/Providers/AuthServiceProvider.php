@@ -12,7 +12,6 @@ use App\Models\PayloadHistory;
 use App\Policies\MappingPolicy;
 use App\Policies\PayloadPolicy;
 use App\Policies\WebhookPolicy;
-use Illuminate\Support\Facades\Gate;
 use App\Policies\MessageHistoryPolicy;
 use App\Policies\PayloadHistoryPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;

@@ -8,7 +8,7 @@ use App\Models\User;
 class SocialGoogleAccountService
 {
     /**
-     * create or get user from google account service
+     * Create or get user from google account service
      *
      * @param Laravel\Socialite\Contracts\User $providerUser
      * @return \App\Models\User

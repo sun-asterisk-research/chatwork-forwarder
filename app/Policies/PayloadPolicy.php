@@ -26,7 +26,7 @@ class PayloadPolicy
     }
 
     /**
-     * Determine  if the given payload can be deleted by user
+     * Determine if the given payload can be deleted by user
      *
      * @param App\Models\User
      * @param App\Models\Payload

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Webhook;
-use App\Models\Condition;
 use Illuminate\Http\Request;
 use App\Services\ForwardChatworkService;
 use App\Repositories\Interfaces\PayloadHistoryRepositoryInterface as PayloadHistoryRepository;

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories\Eloquents;
 
 use App\Repositories\Interfaces\BaseRepositoryInterface;
@@ -19,7 +20,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * get model
+     * Get model
      * @return string
      */
     abstract public function getModel();
@@ -35,7 +36,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * Get All
+     * Get all
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public function getAll()
