@@ -108,6 +108,9 @@ class ForwardChatworkService
             case '<=':
                 return $value <= $condition->value;
                 break;
+            case 'Match':
+                return preg_match($condition->value, $value);
+                break;
             default:
                 return false;
         }

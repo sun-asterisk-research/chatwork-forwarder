@@ -7,7 +7,7 @@ function setChangeStatus(status) {
 function addFields() {
     if (checkData()) {
         var counter = $(".mult-condition").children().length;
-        var operators = ["==", "!=", ">", ">=", "<", "<="]
+        var operators = ["==", "!=", ">", ">=", "<", "<=", "Match"]
         var fieldInput = $("<input>")
             .attr({ name: "field[]", id: "field" + counter, placeholder: "Contidion field" })
             .addClass("form-control col-md-4 field")
@@ -81,7 +81,7 @@ function rerenderConditions() {
     operators = $('.operator').toArray();
     values = $('.value').toArray();
     actions = $('.action').toArray();
-    
+
     for (i = 0; i < counter; i++) {
         fields[i].id = 'field' + i;
         operators[i].id = 'operator' + i;
