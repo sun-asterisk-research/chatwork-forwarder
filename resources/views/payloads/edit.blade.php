@@ -55,7 +55,7 @@
                     <div class="col-md-1">
                         {!! Form::select(
                         'operator[]',
-                        ['==' => '==', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<='], $conditions[$i]->operator,
+                        ['==' => '==', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', 'Match' => 'Match'], $conditions[$i]->operator,
                                     ['class'=>'form-control operator', 'id' => 'operator'.$i, 'onchange' => "setChangeStatus(true)"]
                                     ) !!}
                     </div>
