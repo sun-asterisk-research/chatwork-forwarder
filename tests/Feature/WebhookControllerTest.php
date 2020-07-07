@@ -111,29 +111,6 @@ class WebhookControllerTest extends TestCase
     }
 
     /**
-     * test Feature admin cant store data webhook
-     *
-     * @return void
-     */
-    public function testAdminCantStoreWebhookFeature()
-    {
-        $user = factory(User::class)->create(['role' => UserType::ADMIN]);
-        $bot = factory(Bot::class)->create();
-        $params = [
-            'name' => 'string',
-            'description' => 'some thing successfully',
-            'bot_id' => $bot->id,
-            'room_name' => 'string',
-            'room_id' => 1
-        ];
-
-        $this->actingAs($user);
-        $response = $this->post(route('webhooks.store'), $params);
-
-        $response->assertStatus(403);
-    }
-
-    /**
      * test Feature store data webhook fail
      *
      * @return void
@@ -305,16 +282,6 @@ class WebhookControllerTest extends TestCase
         $response = $this->get(route('webhooks.edit', ['webhook' => $webhook]));
         $response->assertStatus(302);
         $response->assertRedirect('/');
-    }
-
-    public function testUnauthorizationUserCannotSeeWebhook()
-    {
-        $webhook = factory(Webhook::class)->create();
-        $user = factory(User::class)->create();
-        $this->actingAs($user);
-
-        $response = $this->get(route('webhooks.edit', ['webhook' => $webhook]));
-        $response->assertStatus(403);
     }
 
     /**
@@ -577,28 +544,6 @@ class WebhookControllerTest extends TestCase
         $response = $this->put(route('webhooks.update', $webhook->id), $params);
         $response->assertStatus(302);
         $response->assertRedirect('/');
-    }
-
-    /**
-     * test unauthorization user cannot update webhook
-     *
-     * @return  void
-     */
-    public function testUnauthorizationUserCannotUpdateWebhook()
-    {
-        $webhook = factory(Webhook::class)->create();
-        $user = factory(User::class)->create();
-        $params = [
-            'name' => "Name update",
-            'description' => 'description Update',
-            'bot_id' => 1,
-            'room_name' => 'Name Update',
-            'room_id' => 1,
-            'status' => 1,
-        ];
-        $this->actingAs($user);
-        $response = $this->put(route('webhooks.update', $webhook->id), $params);
-        $response->assertStatus(403);
     }
 
     /**

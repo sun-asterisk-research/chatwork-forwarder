@@ -45,8 +45,6 @@ class WebhookController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Webhook::class);
-
         $bots = Bot::byUser(Auth::id());
 
         return view('webhooks.create', compact('bots'));
@@ -60,8 +58,6 @@ class WebhookController extends Controller
      */
     public function store(WebhookCreateRequest $request)
     {
-        $this->authorize('create', Webhook::class);
-
         $data = $request->except('_token');
         $data['token'] = md5(Auth::id() . '' . time());
         $data['user_id'] = Auth::id();
@@ -90,7 +86,6 @@ class WebhookController extends Controller
      */
     public function edit(Webhook $webhook)
     {
-        $this->authorize('update', $webhook);
         $payloads = $webhook->payloads()->get();
         $mappings = $webhook->mappings()->get();
         $bots = Bot::byUser(Auth::id());
@@ -107,7 +102,6 @@ class WebhookController extends Controller
      */
     public function update(WebhookUpdateRequest $request, Webhook $webhook)
     {
-        $this->authorize('update', $webhook);
         $data = $request->only(['name', 'status', 'description', 'bot_id', 'room_name', 'room_id']);
 
         try {

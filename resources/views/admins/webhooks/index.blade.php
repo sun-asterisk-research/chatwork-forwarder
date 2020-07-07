@@ -29,8 +29,8 @@
             <div class="col-xs-2">
                 <select name="search[status]" class="form-control">
                     <option value="">All</option>
-                    <option value="{{ WebhookStatus::ENABLED }}" {{ request('search')['status'] === strval(WebhookStatus::ENABLED) ? "selected" : "" }}>Enable</option>
-                    <option value="{{ WebhookStatus::DISABLED }}"  {{ request('search')['status'] === strval(WebhookStatus::DISABLED) ? "selected" : "" }}>Disable</option>
+                    <option value="{{ WebhookStatus::ENABLED }}" {{ (request('search')['status'] ?? '') === strval(WebhookStatus::ENABLED) ? "selected" : "" }}>Enable</option>
+                    <option value="{{ WebhookStatus::DISABLED }}"  {{ (request('search')['status'] ?? '') === strval(WebhookStatus::DISABLED) ? "selected" : "" }}>Disable</option>
                 </select>
             </div>
             <button class="btn btn-md btn-search"><i class="fa fa-search"></i> Search</button>
@@ -40,7 +40,7 @@
 
 <div class="block full">
     <div class="block-title">
-        <h2><strong>Webhooks list</strong></h2>
+        <h2><strong>Webhooks list</strong></h2> 
     </div>
     <div class="table-responsive">
         <table  class="table table-vcenter table-striped">

@@ -349,14 +349,15 @@ class MappingControllerTest extends TestCase
      */
     public function testUpdateMappingSuccessFeature()
     {
-        $webhook = factory(Webhook::class)->create();
-        $user = $webhook->user;
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $mapping = factory(Mapping::class)->create(['webhook_id' => $webhook->id]);
+
         $data = [
             'keys' => ['tranvana'],
             'values' => ['[To:123123] Tran Van A'],
             'webhook_id' => $webhook->id,
         ];
-
         $this->actingAs($user);
         $response = $this->post(route('webhooks.update.mappings', $webhook->id), $data);
 
