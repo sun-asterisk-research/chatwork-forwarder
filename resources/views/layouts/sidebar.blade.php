@@ -13,29 +13,35 @@
             <ul class="sidebar-nav">
                 @admin
                 <li>
-                    <a href="/admin/dashboard"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
+                    <a href="{{ route('dashboard.index') }}"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
                 </li>
                 <li>
-                    <a href="/admin/users"><i class="fa fa-users"></i> Users</a>
+                    <a href="{{ route('users.index') }}"><i class="fa fa-users"></i> Users</a>
                 </li>
                 <li>
-                    <a href="/admin/webhooks"><i class="fa fa-desktop"></i> Webhooks</a>
+                    <a href="{{ route('admin.webhooks.index') }}"><i class="fa fa-desktop"></i> Webhooks</a>
                 </li>
                 <li>
-                    <a href="/admin/history"><i class="fa fa-history"></i> Payload histories</a>
+                    <a href="{{ route('webhooks.index') }}"><i class="fa fa-desktop"></i> My Webhooks</a>
+                </li>
+                <li>
+                    <a href="{{ route('bots.index') }}"><i class="fa fa-reddit"></i> Bots</a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.history.index') }}"><i class="fa fa-history"></i> Payload histories</a>
                 </li>
                 @else
                 <li>
-                    <a href="/dashboard"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
+                    <a href="{{ route('dashboard.index') }}"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
                 </li>
                 <li>
-                    <a href="/webhooks"><i class="fa fa-desktop"></i> Webhooks</a>
+                    <a href="{{ route('webhooks.index') }}"><i class="fa fa-desktop"></i> Webhooks</a>
                 </li>
                 <li>
-                    <a href="/bots"><i class="fa fa-reddit"></i> Bots</a>
+                    <a href="{{ route('bots.index') }}"><i class="fa fa-reddit"></i> Bots</a>
                 </li>
                 <li>
-                    <a href="/history"><i class="fa fa-history"></i> Payload histories</a>
+                    <a href="{{ route('history.index') }}"><i class="fa fa-history"></i> Payload histories</a>
                 </li>
                 @endadmin
             </ul>

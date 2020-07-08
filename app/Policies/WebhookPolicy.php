@@ -34,7 +34,6 @@ class WebhookPolicy
     {
         return $user->role === UserType::USER;
     }
-
     /**
      * Determine whether the user can enable/disable the webhook.
      *

@@ -72,7 +72,6 @@ class ForwardChatworkServiceTest extends TestCase
 
         $result = $forwardChatworkService->generateMessage($content, $params);
 
-
         $this->assertEquals('Hello, my name is {"name":"qtv"}', $result);
     }
 

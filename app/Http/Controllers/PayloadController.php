@@ -28,8 +28,6 @@ class PayloadController extends Controller
      */
     public function create(Webhook $webhook)
     {
-        $this->authorize('create', [new Payload(), $webhook]);
-
         return view('payloads.create', compact('webhook'));
     }
 
@@ -43,7 +41,6 @@ class PayloadController extends Controller
     public function store(PayloadCreateRequest $request, $webhookId)
     {
         $webhook = Webhook::findOrFail($webhookId);
-        $this->authorize('create', [new Payload(), $webhook]);
 
         $data = $request->only(['content', 'params']);
         $data['webhook_id'] = $webhook->id;
@@ -92,8 +89,6 @@ class PayloadController extends Controller
      */
     public function edit(Webhook $webhook, Payload $payload)
     {
-        $this->authorize('update', [$payload, $webhook]);
-
         $conditions = $payload->conditions()->get();
         return view('payloads.edit', compact('payload', 'webhook', 'conditions'));
     }
@@ -107,8 +102,6 @@ class PayloadController extends Controller
      */
     public function update(PayloadUpdateRequest $request, Webhook $webhook, Payload $payload)
     {
-        $this->authorize('update', [$payload, $webhook]);
-
         $conditions = $request->only('conditions');
         $data = $request->only(['content', 'params']);
         $ids = (array)$request->ids;
@@ -150,7 +143,6 @@ class PayloadController extends Controller
      */
     public function destroy(Webhook $webhook, Payload $payload)
     {
-        $this->authorize('delete', [$payload, $webhook]);
         if ($payload->conditions->count() > 0) {
             return redirect()->back()
                 ->with('messageFail', [

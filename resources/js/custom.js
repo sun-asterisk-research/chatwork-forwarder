@@ -1,10 +1,9 @@
 $(document).ready(function () {
     var pathNames = window.location.pathname.split('/');
-    var current_root_path = window.location.pathname.includes('/admin') ? pathNames[2] : pathNames[1];
-
+    var current_root_path = window.location.href;
     $(".sidebar-content a").each(function (index, element) {
         $(element).removeClass('active');
-        if (element.href.split('/').pop() === current_root_path) {
+        if (element.href === current_root_path) {
             $(element).addClass('active');
         }
     });
