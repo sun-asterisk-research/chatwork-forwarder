@@ -1,0 +1,5 @@
+TO ALL >>>
+
+{!! $params.user.username !!} Có một pull mới, mọi người vào review giúp PR này với ạ.
+
+{{$params.object_attributes.url}}
