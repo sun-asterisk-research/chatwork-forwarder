@@ -269,6 +269,15 @@ $(document).ready(function () {
         });
     });
 
+    $('#gitlab').on('click', function (e) {
+        readTextFile("/json/template-params-gitlab.json", function(text){
+            $("#payload_params").val(text);
+        });
+        readTextFile("/json/template-content-gitlab.json", function(text){
+            $("#payload_content").val(text);
+        });
+    });
+
     $('#viblo').on('click', function (e) {
         readTextFile("/json/template-params-viblo.json", function(text){
             $("#payload_params").val(text);
