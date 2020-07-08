@@ -1,9 +1,42 @@
+function appendCode(url, status) {
+    var payload = "";
+    if (status) {
+        payload = "\n \t \t'payload': JSON.stringify(event.namedValues),";
+    }
+    $("#webhookScript").val("function onFormSubmit (event) \n {"
+        + " \n \t let options = {"
+        + " \n \t \t'method': 'post',"
+        + " \n \t \t'contentType' : 'application/json',"
+        + payload
+        + " \n \t \t'muteHttpExceptions': false"
+        + " \n \t}"
+        + " \n \tlet url = '" + url + "';"
+        + " \n \tlet response = UrlFetchApp.fetch(url, options);"
+        + " \n}"
+    );
+}
+
 $(document).ready(function () {
     $('#cw_rooms').prop('disabled', true);
 
     load_room_name('all');
     load_room_id();
+    load_script();
 
+    function load_script()
+    {
+        var url = $('#webhookUrl').val();
+        $("#webhookScript").val("function onFormSubmit (event) \n {"
+            + " \n \t let options = {"
+            + " \n \t \t'method': 'post',"
+            + " \n \t \t'contentType' : 'application/json',"
+            + " \n \t \t'muteHttpExceptions': false"
+            + " \n \t}"
+            + " \n \tlet url = '" + url +"';"
+            + " \n \tlet response = UrlFetchApp.fetch(url, options);"
+            + " \n}"
+        );
+    }
     function load_room_name(type) {
         var room_name = document.getElementById("room_name");
         var bot_id = $('#cw_bots').val();
@@ -188,5 +221,19 @@ $(document).ready(function () {
         btnCopy.setAttribute('data-original-title', 'Copied!');
         $('[data-toggle="tooltip"], .enable-tooltip').tooltip({container: 'body', animation: false});
         $('#copyUrl').mouseover();
+    });
+
+    $('#copyScript').on('click', function (e) {
+        e.preventDefault();
+        var copyText = document.getElementById("webhookScript");
+        var btnCopy = document.getElementById('copyScript');
+        copyText.select();
+        copyText.setSelectionRange(0, 99999)
+        document.execCommand("copy");
+        btnCopy.setAttribute('data-toggle', 'tooltip');
+        btnCopy.setAttribute('data-placement', 'top');
+        btnCopy.setAttribute('data-original-title', 'Copied!');
+        $('[data-toggle="tooltip"], .enable-tooltip').tooltip({container: 'body', animation: false});
+        $('#copyScript').mouseover();
     });
 });
