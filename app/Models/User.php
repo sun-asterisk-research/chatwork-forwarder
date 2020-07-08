@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         $this->notify(new MailResetPasswordNotification($token));
     }
+
+    public function templates()
+    {
+        return $this->hasMany(Template::class);
+    }
 }

@@ -5,6 +5,7 @@ namespace Tests\Feature\Models;
 use App\Models\User;
 use App\Models\Bot;
 use App\Models\Webhook;
+use App\Models\Template;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,20 +31,28 @@ class UserTest extends TestCase
 
     public function testUserHasManyBots()
     {
-        $user = factory(User::class)->create(); 
-        $bot = factory(Bot::class)->create(['user_id' => $user->id]); 
-       
+        $user = factory(User::class)->create();
+        $bot = factory(Bot::class)->create(['user_id' => $user->id]);
+
         $this->assertInstanceOf(HasMany::class, $user->bots());
         $this->assertEquals('user_id', $user->bots()->getForeignKeyName());
     }
 
     public function testUserHasManyWebhooks()
     {
-        $user = factory(User::class)->create(); 
-        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]); 
-       
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+
         $this->assertInstanceOf(HasMany::class, $user->webhooks());
         $this->assertEquals('user_id', $user->webhooks()->getForeignKeyName());
+    }
+
+    public function testUserHasManyTemplates()
+    {
+        $user = factory(User::class)->create();
+
+        $this->assertInstanceOf(HasMany::class, $user->templates());
+        $this->assertEquals('user_id', $user->templates()->getForeignKeyName());
     }
 
     /**
