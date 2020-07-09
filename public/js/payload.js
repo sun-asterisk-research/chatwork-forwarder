@@ -4,6 +4,12 @@ function setChangeStatus(status) {
     hasValueChanged = status;
 }
 
+function selectTemplate($tem) {
+    var index = document.getElementById("selectTemplate").value;
+    $("#payload_params").val($tem[index].params);
+    $("#payload_content").val($tem[index].content);
+  }
+
 function addFields() {
     if (checkData()) {
         var counter = $(".mult-condition").children().length;

@@ -8,6 +8,7 @@ use App\Models\Condition;
 use App\Models\Payload;
 use App\Models\Webhook;
 use App\Repositories\Interfaces\PayloadRepositoryInterface as PayloadRepository;
+use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -15,10 +16,12 @@ use Illuminate\Database\QueryException;
 class PayloadController extends Controller
 {
     private $payloadRepository;
+    private $templateRepository;
 
-    public function __construct(PayloadRepository $payloadRepository)
+    public function __construct(PayloadRepository $payloadRepository, TemplateRepository $templateRepository)
     {
         $this->payloadRepository = $payloadRepository;
+        $this->templateRepository = $templateRepository;
     }
 
     /**
@@ -28,7 +31,9 @@ class PayloadController extends Controller
      */
     public function create(Webhook $webhook)
     {
-        return view('payloads.create', compact('webhook'));
+        $templates = $this->templateRepository->getTemplate();
+
+        return view('payloads.create', compact('webhook', 'templates'));
     }
 
 

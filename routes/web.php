@@ -51,4 +51,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('webhooks/{webhook}/mappings/update', 'MappingController@update')->name('webhooks.update.mappings');
     Route::resource('dashboard', 'DashboardController')->only('index');
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('admin');
+    Route::resource('template', 'TemplateController')->only(['index']);
 });
