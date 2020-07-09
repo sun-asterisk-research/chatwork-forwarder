@@ -8,7 +8,7 @@ use BenSampo\Enum\Rules\EnumValue;
 use Auth;
 use App\Enums\TemplateStatus;
 
-class TemplateRequest extends FormRequest
+class TemplateCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

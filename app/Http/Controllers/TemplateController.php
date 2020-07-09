@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Template;
-use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
-use App\Models\Webhook;
-use Auth;
 use Exception;
+use Illuminate\Http\Request;
+use App\Http\Requests\TemplateCreateRequest;
+use App\Http\Requests\TemplateUpdateRequest;
+use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
+use Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Template;
 
 class TemplateController extends Controller
 {
@@ -39,7 +40,7 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        //
+        return view('templates.create');
     }
 
     /**
@@ -48,20 +49,29 @@ class TemplateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TemplateCreateRequest $request)
     {
-        //
-    }
+        $data = $request->only(['name', 'content', 'params', 'status']);
+        $data['user_id'] = Auth::id();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        DB::beginTransaction();
+        try {
+            $template = $this->templateRepository->create($data);
+            DB::commit();
+            $request->session()->flash('messageSuccess', [
+                'status' => 'Create success',
+                'message' => 'This template successfully created',
+            ]);
+
+            return $template->id;
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Create failed',
+                'message' => 'Create failed. Something went wrong',
+            ]);
+        }
     }
 
     /**
@@ -70,7 +80,7 @@ class TemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Webhook $webhook, Template $template)
+    public function edit(Template $template)
     {
         return view('templates.edit', compact('template'));
     }
@@ -82,7 +92,7 @@ class TemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Template $template)
+    public function update(TemplateUpdateRequest $request, Template $template)
     {
         $data = $request->only([
             'name',
@@ -105,18 +115,30 @@ class TemplateController extends Controller
             return $template->id;
         } catch (Exception $exception) {
             DB::rollBack();
-            return response()->json(['message' => 'Upload failed. Something went wrong'], 400);
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Update failed',
+                'message' => 'Update failed. Something went wrong',
+            ])->withInput();
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request, Template $template)
     {
-        //
+        $page = $request->page ? ['page' => $request->page] : null;
+        $this->authorize('delete', $template);
+
+        try {
+            $this->templateRepository->delete($template->id);
+
+            return redirect()->route('templates.index', $page)->with('messageSuccess', [
+                'status' => 'Delete success',
+                'message' => __('message.notification.delete.success', ['object' => 'template']),
+            ]);
+        } catch (Exception $exception) {
+            return redirect()->back()->with('messageFail', [
+                'status' => 'Delete failed',
+                'message' => __('message.template.notification.delete.fail'),
+            ]);
+        }
     }
 }

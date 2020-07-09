@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Bot;
+use App\Models\Template;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class BotPolicy
+class TemplatePolicy
 {
     use HandlesAuthorization;
 
@@ -14,24 +14,24 @@ class BotPolicy
      * Determine  if the given bot can be deleted by user
      *
      * @param App\Models\User
-     * @param App\Models\Bot
+     * @param App\Models\Template
      * @return bool
      */
-    public function delete(User $user, Bot $bot)
+    public function delete(User $user, Template $template)
     {
-        return $user->id === $bot->user_id;
+        return $user->id === $template->user_id;
     }
 
     /**
      * Determine  if the given bot can be updated by user
      *
      * @param App\Models\User
-     * @param App\Models\Bot
+     * @param App\Models\Template
      * @return bool
      */
-    public function update(User $user, Bot $bot)
+    public function update(User $user, Template $template)
     {
-        return $user->id === $bot->user_id;
+        return $user->id === $template->user_id;
     }
 
     /**
@@ -54,16 +54,5 @@ class BotPolicy
     public function create(User $user)
     {
         return true;
-    }
-
-    /**
-     * Determine whether the user can get room of bot.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function getRoom(User $user, $bot)
-    {
-        return $user->id === $bot->user_id;
     }
 }
