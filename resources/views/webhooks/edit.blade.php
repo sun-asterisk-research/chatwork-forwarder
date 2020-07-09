@@ -29,8 +29,23 @@
         <div class="col-xs-6">
             <label class="field-compulsory">Url</label>
             <div class="input-group">
-                <input type="text" id="webhookUrl" class="form-control" value="{{ config('app.url').'/api/v1/webhooks/'.$webhook->token }}" readonly>
+                @php($url = config('app.url').'/api/v1/webhooks/'.$webhook->token)
+                <input type="text" id="webhookUrl" class="form-control" value="{{ $url }}" readonly>
                 <a class="input-group-addon" id="copyUrl" ><i class="fa fa-clipboard"></i></a>
+            </div>
+        </div>
+        <div class="mt-15 col-xs-12">
+            <label class="field-compulsory">Google form script :
+                <span class="fill" onclick="appendCode('{{$url}}', true)" data-toggle="tooltip" data-placement="top" title="Generate google script include form data">
+                    Include form data
+                </span>
+                <span class="fill" onclick="appendCode('{{$url}}', false)" data-toggle="tooltip" data-placement="top" title="Generate google script do not include form data">
+                    Do not include form data
+                </span>
+            </label>
+            <div class="input-group">
+                <textarea class="form-control" rows="12" readonly id="webhookScript"></textarea>
+                <a class="input-group-addon" id="copyScript" ><i class="fa fa-clipboard"></i></a>
             </div>
         </div>
         <div class="mt-15 col-xs-8">
