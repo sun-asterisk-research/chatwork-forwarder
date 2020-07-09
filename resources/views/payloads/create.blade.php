@@ -28,6 +28,12 @@
             <span class="fill" id="github" data-toggle="tooltip" data-placement="top" title="Sample template for new Pull Request on Github">Github</span>
             <span class="fill" id="gitlab" data-toggle="tooltip" data-placement="top" title="Sample template for new Pull Request on Gitlab"> Gitlab</span>
             <span class="fill" id="viblo" data-toggle="tooltip" data-placement="top" title="Sample template for new post on Viblo"> Viblo</span>
+            <select class="fill" id="selectTemplate" onchange="selectTemplate({{$templates}})">
+                <option value="" disabled selected>Choose template</option>
+                @foreach ($templates as $index => $template)
+                    <option value="{{ $index }}">{{$template->name}}</option>
+                @endforeach
+            </select>
             <button id="submit" type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>
             <a class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</a>
             </div>

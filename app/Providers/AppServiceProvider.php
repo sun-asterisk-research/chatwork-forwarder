@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
         'MessageHistoryRepository',
         'MappingRepository',
         'ChatworkRepository',
+        'TemplateRepository',
     ];
 
     /**
