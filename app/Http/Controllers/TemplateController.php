@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Template;
 use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
 
 class TemplateController extends Controller
@@ -19,9 +20,12 @@ class TemplateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->templateRepository->getAll();
+        $perPage = config('paginate.perPage');
+        $templates = $this->templateRepository->getAllByUser($perPage);
+
+        return view('templates.index', compact('templates'));
     }
 
     /**
