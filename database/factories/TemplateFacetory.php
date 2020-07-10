@@ -14,6 +14,6 @@ $factory->define(Template::class, function (Faker $faker, $params) {
         'name' => $faker->name,
         'content' => $faker->paragraph,
         'params' => $faker->paragraph,
-        'status' => TemplateStatus::PUBLIC,
+        'status' => TemplateStatus::STATUS_PUBLIC,
     ];
 });
