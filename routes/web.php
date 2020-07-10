@@ -34,7 +34,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::delete('history/{history}', 'PayloadHistoryController@destroy')->name('admin.history.destroy');
             Route::delete('history/message/{message}', 'MessageHistoryController@destroy')->name('admin.message.destroy');
             Route::resource('dashboard', 'DashboardController')->only('index');
-      });
+        });
     });
     Route::resource('bots', 'BotController')->except('show');
     Route::put('webhooks/change_status', 'WebhookController@changeStatus');

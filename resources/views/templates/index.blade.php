@@ -1,6 +1,8 @@
 <?php
 
-use App\Enums\TemplateStatus; ?>
+use App\Enums\TemplateStatus;
+
+?>
 
 @extends('layouts.app')
 
@@ -13,12 +15,13 @@ use App\Enums\TemplateStatus; ?>
 <!-- Datatables Content -->
 <div class="block full">
     <div class="block-title">
-        <h2><strong>Templates list</strong></h2>
-        <a href="" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
+        <h2><strong>List templates</strong></h2>
+        <a href="{{ route('templates.create') }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
     </div>
 
     <div class="table-responsive">
-        <table class="table table-vcenter table-striped">
+        @include('templates.modal')
+        <table class="table table-vcenter table-striped" data-form="deleteForm">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -45,7 +48,7 @@ use App\Enums\TemplateStatus; ?>
                                 @endif
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-default" href=""><i class="fa fa-pencil"></i> Edit</a>
+                                <a class="btn btn-sm btn-default" href="{{ route('templates.edit', $template->id) }}"><i class="fa fa-pencil"></i> Edit</a>
 
                                 {{ Form::open([
                                     'method' => 'DELETE',
@@ -69,4 +72,9 @@ use App\Enums\TemplateStatus; ?>
     </div>
 </div>
 <!-- END Datatables Content -->
+@endsection
+
+@section('js')
+    <script src="{{ asset('/js/templates.js') }}"></script>
+    @include('common.flash-message')
 @endsection
