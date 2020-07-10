@@ -62,6 +62,9 @@ use App\Enums\TemplateStatus;
                                     'title' => 'Delete'
                                 ]) }}
                                 {{ Form::close() }}
+
+                                <a href="" class="btn btn-sm btn-default template-detail btn-detail" data-toggle="modal" data-target="#detail-{{ $template->id }}"><i class="fa fa-eye"></i> Detail</a>
+                                @include('templates.detail_template_modal')
                             </td>
                         </tr>
                     @endforeach
