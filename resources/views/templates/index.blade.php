@@ -38,7 +38,7 @@ use App\Enums\TemplateStatus; ?>
                             <td>{{ $template->name }}</td>
                             <td class="wd-30">{{ $template->content }}</td>
                             <td class="pl-20">
-                                @if($template->status === TemplateStatus::PUBLIC)
+                                @if($template->status === TemplateStatus::STATUS_PUBLIC)
                                     <div class="template-status label label-success">Public</div>
                                 @else
                                     <div class="template-status label label-warning">UnPublic</div>

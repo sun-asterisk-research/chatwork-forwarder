@@ -22,4 +22,4 @@ gkc_*
 /public/mix-manifest.json
 /public/docs/*
 /resources/docs/*
-/coverage
+/coverages

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Template;
 use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
+use App\Models\Webhook;
+use Auth;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class TemplateController extends Controller
 {
@@ -66,9 +70,9 @@ class TemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Webhook $webhook, Template $template)
     {
-        //
+        return view('templates.edit', compact('template'));
     }
 
     /**
@@ -78,9 +82,31 @@ class TemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Template $template)
     {
-        //
+        $data = $request->only([
+            'name',
+            'content',
+            'params',
+            'status',
+        ]);
+        $data['user_id'] = Auth::id();
+
+        DB::beginTransaction();
+        try {
+            $template = $this->templateRepository->update($template->id, $data);
+
+            DB::commit();
+            $request->session()->flash('messageSuccess', [
+                'status' => 'Update success',
+                'message' => 'This template successfully updated',
+            ]);
+
+            return $template->id;
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return response()->json(['message' => 'Upload failed. Something went wrong'], 400);
+        }
     }
 
     /**

@@ -11,6 +11,6 @@ use BenSampo\Enum\Enum;
  */
 final class TemplateStatus extends Enum
 {
-    const PUBLIC = 0;
-    const UNPUBLIC = 1;
+    const STATUS_PUBLIC = 0;
+    const STATUS_UNPUBLIC = 1;
 }
