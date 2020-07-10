@@ -32,7 +32,7 @@
                 </li>
                 @else
                 <li>
-                    <a href="{{ route('dashboard.index') }}"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
+                   <a href="{{ route('dashboard.index') }}"><i class="fa fa-bar-chart-o"></i> Dashboard</a>
                 </li>
                 <li>
                     <a href="{{ route('webhooks.index') }}"><i class="fa fa-desktop"></i> Webhooks</a>
@@ -42,6 +42,9 @@
                 </li>
                 <li>
                     <a href="{{ route('history.index') }}"><i class="fa fa-history"></i> Payload histories</a>
+                </li>
+                <li>
+                    <a href="{{ route('templates.index') }}"><i class="fa fa-file-text-o"></i> Templates</a>
                 </li>
                 @endadmin
             </ul>
