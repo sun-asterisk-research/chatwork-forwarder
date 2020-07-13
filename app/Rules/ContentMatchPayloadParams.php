@@ -55,7 +55,7 @@ class ContentMatchPayloadParams implements Rule
      */
     public function message()
     {
-        return join(', ', $this->errorFields) . ' not found in payload params';
+        return join(', ', $this->errorFields) . ' not found in params';
     }
 
     private function getStringsBetweebBrackets($str)

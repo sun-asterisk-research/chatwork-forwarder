@@ -47,7 +47,7 @@ class TemplateCreateRequest extends FormRequest
             'name.max' => 'Name is too long (maximum is 50 characters)',
             'name.unique' => 'Name has already been used by another template',
             'content.required' => 'Please enter content',
-            'params.required' => 'Please enter payload params to validate the conditions',
+            'params.required' => 'Please enter template params',
             'status.required' => 'Please enter status',
         ];
     }

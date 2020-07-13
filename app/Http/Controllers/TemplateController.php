@@ -67,7 +67,6 @@ class TemplateController extends Controller
             return $template->id;
         } catch (Exception $exception) {
             DB::rollBack();
-            throw $exception;
             return redirect()->back()->with('messageFail', [
                 'status' => 'Create failed',
                 'message' => 'Create failed. Something went wrong',
@@ -83,6 +82,8 @@ class TemplateController extends Controller
      */
     public function edit(Template $template)
     {
+        $this->authorize('update', $template);
+
         return view('templates.edit', compact('template'));
     }
 
@@ -95,17 +96,17 @@ class TemplateController extends Controller
      */
     public function update(TemplateUpdateRequest $request, Template $template)
     {
+        $this->authorize('update', $template);
         $data = $request->only([
             'name',
             'content',
             'params',
             'status',
         ]);
-        $data['user_id'] = Auth::id();
 
         DB::beginTransaction();
         try {
-            $template = $this->templateRepository->update($template->id, $data);
+            $this->templateRepository->update($template->id, $data);
 
             DB::commit();
             $request->session()->flash('messageSuccess', [
@@ -138,7 +139,7 @@ class TemplateController extends Controller
         } catch (Exception $exception) {
             return redirect()->back()->with('messageFail', [
                 'status' => 'Delete failed',
-                'message' => __('message.template.notification.delete.fail'),
+                'message' => __('message.notification.delete.fail', ['object' => 'template']),
             ]);
         }
     }
@@ -147,7 +148,7 @@ class TemplateController extends Controller
     {
         $this->authorize('update', $template);
 
-        if ($request->status == TemplateStatus::STATUS_PUBLIC()) {
+        if ($request->status === TemplateStatus::STATUS_PUBLIC) {
             $status = TemplateStatus::STATUS_PUBLIC;
         } else {
             $status = TemplateStatus::STATUS_UNPUBLIC;
