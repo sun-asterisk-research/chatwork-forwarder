@@ -170,7 +170,7 @@ $(document).ready(function () {
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             type: 'PUT',
-            url: '/templates/change_status',
+            url: `/templates/${template_id}/change_status`,
             data: {
                 id: template_id,
                 status: status_change.toUpperCase()
