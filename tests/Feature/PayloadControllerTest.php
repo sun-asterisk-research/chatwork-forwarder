@@ -284,7 +284,7 @@ class PayloadControllerTest extends TestCase
         $errors = session('errors')->toArray();
 
         $response->assertStatus(302);
-        $this->assertEquals($errors['content'][0], '$payload->asd not found in payload params');
+        $this->assertEquals($errors['content'][0], '$payload->asd not found in params');
     }
 
     /**
@@ -563,7 +563,7 @@ class PayloadControllerTest extends TestCase
         $errors = session('errors')->toArray();
 
         $response->assertStatus(302);
-        $this->assertEquals($errors['content'][0], '$payload->asd not found in payload params');
+        $this->assertEquals($errors['content'][0], '$payload->asd not found in params');
     }
 
     /**
