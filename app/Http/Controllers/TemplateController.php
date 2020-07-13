@@ -6,10 +6,11 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Http\Requests\TemplateCreateRequest;
 use App\Http\Requests\TemplateUpdateRequest;
-use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
 use Auth;
+use App\Enums\TemplateStatus;
 use Illuminate\Support\Facades\DB;
 use App\Models\Template;
+use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
 
 class TemplateController extends Controller
 {
@@ -140,5 +141,25 @@ class TemplateController extends Controller
                 'message' => __('message.template.notification.delete.fail'),
             ]);
         }
+    }
+
+    public function changeStatus(Request $request)
+    {
+        if ($request->status == TemplateStatus::STATUS_PUBLIC()) {
+            $status = TemplateStatus::STATUS_PUBLIC;
+        } else {
+            $status = TemplateStatus::STATUS_UNPUBLIC;
+        }
+
+        $result = $this->templateRepository->update($request->id, ['status' => $status]);
+
+        if ($result) {
+            return 'This template was updated successfully';
+        }
+
+        return response()->json([
+            'status' => 'Updated failed',
+            'message' => 'Updated failed. Something went wrong',
+        ], 400);
     }
 }

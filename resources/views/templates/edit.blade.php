@@ -12,14 +12,14 @@ use App\Enums\TemplateStatus;
 </ul>
 <!-- Simple Editor Block -->
 <div class="block">
-    <!-- Simple Editor Title -->
-    <div class="block-title">
-        <h2><strong>Update Template</strong></h2>
-    </div>
-    <!-- END Simple Editor Title -->
-
     <!-- Simple Editor Content -->
     <div class="form-horizontal form-bordered">
+        <!-- Simple Editor Title -->
+        <div class="block-title">
+            <h2><strong>Update Template</strong></h2>
+        </div>
+        <!-- END Simple Editor Title -->
+        <!-- Simple Editor Content -->
         @include('modals.cancel_modal')
         <div class="col-xs-12">
             <a class="btn btn-sm btn-default float-right cancel-btn" href="{{ route('templates.index') }}"><i class="fa fa-times"></i> Cancel</a>

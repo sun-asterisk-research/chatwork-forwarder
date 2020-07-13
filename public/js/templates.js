@@ -136,4 +136,65 @@ $(document).ready(function () {
                 $form.submit();
             });
     });
+    $('body').on('click', '.btn-public-wh', function() {
+        var template_id = $(this).data('id');
+        var template_name = $(this).data('name');
+        $('#publicModal .template-name').text(template_name);
+        $('#publicModal input').val(template_id);
+        $('#publicModal').modal('show');
+    });
+
+    $('body').on('click', '.btn-unpublic-wh', function() {
+        var template_id = $(this).data('id');
+        var template_name = $(this).data('name');
+        $('#unpublicModal .webhook-name').text(template_name);
+        $('#unpublicModal input').val(template_id);
+        $('#unpublicModal').modal('show');
+    });
+
+    $('body').on('click', '.btn-confirm-public', function() {
+        updateTemplateStatus('#publicModal', 'public', 'success');
+    });
+
+    $('body').on('click', '.btn-confirm-unpublic', function() {
+        updateTemplateStatus('#unpublicModal', 'unpublic', 'warning');
+    });
+
+    function updateTemplateStatus(modal_id, status, current_btn_class) {
+        let template_id = $(modal_id + ' input').val();
+        let item = $('.item-' + template_id);
+        let status_change = (status == 'public') ? 'public' : 'unpublic';
+        let opposite_status = (status == 'public') ? 'unpublic' : 'public';
+        let opposite_btn_class = (current_btn_class == 'success') ? 'warning' : 'success';
+
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: 'PUT',
+            url: '/templates/change_status',
+            data: {
+                id: template_id,
+                status: status_change.toUpperCase()
+            },
+            success: function(data) {
+                $(modal_id).modal('toggle');
+                var button = item.find('button.btn-public-unpublic');
+                $(button).css('text-transform', 'capitalize');
+                $(button).text(opposite_status);
+                $(button).removeClass(`btn-${current_btn_class}`);
+                $(button).removeClass(`btn-${status}-wh`);
+                $(button).addClass(`btn-${opposite_btn_class}`);
+                $(button).addClass(`btn-${opposite_status}-wh`);
+
+                var template_status= $(item).find('div.template-status');
+                $(template_status).removeClass(`label-${opposite_btn_class}`);
+                $(template_status).addClass(`label-${current_btn_class}`);
+                $(template_status).text(status_change).css('text-transform', 'capitalize');
+                toastr.success(data, 'Update Successfully', {timeOut: 4000, showEasing: 'linear'});
+            },
+            error: function(error) {
+                error = error.responseJSON;
+                toastr.error(error['message'], error['status'], {timeOut: 4000});
+            }
+        })
+    }
 });
