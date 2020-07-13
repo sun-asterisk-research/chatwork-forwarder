@@ -198,10 +198,15 @@
     <div class="block">
         <div class="block-title">
             <h2><strong>Mappings</strong></h2>
-            <span class="btn-pull-right">
+            <span class="upload-file">
             <a href="{{ route('webhooks.mappings.create', $webhook) }}" class="btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
             <a href="{{ route('webhooks.edit.mappings', $webhook) }}" class="btn btn-md btn-default"><i class="fa fa-pencil"></i> Edit</a>
-            </span>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadFile">Import</button>
+            <a href={{ route('export-file', $webhook) }}>
+                <button type="button" class="btn btn-info">Export</button>
+            </a>
+        </span>
+
         </div>
 
         @if (count($mappings) <= 0)
@@ -250,10 +255,51 @@
         @endif
     </div>
     <!-- END Simple Editor Content -->
+    <!-- Modal Upload File -->
+    <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <form id="myForm" name="myForm" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-dialog" style="top: 40%;" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Upload File Json</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                            <div class="header">
+                                <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
+                                <input type="file" id="UploadFileJson" name="file_uploads">
+                                @error('file_uploads')
+                                <div class="has-error">
+                                    <span class="help-block">{{ $message }}</span>
+                                </div>
+                                @enderror
+                            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="upload" class="btn btn-primary" onclick="addFields();">Save</button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 @endsection
+
+
 @section('js')
     <script src="{{ asset('/js/webhook.js') }}"></script>
+    <script src="{{ asset('/js/mapping.js') }}"></script>
     @include('common.flash-message')
 @endsection
+
+<style type="text/css">
+    .upload-file {
+        margin-left: 74% !important;
+        margin-bottom: 5px !important;
+    }
+</style>

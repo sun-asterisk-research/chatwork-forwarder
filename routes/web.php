@@ -55,4 +55,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('admin');
     Route::put('templates/{template}/change_status', 'TemplateController@changeStatus');
     Route::resource('templates', 'TemplateController');
+    Route::post('webhooks/{webhook}/mappings/import', 'MappingController@import')->name('webhook.import.mappings');
+    Route::post('webhooks/{webhook}/mappings/exportJson', 'MappingController@exportJson')->name('webhook.export.mappings');
+    Route::get('webhooks/{webhook}/exports', 'MappingController@exportJson')->name('export-file');
 });
