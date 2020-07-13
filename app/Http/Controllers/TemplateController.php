@@ -143,15 +143,16 @@ class TemplateController extends Controller
         }
     }
 
-    public function changeStatus(Request $request)
+    public function changeStatus(Request $request, Template $template)
     {
+        $this->authorize('update', $template);
+
         if ($request->status == TemplateStatus::STATUS_PUBLIC()) {
             $status = TemplateStatus::STATUS_PUBLIC;
         } else {
             $status = TemplateStatus::STATUS_UNPUBLIC;
         }
-
-        $result = $this->templateRepository->update($request->id, ['status' => $status]);
+        $result = $this->templateRepository->update($template->id, ['status' => $status]);
 
         if ($result) {
             return 'This template was updated successfully';
