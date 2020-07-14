@@ -25,13 +25,13 @@
     <div class="form-horizontal form-bordered">
         <div class="col-xs-12">
             <div style="padding-top: 10px">
-            <span class="fill" id="github" data-toggle="tooltip" data-placement="top" title="Sample template for new Pull Request on Github">Github</span>
+            <span class="fill" id="github" data-toggle="tooltip" data-placement="top" title="Sample template for new Pull Request on Github"> Github</span>
             <span class="fill" id="gitlab" data-toggle="tooltip" data-placement="top" title="Sample template for new Pull Request on Gitlab"> Gitlab</span>
             <span class="fill" id="viblo" data-toggle="tooltip" data-placement="top" title="Sample template for new post on Viblo"> Viblo</span>
-            <select class="fill" id="selectTemplate" onchange="selectTemplate({{$templates}})">
-                <option value="" disabled selected>Choose template</option>
+            <select id="selectTemplate" onchange="selectTemplate({{$templates}})" class="select-select2 select-template" data-placeholder="Choose template - User name">
+                <option></option>
                 @foreach ($templates as $index => $template)
-                    <option value="{{ $index }}">{{$template->name}}</option>
+                    <option value="{{ $index }}">{{$template->name}} - {{$template->user['name']}}</option>
                 @endforeach
             </select>
             <button id="submit" type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-check"></i> Save</button>

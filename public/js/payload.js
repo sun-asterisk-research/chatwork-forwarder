@@ -267,6 +267,7 @@ $(document).ready(function () {
     });
 
     $('#github').on('click', function (e) {
+        $('#selectTemplate').select2('data', {id: '', text: 'Choose template - User name'});
         readTextFile("/json/template-params-github.json", function(text){
             $("#payload_params").val(text);
         });
@@ -276,6 +277,7 @@ $(document).ready(function () {
     });
 
     $('#gitlab').on('click', function (e) {
+        $('#selectTemplate').select2('data', {id: '', text: 'Choose template - User name'});
         readTextFile("/json/template-params-gitlab.json", function(text){
             $("#payload_params").val(text);
         });
@@ -285,6 +287,7 @@ $(document).ready(function () {
     });
 
     $('#viblo').on('click', function (e) {
+        $('#selectTemplate').select2('data', {id: '', text: 'Choose template - User name'});
         readTextFile("/json/template-params-viblo.json", function(text){
             $("#payload_params").val(text);
         });
