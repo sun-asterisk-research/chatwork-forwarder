@@ -28,7 +28,7 @@
             <span class="fill" id="github" data-toggle="tooltip" data-placement="top" title="Sample template for new Pull Request on Github"> Github</span>
             <span class="fill" id="gitlab" data-toggle="tooltip" data-placement="top" title="Sample template for new Pull Request on Gitlab"> Gitlab</span>
             <span class="fill" id="viblo" data-toggle="tooltip" data-placement="top" title="Sample template for new post on Viblo"> Viblo</span>
-            <select id="selectTemplate" onchange="selectTemplate({{$templates}})" class="select-select2 select-template" data-placeholder="Choose template - User name">
+            <select id="selectTemplate" onchange="selectTemplate({{$templates}})" class="select-select2 select-template" data-placeholder="Choose template ...">
                 <option></option>
                 @foreach ($templates as $index => $template)
                     <option value="{{ $index }}">{{$template->name}} - {{$template->user['name']}}</option>
