@@ -161,3 +161,20 @@
 .p-6 {
   padding: 6px;
 }
+
+.select-template {
+    padding-bottom: 2px !important;
+}
+.select-template .select2-choice {
+    margin-left: 6px;
+    height: 25.4px !important;
+    line-height: 23px !important;
+    font-size: 12px;
+    border: #ff7300 solid 1px !important;
+    color: #ff7300 !important;
+    border-radius: 0px !important;
+}
+.select-template .select2-arrow {
+    top: -2px !important;
+    color: #ff7300 !important;
+}
