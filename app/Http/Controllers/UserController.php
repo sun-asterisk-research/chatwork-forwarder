@@ -58,6 +58,7 @@ class UserController extends Controller
             Mail::send('mail/create_user_mail', $data, function ($message) use ($email) {
                 $message->to($email)->subject('Welcome to Chatwork Forwarder Application');
             });
+
             return redirect()->route('users.edit', $user)
                 ->with('messageSuccess', [
                     'status' => 'Create success',

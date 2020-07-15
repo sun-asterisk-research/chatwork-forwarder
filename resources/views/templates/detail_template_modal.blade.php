@@ -22,7 +22,7 @@
                     </div>
                     <div class="">
                         <label class="field-compulsory required p-6">Status</label>
-                        <input type="text" class="form-control" {{ $template->status == TemplateStatus::STATUS_PUBLIC ? 'value=Public' : 'value=UnPublic' }} readonly>
+                        <input type="text" class="form-control" {{ $template->status == TemplateStatus::STATUS_PUBLIC ? 'value=Public' : 'value=Unpublic' }} readonly>
                     </div>
                 </div>
             </div>

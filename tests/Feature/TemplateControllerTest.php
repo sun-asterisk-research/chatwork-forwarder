@@ -427,10 +427,11 @@ class TemplateControllerTest extends TestCase
      */
     public function testAuthorizedUserCanUnpublicTemplate()
     {
-        $template = factory(Template::class)->create();
-        $this->actingAs($template->user);
+        $template = factory(Template::class)->create(['status' => TemplateStatus::STATUS_PUBLIC]);
 
-        $response = $this->put("templates/$template->id/change_status", [
+        $this->actingAs($template->user);
+        $response = $this->put("templates/change_status", [
+            'id' => $template->id,
             'status' => TemplateStatus::STATUS_UNPUBLIC,
         ]);
 
@@ -447,7 +448,8 @@ class TemplateControllerTest extends TestCase
     {
         $template = factory(Template::class)->create(['status' => TemplateStatus::STATUS_UNPUBLIC]);
         $this->actingAs($template->user);
-        $response = $this->put("templates/$template->id/change_status", [
+        $response = $this->put("templates/change_status", [
+            'id' => $template->id,
             'status' => TemplateStatus::STATUS_PUBLIC,
         ]);
 
@@ -481,7 +483,7 @@ class TemplateControllerTest extends TestCase
         $user = factory(User::class)->create();
         $this->actingAs($user);
 
-        $response = $this->put("templates/$template->id/change_status", ['status' => TemplateStatus::STATUS_PUBLIC]);
+        $response = $this->put("templates/change_status", ['status' => TemplateStatus::STATUS_PUBLIC]);
         $response->assertStatus(403);
     }
 
@@ -494,7 +496,7 @@ class TemplateControllerTest extends TestCase
     {
         $template = factory(Template::class)->create();
 
-        $response = $this->put("templates/$template->id/change_status", ['status' => TemplateStatus::STATUS_PUBLIC]);
+        $response = $this->put("templates/change_status", ['status' => TemplateStatus::STATUS_PUBLIC]);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -516,7 +518,7 @@ class TemplateControllerTest extends TestCase
         $mock->shouldReceive('update')->andReturn(false);
         $this->app->instance(TemplateRepository::class, $mock);
 
-        $response = $this->put("templates/$template->id/change_status", ['status' => TemplateStatus::STATUS_UNPUBLIC]);
+        $response = $this->put("templates/change_status", ['status' => TemplateStatus::STATUS_UNPUBLIC]);
         $response->assertStatus(400);
         $response->assertSee('Updated failed. Something went wrong');
     }

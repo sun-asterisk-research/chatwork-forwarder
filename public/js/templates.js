@@ -170,10 +170,10 @@ $(document).ready(function () {
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             type: 'PUT',
-            url: `/templates/${template_id}/change_status`,
+            url: `/templates/change_status`,
             data: {
                 id: template_id,
-                status: status_change.toUpperCase()
+                status: status_change == 'public' ? 0 : 1,
             },
             success: function(data) {
                 $(modal_id).modal('toggle');

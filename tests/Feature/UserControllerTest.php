@@ -12,6 +12,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Mockery;
+use Illuminate\Support\Facades\Mail;
 
 class UserControllerTest extends TestCase
 {
@@ -171,6 +172,7 @@ class UserControllerTest extends TestCase
 
     public function testStoreUserSuccessFeature()
     {
+        Mail::fake();
         $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
         $this->actingAs($admin);
         $params = [

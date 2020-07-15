@@ -172,7 +172,6 @@ class WebhookController extends Controller
     {
         $webhook = $this->webhookRepository->find($request->id);
         $this->authorize('changeStatus', $webhook);
-
         if ($request->status == WebhookStatus::ENABLED()->key) {
             $status = WebhookStatus::ENABLED;
         } else {

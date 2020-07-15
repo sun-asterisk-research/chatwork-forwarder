@@ -166,7 +166,6 @@ class ForwardChatworkService
             $content
         );
 
-
         $message = preg_replace_callback(
             '#{{(.*?)}}#',
             function ($match) use ($params, &$isMatching) {

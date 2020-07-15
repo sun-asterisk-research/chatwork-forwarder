@@ -68,11 +68,9 @@ class ForwardChatworkServiceTest extends TestCase
         );
         $content = 'Hello, my name is {{ student }}';
         $params = ['student' => ['name' => 'qtv']];
-
-
         $result = $forwardChatworkService->generateMessage($content, $params);
 
-        $this->assertEquals('Hello, my name is {"name":"qtv"}', $result);
+        $this->assertEquals(`Hello, my name is {"name":"qtv"}`, $result);
     }
 
     /**
@@ -97,7 +95,7 @@ class ForwardChatworkServiceTest extends TestCase
         $result = $forwardChatworkService->generateMessage($content, $params);
 
 
-        $this->assertEquals('Hello, my name is qtv', $result);
+        $this->assertEquals(`Hello, my name is {"name":"qtv"}`, $result);
     }
 
     /**

@@ -44,7 +44,7 @@ use App\Enums\TemplateStatus;
                                 @if($template->status === TemplateStatus::STATUS_PUBLIC)
                                     <div class="template-status label label-success">Public</div>
                                 @else
-                                    <div class="template-status label label-warning">UnPublic</div>
+                                    <div class="template-status label label-warning">Unpublic</div>
                                 @endif
                             </td>
                             <td class="text-center">
