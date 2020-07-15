@@ -206,3 +206,11 @@
     background-color: #f5f5f5;
     padding: 2px 23px;
 }
+
+.btn-submit-wh {
+  background-color: #7db831;
+}
+
+.btn-unsubmit-wh .btn-warning {
+  background-color: #f39c12;
+}

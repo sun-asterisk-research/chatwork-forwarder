@@ -55,6 +55,10 @@ class TemplateController extends Controller
         $data = $request->only(['name', 'content', 'params', 'status']);
         $data['user_id'] = Auth::id();
 
+        if ($request->status == TemplateStatus::STATUS_PUBLIC) {
+            $data['status'] = TemplateStatus::STATUS_REVIEWING;
+        }
+
         DB::beginTransaction();
         try {
             $template = $this->templateRepository->create($data);
@@ -148,13 +152,13 @@ class TemplateController extends Controller
     {
         $this->authorize('update', $template);
 
-        if ($request->status === TemplateStatus::STATUS_PUBLIC) {
-            $status = TemplateStatus::STATUS_PUBLIC;
-        } else {
-            $status = TemplateStatus::STATUS_UNPUBLIC;
+        if ($request->status == TemplateStatus::STATUS_PRIVATE) {
+            $status = TemplateStatus::STATUS_PRIVATE;
+        } elseif ($request->status == TemplateStatus::STATUS_REVIEWING) {
+            $status = TemplateStatus::STATUS_REVIEWING;
         }
         $result = $this->templateRepository->update($template->id, ['status' => $status]);
-
+        
         if ($result) {
             return 'This template was updated successfully';
         }

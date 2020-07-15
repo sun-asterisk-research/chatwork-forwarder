@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Template;
+use App\Enums\TemplateStatus;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TemplatePolicy
@@ -31,7 +32,7 @@ class TemplatePolicy
      */
     public function update(User $user, Template $template)
     {
-        return $user->id === $template->user_id;
+        return $user->id === $template->user_id && $template->status !== TemplateStatus::STATUS_PUBLIC;
     }
 
     /**
