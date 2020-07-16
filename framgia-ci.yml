@@ -1,0 +1,42 @@
+project_type: php
+build:
+  general_test:
+    image: framgiaciteam/laravel-workspace:7.3
+    services:
+      mysql:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: homestead
+          MYSQL_USER: homestead
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+    prepare:
+      - cp .env.example .env
+      - composer install
+      - yarn install
+      - yarn dev
+      - php artisan config:clear
+      - php artisan key:generate
+      - framgia-ci test-connect mysql 3306 10
+      - composer dump-autoload
+      - php artisan migrate --database=mysql --seed
+      - framgia-ci run --logs
+test:
+  phpcs:
+    ignore: false
+    command: echo '' | phpcs --standard=Framgia --report-checkstyle=.framgia-ci-reports/phpcs.xml --ignore=app/Supports/* app
+  phpunit:
+    ignore: false
+    command:
+      - php -dzend_extension=xdebug.so vendor/bin/phpunit
+        --coverage-clover=.framgia-ci-reports/coverage-clover.xml
+        --coverage-html=.framgia-ci-reports/coverage || cat storage/logs/laravel-2019-11-26.log
+#deploy:
+  #rocketeer:
+  #  image: framgiaciteam/deployer:2.0
+  #  run: rocketeer deploy --on=staging --no-interaction --branch=master
+cache:
+  composer:
+    folder: vendor
+  nodejs:
+    folder: node_modules

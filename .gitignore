@@ -5,6 +5,7 @@
 /storage/*.key
 /vendor
 .env
+.env.testing
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -14,3 +15,11 @@ yarn-error.log
 gkc_*
 .framgia-ci-reports
 .framgia-ci-result.temp.yml
+/public/css/login.css
+/public/css/style.css
+/public/css/landing.css
+/public/js/custom.js
+/public/mix-manifest.json
+/public/docs/*
+/resources/docs/*
+/coverage

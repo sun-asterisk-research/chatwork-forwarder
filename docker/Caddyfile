@@ -1,0 +1,12 @@
+0.0.0.0
+
+root ./public
+
+fastcgi / 127.0.0.1:9000 php
+
+rewrite {
+    r .*
+    to {path} {path}/ /index.php?{query}
+}
+
+on startup ./docker/bootstrap.sh

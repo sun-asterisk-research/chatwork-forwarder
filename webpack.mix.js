@@ -10,6 +10,10 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+mix.autoload({
+    jquery: ['$', 'jQuery', 'window.jQuery'],
+});
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.js('resources/js/custom.js', 'public/js')
+    .styles('resources/css/style.css', 'public/css/style.css')
+    .styles('resources/css/landing.css', 'public/css/landing.css');
