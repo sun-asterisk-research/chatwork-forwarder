@@ -9,19 +9,19 @@
             <div class="modal-body">
                 <div class="form-group detail-template-modal">
                     <div class="">
-                        <label class="field-compulsory required">Name</label>
+                        <label class="field-compulsory fl-left">Name</label>
                         <input type="text" class="form-control" value="{{ $template->name }}" readonly>
                     </div>
                     <div class="">
-                        <label class="field-compulsory required p-6">Param</label>
+                        <label class="field-compulsory p-6 fl-left">Param</label>
                         <textarea class="form-control" rows="10" readonly>{{ $template->params }}</textarea>
                     </div>
                     <div class="">
-                        <label class="field-compulsory required p-6">Content</label>
+                        <label class="field-compulsory p-6 fl-left">Content</label>
                         <textarea class="form-control" rows="3" readonly>{{ $template->content }}</textarea>
                     </div>
                     <div class="">
-                        <label class="field-compulsory required p-6">Status</label>
+                        <label class="field-compulsory p-6 fl-left">Status</label>
                         <input type="text" class="form-control" {{ $template->status == TemplateStatus::STATUS_PUBLIC ? 'value=Public' : 'value=UnPublic' }} readonly>
                     </div>
                 </div>

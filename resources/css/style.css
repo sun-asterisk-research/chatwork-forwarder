@@ -150,8 +150,8 @@
     border-radius: 5px;
 }
 
-.wd-30 {
-  width: 30%;
+.wd-20 {
+  width: 20%;
 }
 
 .detail-template-modal {
@@ -178,4 +178,8 @@
 .select-template .select2-arrow {
     top: -2px !important;
     color: #ff7300 !important;
+}
+
+.fl-left {
+  float: left;
 }

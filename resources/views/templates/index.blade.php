@@ -38,8 +38,10 @@ use App\Enums\TemplateStatus;
                     @foreach ($templates as $template)
                         <tr class="item-{{ $template->id }} webtemplatehook-item">
                             <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
-                            <td>{{ $template->name }}</td>
-                            <td class="wd-30">{{ $template->content }}</td>
+                            <td class="wd-10">{{ $template->name }}</td>
+                            <td>
+                                <input type="text" class="form-control" value="{{ $template->content }}" readonly>
+                            </td>
                             <td class="pl-20">
                                 @if($template->status === TemplateStatus::STATUS_PUBLIC)
                                     <div class="template-status label label-success">Public</div>
@@ -47,7 +49,7 @@ use App\Enums\TemplateStatus;
                                     <div class="template-status label label-warning">UnPublic</div>
                                 @endif
                             </td>
-                            <td class="text-center">
+                            <td class="text-center wd-20">
                                 <a class="btn btn-sm btn-default" href="{{ route('templates.edit', $template->id) }}"><i class="fa fa-pencil"></i> Edit</a>
                                 @if($template->status == TemplateStatus::STATUS_PUBLIC)
                                     <button class="btn btn-sm btn-warning btn-unpublic-wh btn-public-unpublic" data-toggle="modal" data-id="{{ $template->id }}" data-name="{{ $template->name }}" data-target="#exampleModal">Unpublic</button>
