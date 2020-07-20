@@ -49,6 +49,9 @@ class ForwardChatworkService
                     if (is_bool($paramValue)) {
                         $paramValue = $paramValue ? 'true' : 'false';
                     }
+                    if (is_null($paramValue)) {
+                        $paramValue = 'null';
+                    }
 
                     if (!$this->checkCondition($paramValue, $condition)) {
                         $isValid = false;
@@ -166,7 +169,6 @@ class ForwardChatworkService
             $content
         );
 
-
         $message = preg_replace_callback(
             '#{{(.*?)}}#',
             function ($match) use ($params, &$isMatching) {
@@ -187,6 +189,38 @@ class ForwardChatworkService
                 }
             },
             $contentMapping
+        );
+
+        $message = preg_replace_callback(
+            '#\[\[(.*?)\]\]#',
+            function ($match) use ($params, &$isMatching) {
+                try {
+                    $requestValue = $this->getValues($params, $match[1]);
+                    if (is_array($requestValue)) {
+                        $requestValue = json_encode($this->getValues($params, $match[1]));
+                    }
+
+                    $mappings = $this->webhook->mappings->map(function ($item) {
+                        $data['key'] = "/([^\ ]+)$item->key/";
+                        $data['value'] = $item->value;
+
+                        return $data;
+                    });
+                    $mappingValues = preg_replace(
+                        $mappings->pluck('key')->toArray(),
+                        $mappings->pluck('value')->toArray(),
+                        $requestValue
+                    );
+
+                    return $mappingValues ? $mappingValues : $requestValue;
+                } catch (Throwable | ErrorException $e) {
+                    // create a failed payload_history when values in payload's content not matching with params payload
+                    $isMatching = false;
+                    $log = 'Not found ' . $match[1];
+                    $this->savePayloadHistory(PayloadHistoryStatus::FAILED, $log);
+                }
+            },
+            $message
         );
 
         if ($isMatching) {

@@ -28,6 +28,77 @@ class ForwardChatworkServiceTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * test generate message matching without mapping
+     *
+     * @return void
+     */
+    public function testGenerateMessageMatchingWithoutMapping()
+    {
+        $webhook = factory(Webhook::class)->create();
+        factory(Mapping::class)->create(['webhook_id' => $webhook->id, 'key' => 'qtv', 'value' => '[To:123123] QTV']);
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'Hello, my name is {!! name !!}';
+        $params = ['name' => 'qtv'];
+
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+
+        $this->assertEquals('Hello, my name is qtv', $result);
+    }
+
+    /**
+     * test generate message no mapping with field in content is an array
+     *
+     * @return void
+     */
+    public function testGenerateMessageNoMappingWithFieldIsArray()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'Hello, my name is {!! student !!}';
+        $params = ['student' => ['name' => 'qtv']];
+
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+        $this->assertEquals('Hello, my name is {"name":"qtv"}', $result);
+    }
+
+    /**
+     * test generate message no mapping unmatching field
+     *
+     * @return void
+     */
+    public function testGenerateMessageNoMappingUnMatching()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'Hello, my name is {!!$params.not_exist!!}';
+        $params = json_decode('{"name" : "qtv"}');
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+        $this->assertEquals('', $result);
+        $this->assertDatabaseHas('payload_histories', ['log' => 'Not found $params.not_exist ']);
+    }
+
+    /**
      * test generate message matching with mapping table
      *
      * @return void
@@ -124,16 +195,114 @@ class ForwardChatworkServiceTest extends TestCase
     }
 
     /**
+     * test generate message matching by regex with mapping table
+     *
+     * @return void
+     */
+    public function testGenerateMessageMatchingWithMappingByRegex()
+    {
+        $webhook = factory(Webhook::class)->create();
+        factory(Mapping::class)->create(['webhook_id' => $webhook->id, 'key' => 'qtv', 'value' => '[To:123123] QTV']);
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'This is a message: [[ message ]].';
+        $params = ['message' => 'Hello @qtv'];
+
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+
+        $this->assertEquals('This is a message: Hello [To:123123] QTV.', $result);
+    }
+
+    /**
+     * test generate message by regex with field in content is an array, mapping
+     *
+     * @return void
+     */
+    public function testGenerateMessageByRegexWithFieldIsArray()
+    {
+        $webhook = factory(Webhook::class)->create();
+        factory(Mapping::class)->create(['webhook_id' => $webhook->id, 'key' => 'qtv', 'value' => '[To:123123] QTV']);
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'This is a message: [[ message ]].';
+        $params = ['message' => ['sms' =>  'Hello @qtv']];
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+        $this->assertEquals('This is a message: {"sms":"Hello [To:123123] QTV"}.', $result);
+    }
+
+    /**
+     * test generate message unmatching by regex with mapping table
+     *
+     * @return void
+     */
+    public function testGenerateMessageUnmatchingByRegexWithMapping()
+    {
+        $webhook = factory(Webhook::class)->create();
+        factory(Mapping::class)->create(['webhook_id' => $webhook->id, 'key' => 'quangvv', 'value' => '[To:123123] QTV']);
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'This is a message: [[ message ]].';
+        $params = ['message' => 'Hello @qtv'];
+
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+
+        $this->assertEquals('This is a message: Hello @qtv.', $result);
+    }
+
+    /**
+     * test generate message unmatching by regex field
+     *
+     * @return void
+     */
+    public function testGenerateMessageUnMatchingByRegex()
+    {
+        $webhook = factory(Webhook::class)->create();
+        $forwardChatworkService = new ForwardChatworkService(
+            $webhook,
+            '',
+            new PayloadHistoryRepository(),
+            new MessageHistoryRepository()
+        );
+        $content = 'Hello, my name is [[$params.not_exist]]';
+        $params = json_decode('{"name" : "qtv"}');
+
+        $result = $forwardChatworkService->generateMessage($content, $params);
+
+        $this->assertEquals('', $result);
+        $this->assertDatabaseHas('payload_histories', ['log' => 'Not found $params.not_exist ']);
+    }
+
+    /**
      * test call method found payload
      *
      * @return void
      */
     public function testCallFoundPayload()
     {
-        $params = ["name" => 'qtv'];
+        $params = ["name" => 'qtv', 'test' => true, 'is_null' => null];
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
         factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'test', 'value' => 'true']);
+        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'is_null', 'value' => 'null']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -154,7 +323,8 @@ class ForwardChatworkServiceTest extends TestCase
      */
     public function testCallNotFoundPayloadWithOneCondtion()
     {
-        $params = ["name" => 'no name'];;
+        $params = ["name" => 'no name'];
+        ;
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
         factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);

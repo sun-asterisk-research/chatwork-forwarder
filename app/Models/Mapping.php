@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mapping extends Model
 {
-
     protected $fillable = [
         'webhook_id',
         'name',
