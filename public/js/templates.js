@@ -3,6 +3,31 @@ var hasValueChanged = false;
 function setChangeStatus(status) {
     hasValueChanged = status;
 }
+function adminChangeStatus(status, templateId)
+{
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: 'PUT',
+            url: `/admin/templates/${templateId}/change_status`,
+            data: {
+                id: templateId,
+                status: status
+            },
+            success: function(data) {
+                toastr.success(data, 'Update Successfully', {timeOut: 3000, showEasing: 'linear'});
+                setTimeout(function() {
+                    window.location.reload();
+                }, 3000);
+            },
+            error: function(error) {
+                error = error.responseJSON;
+                setTimeout(function() {
+                    window.location.reload();
+                }, 3000);
+                toastr.error(error['message'], error['status'], {timeOut: 3000});
+            }
+        })
+}
 
 function checkData() {
     var flag = true;

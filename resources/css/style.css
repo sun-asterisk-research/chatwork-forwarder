@@ -183,3 +183,26 @@
 .fl-left {
   float: left;
 }
+
+.dropdown-primary
+{
+    height: 30px;
+    border-radius: 5px;
+}
+
+.change-status
+{
+    border: #3990de solid 1px !important;
+    color: #3990de !important;
+    border-radius: 3px !important;
+    background-color: #f5f5f5
+}
+
+.status-private
+{
+    border: #ff7300 solid 1px !important;
+    color: #ff7300 !important;
+    border-radius: 3px !important;
+    background-color: #f5f5f5;
+    padding: 2px 23px;
+}

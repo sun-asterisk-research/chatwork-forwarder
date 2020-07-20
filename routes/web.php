@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
-
 Route::get('/', 'Home')->name('home');
 
 Auth::routes([
@@ -34,6 +33,9 @@ Route::group(['middleware' => ['auth']], function () {
             Route::delete('history/{history}', 'PayloadHistoryController@destroy')->name('admin.history.destroy');
             Route::delete('history/message/{message}', 'MessageHistoryController@destroy')->name('admin.message.destroy');
             Route::resource('dashboard', 'DashboardController')->only('index');
+            Route::get('templates', 'TemplateController@index')->name('admin.template.index');
+            Route::delete('templates/{template}', 'TemplateController@destroy')->name('admin.template.destroy');
+            Route::put('templates/{template}/change_status', 'TemplateController@changeStatus');
         });
     });
     Route::resource('bots', 'BotController')->except('show');
