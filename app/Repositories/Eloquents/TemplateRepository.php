@@ -26,4 +26,17 @@ class TemplateRepository extends BaseRepository implements TemplateRepositoryInt
             ->orderBy('templates.created_at', 'desc')
             ->paginate($perPage);
     }
+
+    public function getAllAndSearch($perPage, $searchParams)
+    {
+        $query =$this->model->orderBy('templates.created_at', 'desc');
+
+        if ($searchParams) {
+            $searchParams = $this->handleSearchParams(['name', 'status'], $searchParams);
+
+            return $query->search($searchParams, $perPage);
+        } else {
+            return $query->paginate($perPage);
+        }
+    }
 }
