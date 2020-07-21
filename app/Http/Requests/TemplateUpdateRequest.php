@@ -4,9 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\ContentMatchPayloadParams;
 use Illuminate\Foundation\Http\FormRequest;
-use BenSampo\Enum\Rules\EnumValue;
 use Auth;
-use App\Enums\TemplateStatus;
 use Illuminate\Validation\Rule;
 
 class TemplateUpdateRequest extends FormRequest
@@ -40,10 +38,6 @@ class TemplateUpdateRequest extends FormRequest
             ],
             'content' => ['required', new ContentMatchPayloadParams($this->params)],
             'params' => 'required',
-            'status' => [
-                'required',
-                new EnumValue(TemplateStatus::class, false),
-            ],
         ];
     }
 

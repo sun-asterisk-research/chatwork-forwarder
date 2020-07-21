@@ -55,15 +55,6 @@ use App\Enums\TemplateStatus;
                 </div>
             </div>
         </div>
-        <div class="form-group row">
-            <div class="col-xs-12">
-                <label class="field-compulsory required" for="template_status">Status</label>
-                <select id="template_status" name="status" class="form-control">
-                    <option value="{{ TemplateStatus::STATUS_PUBLIC }}" {{ $template->status === strval(TemplateStatus::STATUS_PUBLIC) ? "selected" : ""}}>PUBLIC</option>
-                    <option value="{{ TemplateStatus::STATUS_UNPUBLIC }}" {{ $template->status === strval(TemplateStatus::STATUS_UNPUBLIC) ? "selected" : "" }}>UNPUBLIC</option>
-                </select>
-            </div>
-        </div>
     </div>
     <!-- END Simple Editor Content -->
 </div>
