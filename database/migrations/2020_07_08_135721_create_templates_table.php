@@ -20,7 +20,7 @@ class CreateTemplatesTable extends Migration
             $table->string('name');
             $table->text('params');
             $table->text('content');
-            $table->integer('status')->default(TemplateStatus::STATUS_PUBLIC);
+            $table->integer('status')->default(TemplateStatus::STATUS_PRIVATE);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -67,7 +67,6 @@ class TemplateControllerTest extends TestCase
             'name' => 'Test',
             'content' => 'Hi my name is {{name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ];
 
         $this->actingAs($user);
@@ -88,7 +87,6 @@ class TemplateControllerTest extends TestCase
             'name' => 'Test',
             'content' => 'Hi my name is {{name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ];
         $this->actingAs($user);
 
@@ -116,7 +114,6 @@ class TemplateControllerTest extends TestCase
             'content' => 'Hi my name is {{$abc}}',
             'params' => '{"name": "rasmus", "age": "30"}',
             'name' => 'Test',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ]);
         $errors = session('errors')->toArray();
 
@@ -136,7 +133,6 @@ class TemplateControllerTest extends TestCase
             'name' => null,
             'content' => 'Hi my name is {{$name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ];
 
         $this->actingAs($user);
@@ -161,7 +157,6 @@ class TemplateControllerTest extends TestCase
             'name' => $template->name,
             'content' => 'Hi my name is {{$name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ];
 
         $this->actingAs($user);
@@ -183,7 +178,6 @@ class TemplateControllerTest extends TestCase
             'name' => 'assdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkdassdkdkdkd1',
             'content' => 'Hi my name is {{$name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ];
 
         $this->actingAs($user);
@@ -205,7 +199,6 @@ class TemplateControllerTest extends TestCase
             'name' => 'a',
             'content' => 'Hi my name is {{$name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ];
 
         $this->actingAs($user);
@@ -307,7 +300,6 @@ class TemplateControllerTest extends TestCase
         $user = factory(User::class)->create();
         $template = factory(Template::class)->create([
             'user_id' => $user->id,
-            'status' => TemplateStatus::STATUS_UNPUBLIC
         ]);
 
         $this->actingAs($user);
@@ -316,7 +308,6 @@ class TemplateControllerTest extends TestCase
             'name' => $template->name,
             'content' => 'Hi my name is {{$params.name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_REVIEWING,
         ]);
         $result = Template::find($template->id);
 
@@ -333,7 +324,6 @@ class TemplateControllerTest extends TestCase
         $user = factory(User::class)->create();
         $template = factory(Template::class)->create([
             'user_id' => $user->id,
-            'status' => TemplateStatus::STATUS_UNPUBLIC
         ]);
 
         $this->actingAs($user);
@@ -347,7 +337,6 @@ class TemplateControllerTest extends TestCase
             'name' => 'Test',
             'content' => 'Hi my name is {{$params.name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ]);
 
         $response->assertSessionHas('messageFail', [
@@ -372,7 +361,6 @@ class TemplateControllerTest extends TestCase
             'content' => '',
             'params' => '',
             'name' => 'Test',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ]);
 
         $response->assertStatus(302);
@@ -398,7 +386,6 @@ class TemplateControllerTest extends TestCase
             'name' => 'Test',
             'content' => 'Hi my name is {{$abc}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
         ]);
         $errors = session('errors')->toArray();
 

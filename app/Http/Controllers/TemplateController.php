@@ -52,12 +52,8 @@ class TemplateController extends Controller
      */
     public function store(TemplateCreateRequest $request)
     {
-        $data = $request->only(['name', 'content', 'params', 'status']);
+        $data = $request->only(['name', 'content', 'params']);
         $data['user_id'] = Auth::id();
-
-        if ($request->status == TemplateStatus::STATUS_PUBLIC) {
-            $data['status'] = TemplateStatus::STATUS_REVIEWING;
-        }
 
         DB::beginTransaction();
         try {
@@ -105,7 +101,6 @@ class TemplateController extends Controller
             'name',
             'content',
             'params',
-            'status',
         ]);
 
         DB::beginTransaction();
@@ -158,7 +153,7 @@ class TemplateController extends Controller
             $status = TemplateStatus::STATUS_REVIEWING;
         }
         $result = $this->templateRepository->update($template->id, ['status' => $status]);
-        
+
         if ($result) {
             return 'This template was updated successfully';
         }

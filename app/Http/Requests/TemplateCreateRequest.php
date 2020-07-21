@@ -4,9 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\ContentMatchPayloadParams;
 use Illuminate\Foundation\Http\FormRequest;
-use BenSampo\Enum\Rules\EnumValue;
 use Auth;
-use App\Enums\TemplateStatus;
 
 class TemplateCreateRequest extends FormRequest
 {
@@ -31,10 +29,6 @@ class TemplateCreateRequest extends FormRequest
             'name' => 'required|string|min:2|max:50|unique:templates,name,NULL,id,user_id,' . Auth::id(),
             'content' => ['required', new ContentMatchPayloadParams($this->params)],
             'params' => 'required',
-            'status' => [
-                'required',
-                new EnumValue(TemplateStatus::class, false),
-            ],
         ];
     }
 
