@@ -50,7 +50,7 @@ class ForwardChatworkService
                         $paramValue = $paramValue ? 'true' : 'false';
                     }
                     if (is_null($paramValue)) {
-                        $paramValue = "null";
+                        $paramValue = 'null';
                     }
 
                     if (!$this->checkCondition($paramValue, $condition)) {
