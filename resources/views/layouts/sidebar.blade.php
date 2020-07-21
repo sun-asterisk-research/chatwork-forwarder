@@ -22,19 +22,19 @@
                     <a href="{{ route('admin.webhooks.index') }}"><i class="fa fa-desktop"></i> Webhooks</a>
                 </li>
                 <li>
-                    <a href="{{ route('webhooks.index') }}"><i class="fa fa-desktop"></i> My Webhooks</a>
+                    <a href="{{ route('admin.template.index') }}"><i class="fa fa-list"></i> Templates</a>
                 </li>
                 <li>
-                    <a href="{{ route('bots.index') }}"><i class="fa fa-reddit"></i> Bots</a>
+                    <a href="{{ route('webhooks.index') }}"><i class="fa fa-laptop"></i> My Webhooks</a>
+                </li>
+                <li>
+                    <a href="{{ route('bots.index') }}"><i class="fa fa-reddit"></i> My Bots</a>
                 </li>
                 <li>
                     <a href="{{ route('admin.history.index') }}"><i class="fa fa-history"></i> Payload histories</a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.template.index') }}"><i class="fa fa-file-text-o"></i> Templates</a>
-                </li>
-                <li>
-                    <a href="{{ route('templates.index') }}"><i class="fa fa-file-text-o"></i> My Template</a>
+                    <a href="{{ route('templates.index') }}"><i class="fa fa-share-alt"></i> My Templates</a>
                 </li>
                 @else
                 <li>
@@ -50,7 +50,7 @@
                     <a href="{{ route('history.index') }}"><i class="fa fa-history"></i> Payload histories</a>
                 </li>
                 <li>
-                    <a href="{{ route('templates.index') }}"><i class="fa fa-file-text-o"></i> Templates</a>
+                    <a href="{{ route('templates.index') }}"><i class="fa fa-share-alt"></i> Templates</a>
                 </li>
                 @endadmin
             </ul>
