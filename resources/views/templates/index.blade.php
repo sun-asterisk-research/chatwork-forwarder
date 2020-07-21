@@ -43,33 +43,40 @@ use App\Enums\TemplateStatus;
                                 <input type="text" class="form-control" value="{{ $template->content }}" readonly>
                             </td>
                             <td class="pl-20">
-                                @if($template->status === TemplateStatus::STATUS_PUBLIC)
+                                @if($template->status === TemplateStatus::STATUS_REVIEWING)
+                                    <div class="template-status label label-default">Reviewing</div>
+                                @elseif($template->status === TemplateStatus::STATUS_PUBLIC)
                                     <div class="template-status label label-success">Public</div>
+                                @elseif($template->status === TemplateStatus::STATUS_PRIVATE)
+                                    <div class="template-status label label-warning">Private</div>
                                 @else
-                                    <div class="template-status label label-warning">UnPublic</div>
+                                    <div class="template-status label label-danger">Unpublic</div>
                                 @endif
                             </td>
                             <td class="text-center wd-20">
-                                <a class="btn btn-sm btn-default" href="{{ route('templates.edit', $template->id) }}"><i class="fa fa-pencil"></i> Edit</a>
-                                @if($template->status == TemplateStatus::STATUS_PUBLIC)
-                                    <button class="btn btn-sm btn-warning btn-unpublic-wh btn-public-unpublic" data-toggle="modal" data-id="{{ $template->id }}" data-name="{{ $template->name }}" data-target="#exampleModal">Unpublic</button>
-                                @else
-                                    <button class="btn btn-sm btn-success btn-public-wh btn-public-unpublic" data-id="{{ $template->id }}" data-name="{{ $template->name }}">Public</button>
+                                @if($template->status != TemplateStatus::STATUS_PUBLIC)
+                                    <a class="btn btn-sm btn-default" href="{{ route('templates.edit', $template->id) }}"><i class="fa fa-pencil"></i> Edit</a>
+                                @endif
+                                @if($template->status === TemplateStatus::STATUS_PRIVATE)
+                                    <button class="btn btn-sm btn-success btn-submit-wh btn-public-unpublic" data-toggle="modal" data-id="{{ $template->id }}" data-name="{{ $template->name }}" data-target="#exampleModal">Submit</button>
+                                @elseif($template->status === TemplateStatus::STATUS_REVIEWING)
+                                    <button class="btn btn-sm btn-warning btn-unsubmit-wh btn-public-unpublic" data-id="{{ $template->id }}" data-name="{{ $template->name }}">Unsubmit</button>
                                 @endif
 
-                                {{ Form::open([
-                                    'method' => 'DELETE',
-                                    'route' => ['templates.destroy', 'template' => $template, 'page' => request('page')],
-                                    'style' => 'display:inline',
-                                    'class' => 'form-delete'
-                                ]) }}
-                                {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
-                                    'type' => 'DELETE',
-                                    'class' => 'btn btn-sm btn-danger delete-btn',
-                                    'title' => 'Delete'
-                                ]) }}
-                                {{ Form::close() }}
-
+                                @if($template->status != TemplateStatus::STATUS_PUBLIC)
+                                    {{ Form::open([
+                                        'method' => 'DELETE',
+                                        'route' => ['templates.destroy', 'template' => $template, 'page' => request('page')],
+                                        'style' => 'display:inline',
+                                        'class' => 'form-delete'
+                                    ]) }}
+                                    {{ Form::button('<i class="fa fa-trash-o"></i> Delete' , [
+                                        'type' => 'DELETE',
+                                        'class' => 'btn btn-sm btn-danger delete-btn',
+                                        'title' => 'Delete'
+                                    ]) }}
+                                    {{ Form::close() }}
+                                @endif
                                 <a href="" class="btn btn-sm btn-default template-detail btn-detail" data-toggle="modal" data-target="#detail-{{ $template->id }}"><i class="fa fa-eye"></i> Detail</a>
                                 @include('templates.detail_template_modal')
                             </td>
@@ -97,7 +104,7 @@ use App\Enums\TemplateStatus;
                     <p class="model-content">Are you sure you want to public this template?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success btn-confirm-public">Public</button>
+                    <button type="button" class="btn btn-success btn-confirm-public">Submit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -116,10 +123,10 @@ use App\Enums\TemplateStatus;
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p class="model-content">Are you sure you want to unpublic this template?</p>
+                    <p class="model-content">Are you sure you want to Unsubmit this template?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning btn-confirm-unpublic">Unpublic</button>
+                    <button type="button" class="btn btn-warning btn-confirm-unpublic">Unsubmit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>

@@ -259,7 +259,7 @@ class TemplateControllerTest extends TestCase
      */
     public function testShowTemplateDetailSuccessFeature()
     {
-        $template = factory(Template::class)->create();
+        $template = factory(Template::class)->create(['status' => TemplateStatus::STATUS_UNPUBLIC]);
         $user = $template->user;
 
         $this->actingAs($user);
@@ -307,6 +307,7 @@ class TemplateControllerTest extends TestCase
         $user = factory(User::class)->create();
         $template = factory(Template::class)->create([
             'user_id' => $user->id,
+            'status' => TemplateStatus::STATUS_UNPUBLIC
         ]);
 
         $this->actingAs($user);
@@ -315,7 +316,7 @@ class TemplateControllerTest extends TestCase
             'name' => $template->name,
             'content' => 'Hi my name is {{$params.name}}',
             'params' => '{"name": "rasmus", "age": "30"}',
-            'status' => TemplateStatus::STATUS_PUBLIC,
+            'status' => TemplateStatus::STATUS_REVIEWING,
         ]);
         $result = Template::find($template->id);
 
@@ -332,6 +333,7 @@ class TemplateControllerTest extends TestCase
         $user = factory(User::class)->create();
         $template = factory(Template::class)->create([
             'user_id' => $user->id,
+            'status' => TemplateStatus::STATUS_UNPUBLIC
         ]);
 
         $this->actingAs($user);
@@ -421,37 +423,19 @@ class TemplateControllerTest extends TestCase
     }
 
     /**
-     * test user can change status template
-     *
-     * @return  void
-     */
-    public function testAuthorizedUserCanUnpublicTemplate()
-    {
-        $template = factory(Template::class)->create();
-        $this->actingAs($template->user);
-
-        $response = $this->put("templates/$template->id/change_status", [
-            'status' => TemplateStatus::STATUS_UNPUBLIC,
-        ]);
-
-        $this->assertDatabaseHas('templates', ['id' => $template->id, 'status' => TemplateStatus::STATUS_UNPUBLIC]);
-        $response->assertSee('This template was updated successfully');
-    }
-
-    /**
      * test user can change status template to public
      *
      * @return  void
      */
-    public function testAuthorizedUserCanChangeStatusToPublicTemplate()
+    public function testAuthorizedUserCanChangeStatusToReviewingTemplate()
     {
-        $template = factory(Template::class)->create(['status' => TemplateStatus::STATUS_UNPUBLIC]);
+        $template = factory(Template::class)->create(['status' => TemplateStatus::STATUS_PRIVATE]);
         $this->actingAs($template->user);
-        $response = $this->put("templates/$template->id/change_status", [
-            'status' => TemplateStatus::STATUS_PUBLIC,
+        $response = $this->put("templates/" . $template->id . "/change_status", [
+            'status' => TemplateStatus::STATUS_REVIEWING,
         ]);
 
-        $this->assertDatabaseHas('templates', ['id' => $template->id, 'status' => TemplateStatus::STATUS_PUBLIC]);
+        $this->assertDatabaseHas('templates', ['id' => $template->id, 'status' => TemplateStatus::STATUS_REVIEWING]);
         $response->assertSee('This template was updated successfully');
     }
 
@@ -494,7 +478,7 @@ class TemplateControllerTest extends TestCase
     {
         $template = factory(Template::class)->create();
 
-        $response = $this->put("templates/$template->id/change_status", ['status' => TemplateStatus::STATUS_PUBLIC]);
+        $response = $this->put("templates/change_status", ['status' => TemplateStatus::STATUS_PUBLIC]);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
@@ -508,7 +492,7 @@ class TemplateControllerTest extends TestCase
     public function testUserChangeStatusTemplateFailed()
     {
         $user = factory(User::class)->create();
-        $template = factory(Template::class)->create(['user_id' => $user->id]);
+        $template = factory(Template::class)->create(['user_id' => $user->id, 'status' => TemplateStatus::STATUS_UNPUBLIC]);
 
         $this->actingAs($user);
         $mock = Mockery::mock(TemplateRepository::class);
@@ -516,7 +500,7 @@ class TemplateControllerTest extends TestCase
         $mock->shouldReceive('update')->andReturn(false);
         $this->app->instance(TemplateRepository::class, $mock);
 
-        $response = $this->put("templates/$template->id/change_status", ['status' => TemplateStatus::STATUS_UNPUBLIC]);
+        $response = $this->put("templates/$template->id/change_status", ['status' => TemplateStatus::STATUS_REVIEWING]);
         $response->assertStatus(400);
         $response->assertSee('Updated failed. Something went wrong');
     }
