@@ -21,8 +21,12 @@
     <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
     <div class="form-horizontal form-bordered">
         <div class="col-xs-12">
-            <button type="submit" class="btn btn-sm btn-primary float-right" id="submitUpdate"><i class="fa fa-check"></i> Save</button>
             <button class="btn btn-sm btn-default float-right cancel-btn"><i class="fa fa-times"></i> Cancel</button>
+            <button type="submit" class="btn btn-sm btn-primary float-right" id="submitUpdate"><i class="fa fa-check"></i> Save</button>
+            <a href={{ route('export-file', $webhook) }}>
+                <button type="button" class="btn btn-sm btn-info float-right">Export</button>
+            </a>
+            <button type="button" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#uploadFile">Import</button>
         </div>
         <div class="form-group row">
             <div class="col-xs-12 mult-condition">
@@ -56,6 +60,33 @@
         </div>
     </div>
     <!-- END Simple Editor Content -->
+    <!-- Modal Upload File -->
+    <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <form id="myForm" name="myForm" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-dialog" style="top: 40%;" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Upload File Json</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                            <div class="header">
+                                <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
+                                <input type="file" id="UploadFileJson" class="file_uploads" name="file_uploads">
+                            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="upload" class="btn btn-primary"></i>Save</button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 </div>
 <!-- END Simple Editor Block -->
 @endsection

@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use File;
+use Response;
 use App\Models\Mapping;
 use App\Models\Webhook;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Http\Requests\MappingCreateRequest;
 use App\Http\Requests\MappingUpdateRequest;
+use App\Http\Requests\MappingImportRequest;
+use Illuminate\Support\Facades\Storage;
 use App\Repositories\Interfaces\MappingRepositoryInterface as MappingRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class MappingController extends Controller
 {
@@ -162,6 +167,66 @@ class MappingController extends Controller
             return redirect()->back()->with('messageFail', [
                 'status' => 'Delete failed',
                 'message' => 'Delete failed. Something went wrong',
+            ]);
+        }
+    }
+
+    public function import(Webhook $webhook, MappingImportRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $keys = $this->mappingRepository->getKeys($webhook);
+            $data = json_decode(file_get_contents($request->file), true);
+
+            Validator::make($data, [
+                '*.key' => 'required|max:100',
+                '*.value' => 'required|max:100',
+            ])->validate();
+
+            $newData = [];
+            foreach ($data as $item) {
+                if (in_array($item['key'], $keys)) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => "Key {$item['key']} exists.",
+                    ]);
+                }
+
+                array_push($newData, array_merge($item, ['webhook_id' => $webhook->id]));
+            }
+
+            $this->mappingRepository->insert($newData);
+            DB::commit();
+            $request->session()->flash('messageSuccess', [
+                'status' => 'Import file success',
+                'message' => 'This mapping successfully Import file',
+            ]);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return response()->json([
+                'error' => true,
+                'message' => 'Import file failed. Something went wrong',
+            ]);
+        }
+    }
+
+    public function exportJson(Webhook $webhook, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $keyValues = $this->mappingRepository->getKeyAndValues($webhook);
+            $fileName = time() . '_datafile.json';
+            $data = json_encode($keyValues, JSON_PRETTY_PRINT);
+            File::put(public_path('/json/'.$fileName), $data);
+
+            return Response::download(public_path('/json/'. $fileName))
+                ->deleteFileAfterSend();
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return response()->json([
+                'error' => true,
+                'message' => 'Export file failed. Something went wrong',
             ]);
         }
     }

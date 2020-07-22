@@ -67,6 +67,66 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#upload').click(function (e) {
+        e.preventDefault();
+        var _token = $('meta[name="csrf-token"]').attr('content');
+        var webhook_id = $("input[name='webhook_id']").val();
+        var fileJson = document.getElementById('UploadFileJson').files[0];
+        var formData = new FormData();
+        formData.append("file", fileJson);
+        formData.append("_token", _token);
+        formData.append("webhook_id", webhook_id);
+
+        $.ajax({
+            url: "/webhooks/" + webhook_id + "/mappings/import",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (data) {
+                if(data.error) {
+                    toastr.error(data.message, 'Failed', { timeOut: 5000 });
+                } else {
+                    window.location.replace("/webhooks/" + webhook_id + "/edit");
+                }
+            },
+            error: function(error) {
+                error = error.responseJSON;
+                toastr.error(error['message'], {timeOut: 4000});
+            }
+        });
+    });
+
+
+    $('#export').click(function (e) {
+        e.preventDefault();
+        var _token = $('meta[name="csrf-token"]').attr('content');
+        var webhook_id = $("input[name='webhook_id']").val();
+        var formData = new FormData();
+
+        formData.append("_token", _token);
+        formData.append("webhook_id", webhook_id);
+
+        $.ajax({
+            url: `/webhooks/${webhook_id}/mappings/exportJson`,
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (data) {
+                if(data.error) {
+                    toastr.error(data.message, 'Failed', { timeOut: 5000 });
+                } else {
+                    window.location.replace("/webhooks/" + webhook_id + "/edit");
+                }
+            },
+            error: function(error) {
+                error = error.responseJSON;
+                toastr.error(error['message'], {timeOut: 4000});
+            }
+        });
+    });
 });
 
 function getValues(items) {
