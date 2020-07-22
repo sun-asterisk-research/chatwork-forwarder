@@ -270,17 +270,12 @@
                 <div class="modal-body">
                             <div class="header">
                                 <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
-                                <input type="file" id="UploadFileJson" name="file_uploads">
-                                @error('file_uploads')
-                                <div class="has-error">
-                                    <span class="help-block">{{ $message }}</span>
-                                </div>
-                                @enderror
+                                <input type="file" id="UploadFileJson" name="file_uploads" accept=".json">
                             </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="upload" class="btn btn-primary" onclick="addFields();">Save</button>
+                    <button type="button" id="upload" class="btn btn-primary">Save</button>
                 </div>
                 </div>
             </div>

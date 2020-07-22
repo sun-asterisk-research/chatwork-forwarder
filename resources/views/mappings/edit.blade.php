@@ -75,7 +75,7 @@
                 <div class="modal-body">
                             <div class="header">
                                 <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
-                                <input type="file" id="UploadFileJson" class="file_uploads" name="file_uploads">
+                                <input type="file" id="UploadFileJson" class="file_uploads" name="file_uploads" accept=".json">
                             </div>
                 </div>
                 <div class="modal-footer">
