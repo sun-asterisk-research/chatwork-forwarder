@@ -1,4 +1,4 @@
-FROM composer as laravel
+FROM composer
 
 COPY composer.json composer.lock ./
 
