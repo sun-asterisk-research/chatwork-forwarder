@@ -201,7 +201,7 @@ class ForwardChatworkService
                     }
 
                     $mappings = $this->webhook->mappings->map(function ($item) {
-                        $data['key'] = "/([^\ ]+)$item->key/";
+                        $data['key'] = "/([^\ ]+)?$item->key/";
                         $data['value'] = $item->value;
 
                         return $data;
