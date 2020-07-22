@@ -1,0 +1,65 @@
+stages:
+- Test
+- Docker build
+- Deploy
+
+.docker-build: &docker-build
+  image: docker:stable
+  services:
+  - docker:stable-dind
+  script:
+  - apk add --no-cache make
+  - echo $REGISTRY_PASSWORD | docker login $REGISTRY_PATH -u $REGISTRY_LOGIN --password-stdin
+  - make pull
+  - make all
+  - make release
+
+.only-master: &only-master
+  only:
+    branches:
+    - master
+
+.only-develop: &only-develop
+  only:
+    branches:
+    - develop
+
+.not-pr: &not-pr
+  except:
+    events:
+    - pull_request
+
+jobs:
+- name: PHP tests
+  stage: Test
+  image: framgiaciteam/laravel-workspace:7.3
+  services:
+  - image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+  script:
+  - cp .env.example .env
+  - composer install
+  - php artisan key:generate
+  - yarn
+  - yarn dev
+  - php artisan migrate --seed
+  - phpcs --standard=Framgia --ignore=app/Supports/* app
+  - vendor/bin/phpunit
+  cache:
+  - key: deps_$CI_BRANCH
+    paths:
+    - vendor
+    - node_modules
+
+- name: Staging
+  stage: Docker build
+  environment:
+    TAG: develop
+    APP_URL: https://cw-forwarder-stg.sun-asterisk.vn
+  <<: *only-develop
+  <<: *not-pr
+  <<: *docker-build
