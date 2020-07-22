@@ -49,7 +49,7 @@ jobs:
   - yarn dev
   - php artisan migrate --seed
   - phpcs --standard=Framgia --ignore=app/Supports/* app
-  - vendor/bin/phpunit
+  - php -dzend_extension=xdebug.so vendor/bin/phpunit --coverage-html=.framgia-ci-reports/coverage
   cache:
   - key: deps_$CI_BRANCH
     paths:
