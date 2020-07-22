@@ -215,7 +215,8 @@ class MappingController extends Controller
         DB::beginTransaction();
         try {
             $keyValues = $this->mappingRepository->getKeyAndValues($webhook);
-            $fileName = time() . '_datafile.json';
+            $fileName = time() . "_$webhook->name.json";
+
             $data = json_encode($keyValues, JSON_PRETTY_PRINT);
             File::put(public_path('/json/'.$fileName), $data);
 

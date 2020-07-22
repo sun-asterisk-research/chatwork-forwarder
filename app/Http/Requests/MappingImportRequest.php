@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidateExtesion;
 
 class MappingImportRequest extends FormRequest
 {
@@ -26,7 +27,12 @@ class MappingImportRequest extends FormRequest
         $size = config('validation.validation.max_size_1m');
 
         return [
-            'file' => "required|file|mimetypes:application/json|max:$size",
+            'file' => [
+                'required',
+                'file',
+                "max:$size",
+                new ValidateExtesion($this->file, 'json'),
+            ],
         ];
     }
 }
