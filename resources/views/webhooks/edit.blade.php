@@ -42,6 +42,7 @@
                 <span class="fill" onclick="appendCode('{{$url}}', false)" data-toggle="tooltip" data-placement="top" title="Generate google script do not include form data">
                     Do not include form data
                 </span>
+                <a href="" data-toggle="modal" data-target="#intergarteFormManual" style="margin-left: 1rem;"><i class="fa fa-info-circle"></i> Manual</a>
             </label>
             <div class="input-group">
                 <textarea class="form-control" rows="12" readonly id="webhookScript"></textarea>
@@ -288,6 +289,7 @@
     </div>
 </div>
 
+@include('webhooks.intergrate-form-manual')
 @endsection
 
 
