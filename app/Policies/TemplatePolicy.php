@@ -34,26 +34,4 @@ class TemplatePolicy
     {
         return $user->id === $template->user_id && $template->status !== TemplateStatus::STATUS_PUBLIC;
     }
-
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function viewAny(User $user)
-    {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function create(User $user)
-    {
-        return true;
-    }
 }

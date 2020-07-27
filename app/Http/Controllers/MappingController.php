@@ -34,7 +34,7 @@ class MappingController extends Controller
      */
     public function create(Webhook $webhook)
     {
-        $this->authorize('create', [new Mapping(), $webhook]);
+        $this->authorize('update', $webhook);
 
         return view('mappings.create', compact('webhook'));
     }
@@ -45,10 +45,9 @@ class MappingController extends Controller
      * @param  \Illuminate\Http\Request  $request, Webhook $webhook
      * @return \Illuminate\Http\Response
      */
-    public function store(MappingCreateRequest $request, $webhookId)
+    public function store(MappingCreateRequest $request, Webhook $webhook)
     {
-        $webhook = Webhook::findOrFail($webhookId);
-        $this->authorize('create', [new Mapping(), $webhook]);
+        $this->authorize('update', $webhook);
 
         DB::beginTransaction();
         try {
@@ -56,10 +55,10 @@ class MappingController extends Controller
             $values = $request->values;
             if ($keys && $values) {
                 for ($i = 0; $i < count($keys); $i++) {
-                    $attributes['webhook_id'] = $webhookId;
+                    $attributes['webhook_id'] = $webhook->id;
                     $attributes['key'] = $keys[$i];
                     $attributes['value'] = $values[$i];
-                    $mapping = Mapping::where('webhook_id', $webhookId)->updateOrCreate([
+                    $mapping = Mapping::where('webhook_id', $webhook->id)->updateOrCreate([
                         'key' => $attributes['key'],
                     ], $attributes);
                 }
@@ -93,6 +92,7 @@ class MappingController extends Controller
      */
     public function edit(Webhook $webhook)
     {
+        $this->authorize('update', $webhook);
         $mappings = $webhook->mappings()->get();
         return view('mappings.edit', compact('webhook', 'mappings'));
     }
@@ -104,9 +104,8 @@ class MappingController extends Controller
      * @param  Webhook $webhook, Mapping $mapping
      * @return \Illuminate\Http\Response
      */
-    public function update(MappingCreateRequest $request, $webhookId)
+    public function update(MappingCreateRequest $request, Webhook $webhook)
     {
-        $webhook = Webhook::findOrFail($webhookId);
         $this->authorize('update', $webhook);
 
         DB::beginTransaction();
@@ -116,10 +115,10 @@ class MappingController extends Controller
             $values = $request->values;
             if ($keys && $values) {
                 for ($i = 0; $i < count($keys); $i++) {
-                    $attributes['webhook_id'] = $webhookId;
+                    $attributes['webhook_id'] = $webhook->id;
                     $attributes['key'] = $keys[$i];
                     $attributes['value'] = $values[$i];
-                    $mapping = Mapping::where('webhook_id', $webhookId)->updateOrCreate([
+                    $mapping = Mapping::where('webhook_id', $webhook->id)->updateOrCreate([
                         'key' => $attributes['key'],
                     ], $attributes);
                 }
@@ -173,6 +172,7 @@ class MappingController extends Controller
 
     public function import(Webhook $webhook, MappingImportRequest $request)
     {
+        $this->authorize('update', $webhook);
         DB::beginTransaction();
         try {
             $keys = $this->mappingRepository->getKeys($webhook);
@@ -212,6 +212,7 @@ class MappingController extends Controller
 
     public function exportJson(Webhook $webhook, Request $request)
     {
+        $this->authorize('update', $webhook);
         DB::beginTransaction();
         try {
             $keyValues = $this->mappingRepository->getKeyAndValues($webhook);

@@ -22,18 +22,6 @@ class WebhookPolicy
     {
         return $user->id === $webhook->user_id;
     }
-
-    /**
-     * Determine whether the user can create the webhook.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Webhook  $webhook
-     * @return mixed
-     */
-    public function create(User $user)
-    {
-        return $user->role === UserType::USER;
-    }
     /**
      * Determine whether the user can enable/disable the webhook.
      *
