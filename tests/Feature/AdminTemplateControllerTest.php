@@ -27,6 +27,18 @@ class AdminTemplateControllerTest extends TestCase
         $response->assertViewHas('templates');
     }
 
+    public function testSearchTemplate()
+    {
+        $templateLists = factory(Template::class, 2)->create(['name' => 'template name']);
+        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+        $searchParams = ['search' => ['name' => 'template name']];
+
+        $this->actingAs($admin);
+        $response = $this->get(route('admin.template.index', $searchParams));
+        $response->assertStatus(200);
+        $response->assertViewHas('templates');
+    }
+
     public function testRemoveTemplateFeature()
     {
         $template = factory(Template::class)->create();
