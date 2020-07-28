@@ -86,6 +86,7 @@ class WebhookController extends Controller
      */
     public function edit(Webhook $webhook)
     {
+        $this->authorize('update', $webhook);
         $payloads = $webhook->payloads()->get();
         $mappings = $webhook->mappings()->get();
         $bots = Bot::byUser(Auth::id());
@@ -102,6 +103,7 @@ class WebhookController extends Controller
      */
     public function update(WebhookUpdateRequest $request, Webhook $webhook)
     {
+        $this->authorize('update', $webhook);
         $data = $request->only(['name', 'status', 'description', 'bot_id', 'room_name', 'room_id']);
 
         try {
