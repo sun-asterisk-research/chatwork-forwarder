@@ -1,0 +1,5 @@
+TO ALL >>>
+
+Có một form vừa được submit lúc {{$params.Timestamp}}
+
+{{$params}}
