@@ -295,6 +295,17 @@ $(document).ready(function () {
             $("#payload_content").val(text);
         });
     });
+
+    $('#google-form').on('click', function (e) {
+        $('#selectTemplate').select2('data', {id: '', text: 'Choose template ...'});
+        readTextFile("/json/template-params-google-form.json", function(text){
+            $("#payload_params").val(text);
+        });
+        readTextFile("/json/template-content-google-form.json", function(text){
+            $("#payload_content").val(text);
+        });
+    });
+
     function readTextFile(file, callback) {
         var rawFile = new XMLHttpRequest();
         rawFile.overrideMimeType("application/json");
