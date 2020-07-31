@@ -10,9 +10,15 @@ class Condition extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'payload_id',
+        'object_id',
         'field',
         'operator',
         'value',
+        'object_type',
     ];
+
+    public function object()
+    {
+        return $this->morphTo();
+    }
 }

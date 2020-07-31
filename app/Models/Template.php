@@ -29,4 +29,9 @@ class Template extends Model
             ->where('status', 'LIKE', '%' . $searchParams['status'] . '%')
             ->paginate($perPage);
     }
+
+    public function conditions()
+    {
+        return $this->morphMany(Condition::class, 'object');
+    }
 }

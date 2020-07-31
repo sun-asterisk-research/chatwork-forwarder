@@ -300,9 +300,9 @@ class ForwardChatworkServiceTest extends TestCase
         $params = ["name" => 'qtv', 'test' => true, 'is_null' => null];
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'test', 'value' => 'true']);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'is_null', 'value' => 'null']);
+        factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '==', 'field' => 'test', 'value' => 'true']);
+        factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '==', 'field' => 'is_null', 'value' => 'null']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -327,7 +327,7 @@ class ForwardChatworkServiceTest extends TestCase
         ;
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -354,8 +354,8 @@ class ForwardChatworkServiceTest extends TestCase
         $params = ["name" => 'qtv', "age" => 20];
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => '$params.name', 'value' => 'qtv']);
-        factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'asd', 'value' => '30']);
+        factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '==', 'field' => '$params.name', 'value' => 'qtv']);
+        factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '>', 'field' => 'asd', 'value' => '30']);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
@@ -377,13 +377,13 @@ class ForwardChatworkServiceTest extends TestCase
         $params = ["name" => 'qtv', "age" => 20];
         $webhook = factory(Webhook::class)->create();
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        $conditionEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
-        $conditionNotEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '!=', 'field' => 'name', 'value' => 'qtv']);
-        $conditionGreater = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>', 'field' => 'name', 'value' => 20]);
-        $conditionGreaterOrEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '>=', 'field' => 'name', 'value' => 20]);
-        $conditionLess = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '<', 'field' => 'name', 'value' => 10]);
-        $conditionLessOrEqual = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '<=', 'field' => 'name', 'value' => 10]);
-        $conditionNotExist = factory(Condition::class)->create(['payload_id' => $payload->id, 'operator' => '<>', 'field' => 'name', 'value' => 10]);
+        $conditionEqual = factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '==', 'field' => 'name', 'value' => 'qtv']);
+        $conditionNotEqual = factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '!=', 'field' => 'name', 'value' => 'qtv']);
+        $conditionGreater = factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '>', 'field' => 'name', 'value' => 20]);
+        $conditionGreaterOrEqual = factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '>=', 'field' => 'name', 'value' => 20]);
+        $conditionLess = factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '<', 'field' => 'name', 'value' => 10]);
+        $conditionLessOrEqual = factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '<=', 'field' => 'name', 'value' => 10]);
+        $conditionNotExist = factory(Condition::class)->create(['object_id' => $payload->id, 'operator' => '<>', 'field' => 'name', 'value' => 10]);
 
         $forwardChatworkService = new ForwardChatworkService(
             $webhook,
