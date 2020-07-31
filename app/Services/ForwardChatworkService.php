@@ -130,7 +130,7 @@ class ForwardChatworkService
     {
         $data = [
             'webhook_id' => $this->webhook->id,
-            'params' => json_encode($this->params),
+            'params' => json_encode($this->params, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'status' => $status,
             'log' => $log,
         ];
@@ -155,7 +155,10 @@ class ForwardChatworkService
                 try {
                     $requestValue = $this->getValues($params, $match[1]);
                     if (is_array($requestValue)) {
-                        $requestValue = json_encode($this->getValues($params, $match[1]));
+                        $requestValue = json_encode(
+                            $this->getValues($params, $match[1]),
+                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                        );
                     }
 
                     return $requestValue;
@@ -175,7 +178,10 @@ class ForwardChatworkService
                 try {
                     $requestValue = $this->getValues($params, $match[1]);
                     if (is_array($requestValue)) {
-                        $requestValue = json_encode($this->getValues($params, $match[1]));
+                        $requestValue = json_encode(
+                            $this->getValues($params, $match[1]),
+                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                        );
                     }
 
                     $mappingValue = $this->webhook->mappings()->byKey($requestValue)->first()['value'];
@@ -197,7 +203,10 @@ class ForwardChatworkService
                 try {
                     $requestValue = $this->getValues($params, $match[1]);
                     if (is_array($requestValue)) {
-                        $requestValue = json_encode($this->getValues($params, $match[1]));
+                        $requestValue = json_encode(
+                            $this->getValues($params, $match[1]),
+                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                        );
                     }
 
                     $mappings = $this->webhook->mappings->map(function ($item) {
