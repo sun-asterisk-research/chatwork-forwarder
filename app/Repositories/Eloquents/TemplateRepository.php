@@ -16,7 +16,10 @@ class TemplateRepository extends BaseRepository implements TemplateRepositoryInt
 
     public function getTemplate()
     {
-        return Template::where('user_id', Auth::user()->id)->orWhere('status', TemplateStatus::STATUS_PUBLIC)->get();
+        return Template::where('user_id', Auth::user()->id)
+                ->orWhere('status', TemplateStatus::STATUS_PUBLIC)
+                ->with('conditions')
+                ->get();
     }
 
     public function getAllByUser($perPage)
