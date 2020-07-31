@@ -179,6 +179,7 @@ class MappingController extends Controller
             $data = json_decode(file_get_contents($request->file), true);
 
             $newData = [];
+
             foreach ($data as $key => $value) {
                 if (in_array($key, $keys)) {
                     return response()->json([
@@ -220,13 +221,12 @@ class MappingController extends Controller
         try {
             $keyValues = $this->mappingRepository->getKeyAndValues($webhook);
             $fileName = time() . "_$webhook->name.json";
-
             $data = json_encode($keyValues, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
             File::put(public_path('/json/'.$fileName), $data);
 
             return Response::download(public_path('/json/'. $fileName))
                 ->deleteFileAfterSend();
-            DB::commit();
         } catch (Exception $exception) {
             return response()->json([
                 'error' => true,
