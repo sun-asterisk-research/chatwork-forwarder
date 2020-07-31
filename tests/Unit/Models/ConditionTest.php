@@ -16,10 +16,11 @@ class ConditionTest extends TestCase
     public function testContainsValidFillableProperties()
     {
         $fillable = [
-            'payload_id',
+            'object_id',
             'field',
             'operator',
             'value',
+            'object_type',
         ];
 
         $model = new Condition();

@@ -12,6 +12,7 @@ $factory->define(Condition::class, function (Faker $faker) {
         'field' => '$params->' . $faker->word,
         'operator' => $operator[array_rand($operator)],
         'value' => $faker->name,
-        'payload_id' => factory(Payload::class)->create()->id
+        'object_id' => factory(Payload::class)->create()->id,
+        'object_type' => 'App\Models\Payload',
     ];
 });

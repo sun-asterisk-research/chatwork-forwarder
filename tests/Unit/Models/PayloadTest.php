@@ -7,7 +7,7 @@ use App\Models\Payload;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\morphMany;
 
 class PayloadTest extends TestCase
 {
@@ -62,6 +62,6 @@ class PayloadTest extends TestCase
     {
         $payload = new Payload();
 
-        $this->assertInstanceOf(HasMany::class, $payload->conditions());
+        $this->assertInstanceOf(morphMany::class, $payload->conditions());
     }
 }

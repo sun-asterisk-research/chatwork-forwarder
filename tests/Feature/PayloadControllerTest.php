@@ -77,7 +77,7 @@ class PayloadControllerTest extends TestCase
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'test remove payload fail']);
 
         $this->actingAs($user);
-        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload_id' => ($payload->id + 99)]));
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'object_id' => ($payload->id + 99)]));
         $this->assertDatabaseHas('payloads', ['content' => 'test remove payload fail']);
         $response->assertStatus(404);
     }
@@ -92,10 +92,10 @@ class PayloadControllerTest extends TestCase
         $user = factory(User::class)->create();
         $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'test remove payload fail']);
-        factory(Condition::class)->create(['payload_id' => $payload->id]);
+        factory(Condition::class)->create(['object_id' => $payload->id]);
 
         $this->actingAs($user);
-        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload_id' => $payload->id]));
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'object_id' => $payload->id]));
         $this->assertDatabaseHas('payloads', ['content' => 'test remove payload fail']);
         $response->assertStatus(302);
         $response->assertSessionHas('messageFail', [
@@ -114,7 +114,7 @@ class PayloadControllerTest extends TestCase
         $user = factory(User::class)->create();
         $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'test remove payload fail']);
-        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'payload_id' => 1]));
+        $response = $this->delete(route('webhooks.payloads.destroy', ['webhook' => $webhook, 'object_id' => 1]));
 
         $response->assertLocation('/');
         $response->assertStatus(302);
@@ -341,7 +341,7 @@ class PayloadControllerTest extends TestCase
         $user = factory(User::class)->create();
         $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
-        factory(Condition::class)->create(['payload_id' => $payload->id]);
+        factory(Condition::class)->create(['object_id' => $payload->id]);
         $this->actingAs($user);
 
         $response = $this->get(route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]));
@@ -462,7 +462,7 @@ class PayloadControllerTest extends TestCase
         $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
         $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id, 'content' => 'old content']);
         $condition = factory(Condition::class)->create([
-            'payload_id' => $payload->id,
+            'object_id' => $payload->id,
             'field' => 'name',
             'operator' => '==',
             'value' => 'rasmus',

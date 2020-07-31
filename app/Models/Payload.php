@@ -22,6 +22,6 @@ class Payload extends Model
 
     public function conditions()
     {
-        return $this->hasMany(Condition::class);
+        return $this->morphMany(Condition::class, 'object');
     }
 }
