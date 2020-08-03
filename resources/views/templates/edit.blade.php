@@ -8,7 +8,7 @@ use App\Enums\TemplateStatus;
 
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="{{ route('templates.index') }}">Templates</a></li>
-    <li>Detail</li>
+    <li>Edit</li>
 </ul>
 <!-- Simple Editor Block -->
 <div class="block">
@@ -47,6 +47,53 @@ use App\Enums\TemplateStatus;
         </div>
         <div class="form-group row">
             <div class="col-xs-12">
+                <label class="field-compulsory">Conditions</label>
+                <a href="" data-toggle="modal" data-target="#payloadExample"><i class="fa fa-info-circle"></i> example</a>
+            </div>
+            <div class="col-xs-12">
+                <div class="col-xs-12 mult-condition">
+                    @for($i = 0; $i < count($template->conditions); $i++)
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input class="form-control field-condition" id="field{{ $i }}" value="{{ $template->conditions[$i]->field }}"
+                                data-id="{{ $template->conditions[$i]->id }}" name="field[]" onchange="setChangeStatus(true)">
+                        </div>
+                        <div class="col-md-1">
+                            {!! Form::select(
+                            'operator[]',
+                            ['==' => '==', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', 'Match' => 'Match'], $template->conditions[$i]->operator,
+                                        ['class'=>'form-control operator', 'id' => 'operator'.$i, 'onchange' => "setChangeStatus(true)"]
+                                        ) !!}
+                        </div>
+                        <div class="col-md-2">
+                            <input class="form-control value" id="value{{ $i }}" value="{{ $template->conditions[$i]->value }}" name="value[]" onchange="setChangeStatus(true)">
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn--link-danger font-weight-normal action" id="action{{ $i }}" onclick="removeCondition({{ $i }});">
+                                <i class="fa fa-minus-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                    @endfor
+                </div>
+                <div class="col-xs-2 has-error">
+                    <span class="help-block error-field-condition"></span>
+                </div>
+                <div class="col-xs-1">
+                </div>
+                <div class="col-xs-2 has-error">
+                    <span class="help-block error-value"></span>
+                </div>
+                <div class="col-xs-12">
+                    <button type="button" class="btn btn--link-primary font-weight-normal" onclick="addFields();">
+                        <i class="fa fa-plus-circle"></i>
+                        <strong>Add condition</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-12">
                 <label class="field-compulsory required" for="name">Content</label>
                 <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> example</a>
                 <textarea id="content" name="content" class="form-control field" rows="4" value="{{ $template->content }}" placeholder="Enter content">{{ $template->content }}</textarea>
@@ -58,6 +105,7 @@ use App\Enums\TemplateStatus;
     </div>
     <!-- END Simple Editor Content -->
 </div>
+@include('payloads.condition-example')
 @include('payloads.content-example')
 <!-- END Simple Editor Block -->
 @endsection

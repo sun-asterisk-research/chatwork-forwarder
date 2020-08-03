@@ -39,24 +39,19 @@ function checkData() {
             flag = false;
         }
     });
-    $(".value").each(function () {
-        if ($(this).val().length > 100) {
-            $(".error-value").html("Value is too long (maximum is 100 characters)")
-            flag = false;
-        }
-        if ($(this).val() == "") {
-            $(".error-value").html("Please enter value")
-            flag = false;
-        }
-    });
 
     return flag;
+}
+
+function getValues(items) {
+    return items.map(function () { return $(this).val(); }).get();
 }
 
 function clearOldErrorMessage() {
     $(".name").html("");
     $(".params").html("");
     $(".content").html("");
+    $(".fields").remove();
 }
 
 function printErrorMsg(errors) {
@@ -106,7 +101,7 @@ $(document).ready(function () {
 
     $("#submitUpdate").click(function (e) {
         e.preventDefault();
-        if (checkData()) {
+        if (checkData() && checkDataCondition()) {
             var _token = $('meta[name="csrf-token"]').attr('content');
             var url = $("input[name='url']").val();
             var content = $("textarea[name='content']").val();
@@ -114,6 +109,19 @@ $(document).ready(function () {
             var name = $("input[name='name']").val();
             var template_id = $("input[name='id']").val();
             var status = $("select[name='status']").val();
+            var fields = getValues($("input[name^='field[]']"));
+            var operators = getValues($("select[name^='operator[]']"));
+            var values = getValues($("input[name^='value[]']"));
+            var ids = $("input[name^='field[]']").map(function () { return $(this).attr("data-id"); }).get();
+            var conditions = [];
+            for (i = 0; i < fields.length; i++) {
+                conditions.push({
+                    id: ids[i] ? ids[i] : "",
+                    field: fields[i],
+                    operator: operators[i],
+                    value: values[i],
+                });
+            }
             $.ajax({
                 url: url,
                 method: 'PUT',
@@ -122,8 +130,9 @@ $(document).ready(function () {
                     name: name,
                     content: content,
                     params: params,
-                    status: status,
                     id: template_id,
+                    conditions: conditions,
+                    ids: ids,
                 },
                 success: function (id) {
                     window.location.replace("/templates/" + id + "/edit");
@@ -222,3 +231,87 @@ $(document).ready(function () {
         })
     }
 });
+function removeCondition(row) {
+    $("#field" + row).parent().parent().remove();
+    setChangeStatus(true);
+    rerenderConditions();
+}
+
+function rerenderConditions() {
+    var counter = $(".mult-condition").children().length;
+    fields = $('.field-condition').toArray();
+    operators = $('.operator').toArray();
+    values = $('.value').toArray();
+    actions = $('.action').toArray();
+
+    for (i = 0; i < counter; i++) {
+        fields[i].id = 'field' + i;
+        operators[i].id = 'operator' + i;
+        values[i].id = 'value' + i;
+        actions[i].id = 'action' + i;
+        actions[i].setAttribute('onclick', 'removeCondition(' + i + ')');
+    }
+}
+function addFields() {
+    if (checkDataCondition()) {
+        var counter = $(".mult-condition").children().length;
+        var operators = ["==", "!=", ">", ">=", "<", "<=", "Match"]
+        var fieldInput = $("<input>")
+            .attr({ name: "field[]", id: "field" + counter, placeholder: "Contidion field" })
+            .addClass("form-control col-md-4 field-condition")
+            .attr('onchange', 'setChangeStatus(true)');
+        var valueInput = $("<input>")
+            .attr({ name: "value[]", id: "value" + counter, placeholder: "Contidion value" })
+            .addClass("form-control col-md-4 value")
+            .attr('onchange', 'setChangeStatus(true)');
+        var operatorsDropdown = $("<select/>")
+            .attr({ name: "operator[]", id: "operator" + counter })
+            .addClass("form-control col-md-2 operator")
+            .attr('onchange', 'setChangeStatus(true)');
+        var btnDelete = $("<button/>")
+            .attr({ name: "action[]", id: "action" + counter })
+            .addClass("btn btn--link-danger font-weight-normal action")
+            .append("<i/>").addClass("fa fa-minus-circle")
+            .attr('onClick', 'removeCondition(' + counter + ')');
+        var conditions = $('.mult-condition');
+        var row = $('<div class="row"></div>');
+        var field = $('<div class="col-md-2"></div>');
+        var operator = $('<div class="col-md-1"></div>');
+        var value = $('<div class="col-md-2"></div>');
+        var btn = $('<div class="col-md-1"></div>');
+
+        $.each(operators, function (index, value) {
+            operatorsDropdown.append($("<option/>").val(value).html(value))
+        })
+
+        $(field).append(fieldInput);
+        $(operator).append(operatorsDropdown);
+        $(value).append(valueInput);
+        $(btn).append(btnDelete);
+        $(row).append(field, operator, value, btn);
+        $(conditions).append(row);
+    }
+}
+function checkDataCondition() {
+    var flag = true;
+    $(".error-field-condition").html("");
+    $(".error-value").html("");
+    $(".field-condition").each(function () {
+        if ($(this).val() == "") {
+            $(".error-field-condition").html("Please enter field")
+            flag = false;
+        }
+    });
+    $(".value").each(function () {
+        if ($(this).val().length > 100) {
+            $(".error-value").html("Value is too long (maximum is 100 characters)")
+            flag = false;
+        }
+        if ($(this).val() == "") {
+            $(".error-value").html("Please enter value")
+            flag = false;
+        }
+    });
+
+    return flag;
+}
