@@ -50,6 +50,31 @@ use App\Enums\TemplateStatus;
 
         <div class="form-group row">
             <div class="col-xs-12">
+                <label class="field-compulsory">Conditions</label>
+                <a href="" data-toggle="modal" data-target="#payloadExample"><i class="fa fa-info-circle"></i> example</a>
+            </div>
+            <div class="col-xs-12 mult-condition">
+            </div>
+            <div class="col-xs-12">
+                <div class="col-xs-2 has-error">
+                    <span class="help-block error-field-condition"></span>
+                </div>
+                <div class="col-xs-1">
+                </div>
+                <div class="col-xs-2 has-error">
+                    <span class="help-block error-value"></span>
+                </div>
+                <div class="col-xs-12">
+                    <button type="button" class="btn btn--link-primary font-weight-normal" onclick="addFields();">
+                        <i class="fa fa-plus-circle"></i>
+                        <strong>Add condition</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-xs-12">
                 <label class="field-compulsory required" for="webhook_description">Content</label>
                 <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> example</a>
                 <textarea class="form-control field" id="template_content" rows="5" name="content" placeholder="Enter Content message"></textarea>
@@ -61,6 +86,7 @@ use App\Enums\TemplateStatus;
         <!-- END Simple Editor Content -->
     </div>
 </div>
+@include('payloads.condition-example')
 @include('payloads.content-example')
 <!-- END Simple Editor Block -->
 @endsection

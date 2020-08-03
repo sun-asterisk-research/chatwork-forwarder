@@ -16,27 +16,29 @@
                         <label class="field-compulsory p-6 fl-left">Param</label>
                         <textarea class="form-control" rows="10" readonly>{{ $template->params }}</textarea>
                     </div>
-                    <div class="row pdl-15">
-                        <label class="field-compulsory p-6 fl-left">Condition</label>
-                    </div>
-                    @for($i = 0; $i < count($template->conditions); $i++)
-                    <div class="row">
-                        <div class="col-md-5">
-                            <input class="form-control field-condition" id="field{{ $i }}" value="{{ $template->conditions[$i]->field }}"
-                                data-id="{{ $template->conditions[$i]->id }}" name="field[]" onchange="setChangeStatus(true)">
+                    @if(count($template->conditions) > 0)
+                        <div class="row pdl-15">
+                            <label class="field-compulsory p-6 fl-left">Condition</label>
                         </div>
-                        <div class="col-md-2">
-                            {!! Form::select(
-                            'operator[]',
-                            ['==' => '==', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', 'Match' => 'Match'], $template->conditions[$i]->operator,
-                                        ['class'=>'form-control operator', 'id' => 'operator'.$i, 'onchange' => "setChangeStatus(true)"]
-                                        ) !!}
+                        @for($i = 0; $i < count($template->conditions); $i++)
+                        <div class="row">
+                            <div class="col-md-5">
+                                <input class="form-control field-condition" id="field{{ $i }}" value="{{ $template->conditions[$i]->field }}"
+                                    data-id="{{ $template->conditions[$i]->id }}" name="field[]" onchange="setChangeStatus(true)">
+                            </div>
+                            <div class="col-md-2">
+                                {!! Form::select(
+                                'operator[]',
+                                ['==' => '==', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', 'Match' => 'Match'], $template->conditions[$i]->operator,
+                                            ['class'=>'form-control operator', 'id' => 'operator'.$i, 'onchange' => "setChangeStatus(true)"]
+                                            ) !!}
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control value" id="value{{ $i }}" value="{{ $template->conditions[$i]->value }}" name="value[]" onchange="setChangeStatus(true)">
+                            </div>
                         </div>
-                        <div class="col-md-5">
-                            <input class="form-control value" id="value{{ $i }}" value="{{ $template->conditions[$i]->value }}" name="value[]" onchange="setChangeStatus(true)">
-                        </div>
-                    </div>
-                    @endfor
+                        @endfor
+                    @endif
 
                     <div class="">
                         <label class="field-compulsory p-6 fl-left">Content</label>

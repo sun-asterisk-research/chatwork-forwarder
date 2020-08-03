@@ -59,6 +59,22 @@ class TemplateController extends Controller
         DB::beginTransaction();
         try {
             $template = $this->templateRepository->create($data);
+            $conditions = $request->only('fields', 'operators', 'values');
+            if ($conditions) {
+                for ($i = 0; $i < count($conditions['fields']); $i++) {
+                    $field = trim($conditions['fields'][$i]);
+                    $operator = trim($conditions['operators'][$i]);
+                    $value = trim($conditions['values'][$i]);
+
+                    if (!empty($field) && !empty($operator) && !empty($value)) {
+                        $template->conditions()->create([
+                            'field' => $field,
+                            'operator' => $operator,
+                            'value' => $value,
+                        ]);
+                    }
+                }
+            }
             DB::commit();
             $request->session()->flash('messageSuccess', [
                 'status' => 'Create success',
