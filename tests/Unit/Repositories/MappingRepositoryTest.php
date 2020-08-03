@@ -5,7 +5,6 @@ namespace Tests\Unit\Repositories;
 use Tests\TestCase;
 use App\Models\Mapping;
 use App\Models\Webhook;
-use App\Models\User;
 use App\Repositories\Eloquents\MappingRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -38,7 +37,7 @@ class MappingRepositoryTest extends TestCase
 
         $mappingRepository->delete($mapping->id);
 
-        $this->assertDatabaseMissing('mappings', ['id' => $mapping->id, 'deleted_at' => NULL]);
+        $this->assertDatabaseMissing('mappings', ['id' => $mapping->id, 'deleted_at' => null]);
     }
 
     public function testGetKeys()
@@ -56,9 +55,10 @@ class MappingRepositoryTest extends TestCase
         $mappingRepository = new MappingRepository;
         $webhook = factory(Webhook::class)->create();
         $mapping = factory(Mapping::class)->create(['webhook_id' => $webhook->id, 'key' => 'my key', 'value' => 'this value']);
-        $keys = $mappingRepository->getKeyAndValues($webhook);
+        $result = $mappingRepository->getKeyAndValues($webhook);
 
-        $this->assertEquals('my key', $keys[0]->key);
-        $this->assertEquals('this value', $keys[0]->value);
+        $this->assertEquals(collect([
+            'my key' => 'this value',
+        ]), $result);
     }
 }

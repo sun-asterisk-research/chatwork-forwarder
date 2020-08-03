@@ -13,13 +13,20 @@ class MappingRepository extends BaseRepository implements MappingRepositoryInter
         return Mapping::class;
     }
 
-    public function getKeys($webhook)
+    public function getKeys(Webhook $webhook)
     {
         return Mapping::where('webhook_id', $webhook->id)->pluck('key')->toArray();
     }
 
-    public function getKeyAndValues($webhook)
+    public function getKeyAndValues(Webhook $webhook)
     {
-        return Mapping::select('key', 'value')->where('webhook_id', $webhook->id)->get();
+        return Mapping::select('key', 'value')->where('webhook_id', $webhook->id)
+            ->get()
+            ->map(function ($item) {
+                $data[$item->key] =  $item->value;
+
+                return $data;
+            })
+            ->collapse();
     }
 }
