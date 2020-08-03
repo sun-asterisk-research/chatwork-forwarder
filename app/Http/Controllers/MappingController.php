@@ -178,22 +178,26 @@ class MappingController extends Controller
             $keys = $this->mappingRepository->getKeys($webhook);
             $data = json_decode(file_get_contents($request->file), true);
 
-            Validator::make($data, [
-                '*.key' => 'required|max:100',
-                '*.value' => 'required|max:100',
-            ])->validate();
-
             $newData = [];
-            foreach ($data as $item) {
-                if (in_array($item['key'], $keys)) {
+            foreach ($data as $key => $value) {
+                if (in_array($key, $keys)) {
                     return response()->json([
                         'error' => true,
-                        'message' => "Key {$item['key']} exists.",
+                        'message' => "Key '$key' exists.",
                     ]);
                 }
 
-                array_push($newData, array_merge($item, ['webhook_id' => $webhook->id]));
+                array_push($newData, [
+                    'key' => $key,
+                    'value' => $value,
+                    'webhook_id' => $webhook->id,
+                ]);
             }
+
+            Validator::make($newData, [
+                '*.key' => 'required|max:100',
+                '*.value' => 'required|max:100',
+            ])->validate();
 
             $this->mappingRepository->insert($newData);
             DB::commit();
@@ -213,19 +217,17 @@ class MappingController extends Controller
     public function exportJson(Webhook $webhook, Request $request)
     {
         $this->authorize('update', $webhook);
-        DB::beginTransaction();
         try {
             $keyValues = $this->mappingRepository->getKeyAndValues($webhook);
             $fileName = time() . "_$webhook->name.json";
 
-            $data = json_encode($keyValues, JSON_PRETTY_PRINT);
+            $data = json_encode($keyValues, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
             File::put(public_path('/json/'.$fileName), $data);
 
             return Response::download(public_path('/json/'. $fileName))
                 ->deleteFileAfterSend();
             DB::commit();
         } catch (Exception $exception) {
-            DB::rollBack();
             return response()->json([
                 'error' => true,
                 'message' => 'Export file failed. Something went wrong',
