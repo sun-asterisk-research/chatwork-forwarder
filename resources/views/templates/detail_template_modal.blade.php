@@ -9,13 +9,35 @@
             <div class="modal-body">
                 <div class="form-group detail-template-modal">
                     <div class="">
-                        <label class="field-compulsory fl-left">Name</label>
+                        <label class="field-compulsory p-6 fl-left">Name</label>
                         <input type="text" class="form-control" value="{{ $template->name }}" readonly>
                     </div>
                     <div class="">
                         <label class="field-compulsory p-6 fl-left">Param</label>
                         <textarea class="form-control" rows="10" readonly>{{ $template->params }}</textarea>
                     </div>
+                    <div class="row pdl-15">
+                        <label class="field-compulsory p-6 fl-left">Condition</label>
+                    </div>
+                    @for($i = 0; $i < count($template->conditions); $i++)
+                    <div class="row">
+                        <div class="col-md-5">
+                            <input class="form-control field-condition" id="field{{ $i }}" value="{{ $template->conditions[$i]->field }}"
+                                data-id="{{ $template->conditions[$i]->id }}" name="field[]" onchange="setChangeStatus(true)">
+                        </div>
+                        <div class="col-md-2">
+                            {!! Form::select(
+                            'operator[]',
+                            ['==' => '==', '!=' => '!=', '>' => '>', '>=' => '>=', '<' => '<', '<=' => '<=', 'Match' => 'Match'], $template->conditions[$i]->operator,
+                                        ['class'=>'form-control operator', 'id' => 'operator'.$i, 'onchange' => "setChangeStatus(true)"]
+                                        ) !!}
+                        </div>
+                        <div class="col-md-5">
+                            <input class="form-control value" id="value{{ $i }}" value="{{ $template->conditions[$i]->value }}" name="value[]" onchange="setChangeStatus(true)">
+                        </div>
+                    </div>
+                    @endfor
+
                     <div class="">
                         <label class="field-compulsory p-6 fl-left">Content</label>
                         <textarea class="form-control" rows="3" readonly>{{ $template->content }}</textarea>

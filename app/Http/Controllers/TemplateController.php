@@ -10,6 +10,7 @@ use Auth;
 use App\Enums\TemplateStatus;
 use Illuminate\Support\Facades\DB;
 use App\Models\Template;
+use App\Models\Condition;
 use App\Repositories\Interfaces\TemplateRepositoryInterface as TemplateRepository;
 
 class TemplateController extends Controller
@@ -102,10 +103,22 @@ class TemplateController extends Controller
             'content',
             'params',
         ]);
+        $conditions = $request->only('conditions');
+        $ids = (array)$request->ids;
 
         DB::beginTransaction();
         try {
-            $this->templateRepository->update($template->id, $data);
+            $template = $this->templateRepository->update($template->id, $data);
+            $template->conditions()->whereNotIn('id', $ids)->delete();
+            if ($conditions) {
+                foreach ($conditions['conditions'] as $condition) {
+                    if ($condition['id']) {
+                        Condition::whereId($condition['id'])->update($condition);
+                    } else {
+                        $template->conditions()->create($condition);
+                    }
+                }
+            }
 
             DB::commit();
             $request->session()->flash('messageSuccess', [
