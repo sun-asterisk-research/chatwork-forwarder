@@ -4,11 +4,55 @@ function setChangeStatus(status) {
     hasValueChanged = status;
 }
 
-function selectTemplate($tem) {
+function selectTemplate($tem, $user_id) {
+
     var index = document.getElementById("selectTemplate").value;
     $("#payload_params").val($tem[index].params);
     $("#payload_content").val($tem[index].content);
-  }
+    if(($tem[index].status != 2) || (user_id == $tem[index].user_id))
+    {
+        $tem[index].conditions.forEach(addFieldsData);
+    }
+}
+
+function addFieldsData(condition) {
+        var counter = $(".mult-condition").children().length;
+        var operators = ["==", "!=", ">", ">=", "<", "<=", "Match"]
+        var fieldInput = $("<input>")
+            .attr({ name: "field[]", id: "field" + counter, value: condition.field })
+            .addClass("form-control col-md-4 field")
+            .attr('onchange', 'setChangeStatus(true)');
+        var valueInput = $("<input>")
+            .attr({ name: "value[]", id: "value" + counter, value: condition.value})
+            .addClass("form-control col-md-4 value")
+            .attr('onchange', 'setChangeStatus(true)');
+        var operatorsDropdown = $("<select/>")
+            .attr({ name: "operator[]", id: "operator" + counter, value: condition.operator})
+            .addClass("form-control col-md-2 operator")
+            .attr('onchange', 'setChangeStatus(true)');
+        var btnDelete = $("<button/>")
+            .attr({ name: "action[]", id: "action" + counter })
+            .addClass("btn btn--link-danger font-weight-normal action")
+            .append("<i/>").addClass("fa fa-minus-circle")
+            .attr('onClick', 'removeCondition(' + counter + ')');
+        var conditions = $('.mult-condition');
+        var row = $('<div class="row"></div>');
+        var field = $('<div class="col-md-2"></div>');
+        var operator = $('<div class="col-md-1"></div>');
+        var value = $('<div class="col-md-2"></div>');
+        var btn = $('<div class="col-md-1"></div>');
+
+        $.each(operators, function (index, value) {
+            operatorsDropdown.append($("<option/>").val(value).html(value))
+        })
+        $(field).append(fieldInput);
+        $(operator).append(operatorsDropdown);
+        $(value).append(valueInput);
+        $(btn).append(btnDelete);
+        $(row).append(field, operator, value, btn);
+        $(conditions).append(row);
+        document.getElementById('operator' + counter).value = condition.operator;
+}
 
 function addFields() {
     if (checkData()) {
