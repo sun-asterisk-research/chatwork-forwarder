@@ -40,7 +40,7 @@ use App\Enums\PayloadHistoryStatus;
         <div class="col-md-11">
             <a href="javascript:void(0)" data-toggle="collapse" data-target="#params">click to show</a>
             <div id="params" class="collapse">
-                <pre class="payload-example">{{ json_encode(json_decode($payloadHistory->params), JSON_PRETTY_PRINT) }}</pre>
+                <pre class="payload-example">{{ json_encode(json_decode($payloadHistory->params), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) }}</pre>
             </div>
         </div>
     </div>
