@@ -76,6 +76,9 @@ $(document).ready(function () {
             var params = $("textarea[name='params']").val();
             var name = $("input[name='name']").val();
             var status = $("select[name='status']").val();
+            var fields = getValues($("input[name^='field[]']"));
+            var operators = getValues($("select[name^='operator[]']"));
+            var values = getValues($("input[name^='value[]']"));
 
             $.ajax({
                 url: "/templates",
@@ -86,6 +89,9 @@ $(document).ready(function () {
                     content: content,
                     params: params,
                     status: status,
+                    operators: operators,
+                    fields: fields,
+                    values: values,
                 },
                 success: function (id) {
                     window.location.replace("/templates/" + id + "/edit");
