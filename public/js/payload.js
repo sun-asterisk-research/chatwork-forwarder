@@ -5,7 +5,7 @@ function setChangeStatus(status) {
 }
 
 function selectTemplate($tem, $user_id) {
-
+    removeAllCondition();
     var index = document.getElementById("selectTemplate").value;
     $("#payload_params").val($tem[index].params);
     $("#payload_content").val($tem[index].content);
@@ -139,6 +139,12 @@ function rerenderConditions() {
         actions[i].id = 'action' + i;
         actions[i].setAttribute('onclick', 'removeCondition(' + i + ')');
     }
+}
+
+function removeAllCondition() {
+    $(".field").parent().parent().remove();
+    setChangeStatus(true);
+    rerenderConditions();
 }
 
 function clearOldErrorMessage() {
@@ -311,6 +317,7 @@ $(document).ready(function () {
     });
 
     $('#github').on('click', function (e) {
+        removeAllCondition()
         $('#selectTemplate').select2('data', {id: '', text: 'Choose template ...'});
         readTextFile("/json/template-params-github.json", function(text){
             $("#payload_params").val(text);
@@ -321,6 +328,7 @@ $(document).ready(function () {
     });
 
     $('#gitlab').on('click', function (e) {
+        removeAllCondition()
         $('#selectTemplate').select2('data', {id: '', text: 'Choose template ...'});
         readTextFile("/json/template-params-gitlab.json", function(text){
             $("#payload_params").val(text);
@@ -331,6 +339,7 @@ $(document).ready(function () {
     });
 
     $('#viblo').on('click', function (e) {
+        removeAllCondition()
         $('#selectTemplate').select2('data', {id: '', text: 'Choose template ...'});
         readTextFile("/json/template-params-viblo.json", function(text){
             $("#payload_params").val(text);
@@ -341,6 +350,7 @@ $(document).ready(function () {
     });
 
     $('#google-form').on('click', function (e) {
+        removeAllCondition()
         $('#selectTemplate').select2('data', {id: '', text: 'Choose template ...'});
         readTextFile("/json/template-params-google-form.json", function(text){
             $("#payload_params").val(text);
