@@ -17,6 +17,8 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use Mockery;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Http\File;
 
 class WebhookControllerTest extends TestCase
 {
@@ -747,5 +749,30 @@ class WebhookControllerTest extends TestCase
         $response
             ->assertStatus(302)
             ->assertSessionHasErrors('room_id');
+    }
+
+    /**
+     * test import file json
+     */
+    public function testExportFileJson()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+        $this->actingAs($user);
+        $response = $this->get(route('export-file', $webhook->id));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * test export failed
+     */
+    public function testExportFileJsonFailed()
+    {
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create();
+        $this->actingAs($user);
+        $fileJson = UploadedFile::fake()->create('document.pdf');
+        $response = $this->get(route('export-file', $webhook->id));
+        $response->assertStatus(403);
     }
 }
