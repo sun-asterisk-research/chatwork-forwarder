@@ -16,6 +16,9 @@ class SocialGoogleAccountService
     public static function createOrGetUser(ProviderUser $providerUser)
     {
         $email = $providerUser->getEmail();
+        if (preg_match('/-\w*@sun-asterisk.com/', $email)) {
+            $email = preg_replace('/-/', '', $email, 1);
+        }
         $account = User::whereEmail($email)->first();
 
         if ($account) {
