@@ -11,6 +11,7 @@
 |
  */
 Route::get('/', 'Home')->name('home');
+Route::get('/features', 'Home@features')->name('features');
 
 Auth::routes([
     'register' => false,

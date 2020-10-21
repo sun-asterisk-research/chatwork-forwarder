@@ -10,14 +10,10 @@
 </head>
 
 <body>
-    <div class="wrapper">
-        <div class="main">
-            <div class="logo">
-                <img src="{{asset('img/logo.png')}}" alt="">
-            </div>
-            <div class="content">
-                <p>Easily forwarding payload to Chatwork with Customizable Message </p>
-
+    <div class="wrapper feature-page">
+        <div class="header">
+            <img src="{{asset('img/logo.png')}}" alt="">
+            <div class="content-header">
                 @if(Auth::guest())
                 <a data-toggle="modal" href='#modal-login' class="btn btn-default">Login</a>
                 @else
@@ -29,56 +25,9 @@
                 @endif
             </div>
         </div>
-        <div class="box-content">
-            <div class="title">
-                <span>features</span>
-            </div>
-            <div class="list-feature">
-                <div class="box-items">
-                    <div class="item">
-                        <h2>Easy to track Statistic</h2>
-                        <img src="{{asset('img/cw-feature1.png')}}" alt="">
-                    </div>
 
-                    <div class="item">
-                        <h2>Various webhook setting with customizable message</h2>
-                        <img src="{{asset('img/cw-feature2.png')}}" alt="">
-                    </div>
-
-                    <div class="item">
-                        <h2>Payload and message history</h2>
-                        <img src="{{asset('img/cw-feature3.png')}}" alt="">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="box-content use-case">
-            <div class="title">
-                <span>Use cases</span>
-            </div>
-            <div class="list-use-case">
-                <div class="box-items">
-                    <div class="item">
-                        <h2>Forward</h2>
-                        <p>Forward alert from Server/Application Monitoring service like Sentry, Updown, Grafana ... to Chatwork</p>
-                        <img src="{{asset('img/chatwork-icon.png')}}" alt="">
-                    </div>
-
-                    <div class="item">
-                        <h2>Notification</h2>
-                        <p>Send notification to Chatwork when there is a new Pull Request on Github </p>
-                        <img src="{{asset('img/github-icon.png')}}" alt="">
-                    </div>
-
-                    <div class="item">
-                        <h2>Contents</h2>
-                        <p>Integrate with other services that allow sending webhooks ...</p>
-                        <img src="{{asset('img/services.png')}}" alt="">
-                    </div>
-                </div>
-            </div>
+        <div class="container mt-10 markdown-content">
+            {{ $html }}
         </div>
 
         <div class="footer">
@@ -126,6 +75,7 @@
             </div>
         </div>
     </div>
+
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/login.js') }}"></script>
