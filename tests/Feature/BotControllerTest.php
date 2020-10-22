@@ -243,7 +243,7 @@ class BotControllerTest extends TestCase
 
         $params = [
             'name' => 'asd',
-            'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdwe',
+            'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdweasdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdw',
         ];
 
         $this->actingAs($user);
@@ -577,7 +577,7 @@ class BotControllerTest extends TestCase
         $bot = factory(Bot::class)->create(['name' => 'Created Bot', 'user_id' => $user->id]);
         $params = [
             'name' => 'asd',
-            'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdwe',
+            'bot_key' => 'asdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdweasdasdasdwasdasdasdwasdasdasdwasdasdasdwasdasdasdw',
         ];
 
         $this->actingAs($user);

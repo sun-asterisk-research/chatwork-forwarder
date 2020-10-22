@@ -28,7 +28,7 @@ class RoomController extends Controller
         try {
             $bot = Bot::findOrFail($request->bot_id);
             $this->authorize('getRoom', $bot);
-            $chatwork = Chatwork::withAPIToken($bot->bot_key);
+            $chatwork = Chatwork::withAPIToken($bot->bot_key, $bot->getProxyUri());
             $rooms = $this->chatworkRepository->getRooms($chatwork, $request->type);
 
             return $rooms;

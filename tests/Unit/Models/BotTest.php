@@ -18,6 +18,7 @@ class BotTest extends TestCase
         $fillable = [
             'user_id',
             'name',
+            'type',
             'bot_key'
         ];
         $model = new Bot();

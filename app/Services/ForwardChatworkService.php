@@ -81,7 +81,7 @@ class ForwardChatworkService
             if ($messages) {
                 $payloadHistory = $this->savePayloadHistory(PayloadHistoryStatus::SUCCESS);
                 // send messages to chatwork
-                $chatwork = Chatwork::withAPIToken($this->webhook->bot->bot_key);
+                $chatwork = Chatwork::withAPIToken($this->webhook->bot->bot_key, $this->webhook->bot->getProxyUri());
                 $this->sendMessages($messages, $chatwork, $payloadHistory->id);
             }
         } else {
