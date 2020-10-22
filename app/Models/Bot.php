@@ -42,4 +42,15 @@ class Bot extends Model
 
         return null;
     }
+
+    public function getAPIOptions()
+    {
+        if ($baseUri = $this->getProxyUri()) {
+            return [
+                'base_uri' => $baseUri,
+            ];
+        }
+
+        return [];
+    }
 }
