@@ -9,9 +9,13 @@ class Bot extends Model
 {
     use SoftDeletes;
 
+    public const TYPE_CHATWORK = 'chatwork';
+    public const TYPE_SUN_PROXY = 'sun_proxy';
+
     protected $fillable = [
         'user_id',
         'name',
+        'type',
         'bot_key',
     ];
 
@@ -28,5 +32,14 @@ class Bot extends Model
     public function scopeByUser($query, $userId)
     {
         return $query->where('user_id', $userId)->get();
+    }
+
+    public function getProxyUri()
+    {
+        if ($this->type == self::TYPE_SUN_PROXY && isset(config('cw.base_url')[$this->type])) {
+            return config('cw.base_url')[$this->type];
+        }
+
+        return null;
     }
 }

@@ -37,7 +37,7 @@ class BotUpdateRequest extends FormRequest
 
         if ($this->bot_key != '') {
             $rules['bot_key'] = [
-                'max:50',
+                'max:100',
                 Rule::unique('bots')->ignore($this->id)->where(function ($query) {
                     return $query->where('user_id', \Auth::id());
                 }),
@@ -53,7 +53,7 @@ class BotUpdateRequest extends FormRequest
             'name.required' => 'Please enter name',
             'name.max' => 'Name is too long (maximum is 50 characters)',
             'name.unique' => 'This bot name has already been used by another bot',
-            'bot_key.max' => 'Bot key is too long (maximum is 50 characters)',
+            'bot_key.max' => 'Bot key is too long (maximum is 100 characters)',
             'bot_key.unique' => 'This bot key has already been used by another bot',
         ];
     }

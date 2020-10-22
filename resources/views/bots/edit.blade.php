@@ -35,6 +35,15 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-4">
+                <label class="field-compulsory required" for="bot_type">Type</label>
+                <select id="bot_type" name="type" class="form-control">
+                    <option value="{{ \App\Models\Bot::TYPE_CHATWORK }}" {{ (old('type', $bot->type) === strval(\App\Models\Bot::TYPE_CHATWORK) || !old('type')) ? "selected" : ""}}>Chatwork</option>
+                    <option value="{{ \App\Models\Bot::TYPE_SUN_PROXY }}" {{ old('type', $bot->type) === strval(\App\Models\Bot::TYPE_SUN_PROXY) ? "selected" : "" }}>Sun CW Proxy</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-4">
                 <label class="field-compulsory" for="bot_key">Bot Key</label>
                 <input type="password" id="bot_key" name="bot_key" class="form-control" value="{{ $bot->bot_key }}" placeholder="Enter bot key if you want to change">
                 @error('bot_key')

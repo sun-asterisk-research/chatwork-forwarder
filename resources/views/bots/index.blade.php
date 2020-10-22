@@ -20,6 +20,7 @@
                 <tr>
                     <th>No.</th>
                     <th>Name</th>
+                    <th>Type</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -31,6 +32,13 @@
                         <tr>
                             <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
                             <td class="pl-20">{{ $bot->name }}</td>
+                            <td class="pl-20">
+                                @if($bot->type === \App\Models\Bot::TYPE_SUN_PROXY)
+                                    <div class="webhook-status label label-success">Sun CW Proxy</div>
+                                @else
+                                    <div class="webhook-status label label-warning">Chatwork</div>
+                                @endif
+                            </td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-default" href="{{ route('bots.edit', $bot->id) }}"><i class="fa fa-pencil"></i> Edit</a>
 
