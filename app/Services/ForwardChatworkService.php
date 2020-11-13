@@ -184,9 +184,9 @@ class ForwardChatworkService
                         );
                     }
 
-                    $mappingValue = $this->webhook->mappings()->byKey($requestValue)->first()['value'];
+                    $mappingValue = $this->webhook->mappings()->byKey((string) $requestValue)->first();
 
-                    return $mappingValue ? $mappingValue : $requestValue;
+                    return $mappingValue ? $mappingValue['value'] : $requestValue;
                 } catch (Throwable | ErrorException $e) {
                     // create a failed payload_history when values in payload's content not matching with params payload
                     $isMatching = false;
