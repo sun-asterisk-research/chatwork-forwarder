@@ -89,3 +89,6 @@ jobs:
   - curl -X POST "$PRODUCTION_UPDATE_HOOK?tag=stable"
   <<: *only-master
   <<: *not-pr
+  release:
+    environment: production
+    url: https://cw-forwarder.sun-asterisk.vn/
