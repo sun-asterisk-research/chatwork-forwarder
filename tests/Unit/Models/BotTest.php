@@ -1,13 +1,12 @@
 <?php
 
-namespace Tests\Feature\Models;
+namespace Tests\Unit\Models;
 
 use App\Models\Bot;
 use App\Models\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class BotTest extends TestCase
 {
@@ -19,7 +18,7 @@ class BotTest extends TestCase
             'user_id',
             'name',
             'type',
-            'bot_key'
+            'bot_key',
         ];
         $model = new Bot();
 

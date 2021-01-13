@@ -1,15 +1,11 @@
 <?php
 
-namespace Tests\Feature\Models;
+namespace Tests\Unit\Models;
 
 use App\Models\User;
-use App\Models\Bot;
-use App\Models\Webhook;
-use App\Models\Template;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UserTest extends TestCase
 {
@@ -32,7 +28,6 @@ class UserTest extends TestCase
     public function testUserHasManyBots()
     {
         $user = factory(User::class)->create();
-        $bot = factory(Bot::class)->create(['user_id' => $user->id]);
 
         $this->assertInstanceOf(HasMany::class, $user->bots());
         $this->assertEquals('user_id', $user->bots()->getForeignKeyName());
@@ -41,7 +36,6 @@ class UserTest extends TestCase
     public function testUserHasManyWebhooks()
     {
         $user = factory(User::class)->create();
-        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
 
         $this->assertInstanceOf(HasMany::class, $user->webhooks());
         $this->assertEquals('user_id', $user->webhooks()->getForeignKeyName());
@@ -65,8 +59,11 @@ class UserTest extends TestCase
         $perPage = config('paginate.perPage');
         $user = factory(User::class)->create();
         factory(User::class, 2)->create(['name' => 'abc']);
-        $searchParams['name'] = $user->name;
-        $searchParams['email'] = $user->email;
+
+        $searchParams = [
+            'name' => $user->name,
+            'email' => $user->email,
+        ];
 
         $result = User::search($searchParams, $perPage);
 
