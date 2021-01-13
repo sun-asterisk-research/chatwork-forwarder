@@ -1,16 +1,15 @@
 <?php
 
-namespace Tests\Feature\Models;
+namespace Tests\Unit\Models;
 
+use App\Enums\MessageHistoryStatus;
 use App\Models\MessageHistory;
 use App\Models\PayloadHistory;
-use App\Models\Webhook;
 use App\Models\User;
-use Tests\TestCase;
+use App\Models\Webhook;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Enums\MessageHistoryStatus;
+use Tests\TestCase;
 
 class MessageHistoryTest extends TestCase
 {
@@ -19,7 +18,10 @@ class MessageHistoryTest extends TestCase
     public function test_contains_valid_fillable_properties()
     {
         $fillable = [
-            'payload_history_id', 'message_content', 'status', 'log'
+            'payload_history_id',
+            'message_content',
+            'status',
+            'log',
         ];
         $model = new MessageHistory();
 
