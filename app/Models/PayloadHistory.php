@@ -57,6 +57,14 @@ class PayloadHistory extends Model
         });
     }
 
+    public function forceDelete()
+    {
+        DB::transaction(function () {
+            $this->messageHistories()->forceDelete();
+            parent::forceDelete();
+        });
+    }
+
     public function scopeDataChart($query, $statisticParams, $status)
     {
         $from = date('Y-m-d 00:00:00', strtotime($statisticParams['fromDate']));

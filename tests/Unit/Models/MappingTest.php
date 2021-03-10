@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Feature\Models;
+namespace Tests\Unit\Models;
 
 use App\Models\Mapping;
-use Tests\TestCase;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class MappingTest extends TestCase
 {
@@ -14,7 +14,10 @@ class MappingTest extends TestCase
     public function test_contains_valid_fillable_properties()
     {
         $fillable = [
-            'webhook_id', 'name', 'key', 'value'
+            'webhook_id',
+            'name',
+            'key',
+            'value',
         ];
         $model = new Mapping();
 

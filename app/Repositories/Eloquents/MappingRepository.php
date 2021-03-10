@@ -22,11 +22,6 @@ class MappingRepository extends BaseRepository implements MappingRepositoryInter
     {
         return Mapping::select('key', 'value')->where('webhook_id', $webhook->id)
             ->get()
-            ->map(function ($item) {
-                $data[$item->key] =  $item->value;
-
-                return $data;
-            })
-            ->collapse();
+            ->pluck('value', 'key');
     }
 }

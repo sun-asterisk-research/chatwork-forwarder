@@ -1,19 +1,18 @@
 <?php
 
-namespace Tests\Feature\Models;
+namespace Tests\Unit\Models;
 
-use App\Models\User;
-use App\Models\Bot;
-use App\Models\Webhook;
-use App\Models\Payload;
-use App\Models\Mapping;
-use App\Models\PayloadHistory;
 use App\Enums\WebhookStatus;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Bot;
+use App\Models\Mapping;
+use App\Models\Payload;
+use App\Models\PayloadHistory;
+use App\Models\User;
+use App\Models\Webhook;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class WebhookTest extends TestCase
 {
@@ -38,18 +37,18 @@ class WebhookTest extends TestCase
 
     public function testWebhookBeLongsToUser()
     {
-        $user = factory(User::class)->create(); 
-        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]); 
-        
+        $user = factory(User::class)->create();
+        $webhook = factory(Webhook::class)->create(['user_id' => $user->id]);
+
         $this->assertEquals('user_id', $webhook->user()->getForeignKeyName());
         $this->assertInstanceOf(BelongsTo::class, $webhook->user());
     }
 
     public function testWebhookBeLongsToBot()
     {
-        $bot = factory(Bot::class)->create(); 
-        $webhook = factory(Webhook::class)->create(['bot_id' => $bot->id]); 
-        
+        $bot = factory(Bot::class)->create();
+        $webhook = factory(Webhook::class)->create(['bot_id' => $bot->id]);
+
         $this->assertEquals('bot_id', $webhook->bot()->getForeignKeyName());
         $this->assertInstanceOf(BelongsTo::class, $webhook->bot());
     }
@@ -57,8 +56,8 @@ class WebhookTest extends TestCase
     public function testWebhookHasManyPayloads()
     {
         $webhook = factory(Webhook::class)->create();
-        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]); 
-       
+        $payload = factory(Payload::class)->create(['webhook_id' => $webhook->id]);
+
         $this->assertInstanceOf(HasMany::class, $webhook->payloads());
         $this->assertEquals('webhook_id', $webhook->payloads()->getForeignKeyName());
     }
@@ -67,7 +66,7 @@ class WebhookTest extends TestCase
     {
         $webhook = factory(Webhook::class)->create();
         $mapping = factory(Mapping::class)->create(['webhook_id' => $webhook->id]);
-       
+
         $this->assertInstanceOf(HasMany::class, $webhook->mappings());
         $this->assertEquals('webhook_id', $webhook->mappings()->getForeignKeyName());
     }
@@ -76,7 +75,7 @@ class WebhookTest extends TestCase
     {
         $webhook = factory(Webhook::class)->create();
         $payloadHistory = factory(PayloadHistory::class)->create(['webhook_id' => $webhook->id]);
-       
+
         $this->assertInstanceOf(HasMany::class, $webhook->payloadHistories());
         $this->assertEquals('webhook_id', $webhook->payloadHistories()->getForeignKeyName());
     }
