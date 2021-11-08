@@ -11,4 +11,6 @@ interface UserRepositoryInterface
     public function store($data);
 
     public function getAllAndSearch($perPage, $keyword);
+
+    public function findByEmail($email);
 }

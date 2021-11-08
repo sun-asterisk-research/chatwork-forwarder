@@ -177,4 +177,13 @@ class PayloadController extends Controller
             ]);
         }
     }
+
+    public function copy(Webhook $webhook, Payload $payload)
+    {
+        $this->authorize('update', [$payload, $webhook]);
+
+        $conditions = $payload->conditions()->get();
+        $templates = $this->templateRepository->getTemplate();
+        return view('payloads.copy', compact('payload', 'webhook', 'conditions', 'templates'));
+    }
 }

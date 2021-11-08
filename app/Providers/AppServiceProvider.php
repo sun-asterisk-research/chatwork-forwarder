@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
         'MappingRepository',
         'ChatworkRepository',
         'TemplateRepository',
+        'SlackRepository',
     ];
 
     /**

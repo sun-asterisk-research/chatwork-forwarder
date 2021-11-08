@@ -6,8 +6,11 @@ use App\Models\Webhook;
 use App\Models\Condition;
 use Illuminate\Http\Request;
 use App\Services\ForwardChatworkService;
+use App\Services\ForwardSlackService;
+use App\Models\Bot;
 use App\Repositories\Interfaces\PayloadHistoryRepositoryInterface as PayloadHistoryRepository;
 use App\Repositories\Interfaces\MessageHistoryRepositoryInterface as MessageHistoryRepository;
+use SebastianBergmann\Environment\Console;
 
 class ForwardChatworkController extends Controller
 {
@@ -45,18 +48,31 @@ class ForwardChatworkController extends Controller
      */
     public function forwardMessage(Request $request, $token)
     {
+        error_log('hello');
+        error_log($request);
         $params = json_decode(json_encode($request->all()), true);
         $webhook = Webhook::enable()->where('token', $token)->first();
 
         if ($webhook) {
-            $forwardChatworkService = new ForwardChatworkService(
-                $webhook,
-                $params,
-                $this->payloadHistoryRepository,
-                $this->messageHistoryRepository
-            );
+            if ($webhook->bot->type === Bot::TYPE_SLACK) {
+                $forwardSlackService = new ForwardSlackService(
+                    $webhook,
+                    $params,
+                    $this->payloadHistoryRepository,
+                    $this->messageHistoryRepository
+                );
+                
+                $forwardSlackService->call();
+            } else {
+                $forwardChatworkService = new ForwardChatworkService(
+                    $webhook,
+                    $params,
+                    $this->payloadHistoryRepository,
+                    $this->messageHistoryRepository
+                );
 
-            $forwardChatworkService->call();
+                $forwardChatworkService->call();
+            }
 
             return response()->json('Excuted successfully', 200);
         }

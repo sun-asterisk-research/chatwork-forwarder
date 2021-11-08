@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Bot;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Enums\UserType;
 
 class BotPolicy
 {
@@ -65,5 +66,19 @@ class BotPolicy
     public function getRoom(User $user, $bot)
     {
         return $user->id === $bot->user_id;
+    }
+
+    /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $bot)
+    {
+        if ($user->role == UserType::ADMIN) {
+            return true;
+        }
     }
 }

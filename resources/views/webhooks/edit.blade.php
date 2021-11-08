@@ -34,6 +34,17 @@
                 <a class="input-group-addon" id="copyUrl" ><i class="fa fa-clipboard"></i></a>
             </div>
         </div>
+        <div class="col-xs-6">
+            <label class="field-compulsory">Change Owner Webhook</label>
+            <div class="input-group">
+                <input type="email" name="email" class="form-control" placeholder="Please type email" style="width: 300px">
+                @error('email')
+                <div class="has-error">
+                    <span class="help-block">{{ $message }}</span>
+                </div>
+                @enderror
+            </div>
+        </div>
         <div class="mt-15 col-xs-12">
             <label class="field-compulsory">Google form script :
                 <span class="fill" onclick="appendCode('{{$url}}', true)" data-toggle="tooltip" data-placement="top" title="Generate google script include form data">
@@ -82,7 +93,7 @@
         <div class="form-group row">
             <div class="col-xs-4">
                 <input type="hidden" name="id" value="{{ $webhook->id }}">
-                <label class="field-compulsory required">Chatwork bot</label>
+                <label class="field-compulsory required">Slack bot</label>
                 <select id="cw_bots" name="bot_id" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
                     @foreach($bots as $bot)
@@ -105,7 +116,7 @@
             </div>
             <div class="col-xs-4">
                 <input type="hidden" id="room_name" value="{{ $webhook->room_name }}">
-                <label class="field-compulsory required" for="cw_rooms">Chatwork room</label>
+                <label class="field-compulsory required" for="cw_rooms">Slack room</label>
                 <select id="cw_rooms" name="room_name" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
                 </select>
@@ -116,7 +127,7 @@
                 @enderror
             </div>
             <div class="col-xs-3">
-                <label class="field-compulsory required" for="cw_room_id">Chatwork room id</label>
+                <label class="field-compulsory required" for="cw_room_id">Slack room id</label>
                 <input type="hidden" id="room_id" value="{{ $webhook->room_id }}">
                 <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
                 @error('room_id')
@@ -176,7 +187,11 @@
 		            <div class="col-xs-2 text-center">
 		                <a class="btn btn-sm btn-default" href="{{ route('webhooks.payloads.edit', ['webhook' => $webhook, 'payload' => $payload]) }} ">
 		                    <i class="fa fa-pencil"></i> Edit
-		                </a>&nbsp
+		                </a>
+
+                        <a class="btn btn-sm btn-default" href="{{ route('webhooks.payloads.copy', ['webhook' => $webhook, 'payload' => $payload]) }} ">
+		                    <i class="fa fa-clipboard"></i> Copy
+		                </a>
 
 		                {{ Form::open([
 		                    'method' => 'DELETE',

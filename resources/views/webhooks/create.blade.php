@@ -56,7 +56,7 @@
         </div>
         <div class="form-group">
             <div class="col-xs-4">
-                <label class="field-compulsory required" for="webhook_bot_id">Chatwork bot</label>
+                <label class="field-compulsory required" for="webhook_bot_id">Slack bot</label>
                 <select id="cw_bots" name="bot_id" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
                     @foreach($bots as $bot)
@@ -80,7 +80,7 @@
             </div>
             <div class="col-xs-4">
                 <input type="hidden" id="room_name" value="{{ old('room_name') }}">
-                <label class="field-compulsory required" for="cw_rooms">Chatwork room</label>
+                <label class="field-compulsory required" for="cw_rooms">Slack room</label>
                 <select id="cw_rooms" name="room_name" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
                 </select>
@@ -91,7 +91,7 @@
                 @enderror
             </div>
             <div class="col-xs-3">
-                <label class="field-compulsory required" for="cw_room_id">Chatwork room id</label>
+                <label class="field-compulsory required" for="cw_room_id">Slack room id</label>
                 <input type="hidden" id="room_id" value="{{ old('room_id') }}">
                 <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
                 @error('room_id')

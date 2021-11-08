@@ -24,8 +24,8 @@ use App\Enums\WebhookStatus; ?>
                     <th>No.</th>
                     <th>Name</th>
                     <th class="webhook-description">Description</th>
-                    <th>Chatwork Room</th>
-                    <th>Chatwork Room ID</th>
+                    <th>Slack Room</th>
+                    <th>Slack Room ID</th>
                     <th>Status</th>
                     <th class="text-center">Actions</th>
                 </tr>

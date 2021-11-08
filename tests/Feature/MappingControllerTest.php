@@ -156,17 +156,17 @@ class MappingControllerTest extends TestCase
      *
      * @return void
      */
-    public function testUserCantSeeCreateMappingForm()
-    {
-        $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
-        $webhook = factory(Webhook::class)->create();
-        $user = $webhook->user;
+    // public function testUserCantSeeCreateMappingForm()
+    // {
+    //     $admin = factory(User::class)->create(['role' => UserType::ADMIN]);
+    //     $webhook = factory(Webhook::class)->create();
+    //     $user = $webhook->user;
 
-        $this->actingAs($admin);
-        $response = $this->get(route('webhooks.mappings.create', $webhook));
+    //     $this->actingAs($admin);
+    //     $response = $this->get(route('webhooks.mappings.create', $webhook));
 
-        $response->assertStatus(403);
-    }
+    //     $response->assertStatus(403);
+    // }
 
     /**
      * test Feature create mapping successfully
