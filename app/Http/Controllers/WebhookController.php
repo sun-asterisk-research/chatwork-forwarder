@@ -8,6 +8,7 @@ use App\Http\Requests\WebhookUpdateRequest;
 use App\Models\Bot;
 use App\Models\Webhook;
 use App\Repositories\Interfaces\WebhookRepositoryInterface as WebhookRepository;
+use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Auth;
@@ -16,10 +17,12 @@ use Exception;
 class WebhookController extends Controller
 {
     private $webhookRepository;
+    private $userRepository;
 
-    public function __construct(WebhookRepository $webhookRepository)
+    public function __construct(WebhookRepository $webhookRepository, UserRepository $userRepository)
     {
         $this->webhookRepository = $webhookRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -89,7 +92,7 @@ class WebhookController extends Controller
         $this->authorize('update', $webhook);
         $payloads = $webhook->payloads()->get();
         $mappings = $webhook->mappings()->get();
-        $bots = Bot::byUser(Auth::id());
+        $bots = Bot::byUser($webhook->user_id);
 
         return view('webhooks.edit', compact('webhook', 'payloads', 'bots', 'mappings'));
     }
@@ -105,14 +108,24 @@ class WebhookController extends Controller
     {
         $this->authorize('update', $webhook);
         $data = $request->only(['name', 'status', 'description', 'bot_id', 'room_name', 'room_id']);
-
         try {
-            $webhook = $this->webhookRepository->update($webhook->id, $data);
-            return redirect()->route('webhooks.edit', $webhook)
-                ->with('messageSuccess', [
-                    'status' => 'Update success',
-                    'message' => 'This webhook successfully updated',
-                ]);
+            if ($request->email) {
+                $user = $this->userRepository->findByEmail($request->email);
+                $data['user_id'] = $user ? $user->id : null;
+                $webhook = $this->webhookRepository->update($webhook->id, $data);
+                return redirect()->route('webhooks.index', $webhook)
+                    ->with('messageSuccess', [
+                        'status' => 'Update success',
+                        'message' => 'This webhook successfully updated',
+                    ]);
+            } else {
+                $webhook = $this->webhookRepository->update($webhook->id, $data);
+                return redirect()->route('webhooks.edit', $webhook)
+                    ->with('messageSuccess', [
+                        'status' => 'Update success',
+                        'message' => 'This webhook successfully updated',
+                    ]);
+            }
         } catch (QueryException $exception) {
             return redirect()->back()->with('messageFail', [
                 'status' => 'Update failed',

@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth']], function () {
         'index'
     ]);
     Route::resource('webhooks.payloads', 'PayloadController')->except('show');
+    Route::get('webhooks/{webhook}/payloads/{payload}/copy', 'PayloadController@copy')->name('webhooks.payloads.copy');
     Route::resource('webhooks.mappings', 'MappingController')->except(['index', 'show', 'update']);
     Route::get('webhooks/{webhook}/mappings', 'MappingController@edit')->name('webhooks.edit.mappings');
     Route::post('webhooks/{webhook}/mappings/update', 'MappingController@update')->name('webhooks.update.mappings');
