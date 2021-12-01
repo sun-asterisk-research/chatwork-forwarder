@@ -1,5 +1,5 @@
-<h2>Welcome to Chatwork Forwarder Application</h2>
-<div>Your account is registered on Chatwork Forwarder. Please keep this email for your records. Your account information is as follows:</div>
+<h2>Welcome to Slack Forwarder Application</h2>
+<div>Your account is registered on Slack Forwarder. Please keep this email for your records. Your account information is as follows:</div>
 <div>Name: {{$name}}<br>
 Email: {{$email}}<br>
 Password: {{$password}}<br>

@@ -73,14 +73,13 @@
                 <label class="field-compulsory" for="type_rooms">Type room</label>
                 <input type="hidden" id="room_type" value="{{ old('room_type') }}">
                 <select id="type_room" name="room_type" class="form-control" style="width: 100%;">
-                    <option value="group" {{ old('room_type') == 'group' ? "selected" : "" }}>Group</option>
-                    <option value="direct" {{ old('room_type') == 'direct' ? "selected" : "" }}>Private</option>
-                    <option value="all" {{ old('room_type') == 'all' ? "selected" : "" }}>All</option>
+                    <option value="group" {{ old('room_type') == 'group' ? "selected" : "" }}>Channel</option>
+                    <option value="direct" {{ old('room_type') == 'direct' ? "selected" : "" }}>Direct message</option>
                 </select>
             </div>
             <div class="col-xs-4">
                 <input type="hidden" id="room_name" value="{{ old('room_name') }}">
-                <label class="field-compulsory required" for="cw_rooms">Slack room</label>
+                <label class="field-compulsory required" for="cw_rooms">Slack channel/ DMs</label>
                 <select id="cw_rooms" name="room_name" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
                 </select>
@@ -91,9 +90,9 @@
                 @enderror
             </div>
             <div class="col-xs-3">
-                <label class="field-compulsory required" for="cw_room_id">Slack room id</label>
+                <label class="field-compulsory required" for="cw_room_id">Slack channel/ DMs ID</label>
                 <input type="hidden" id="room_id" value="{{ old('room_id') }}">
-                <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
+                <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Channel/ DMs ID">
                 @error('room_id')
                     <div class="has-error">
                         <span class="help-block">{{ $message }}</span>

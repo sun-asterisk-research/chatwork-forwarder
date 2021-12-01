@@ -1,5 +1,5 @@
 @component('mail::message')
-# Welcome to Chatwork Forwarder Application
+# Welcome to Slack Forwarder Application
 
 You are receiving this email because we received a password reset request for your account.
 

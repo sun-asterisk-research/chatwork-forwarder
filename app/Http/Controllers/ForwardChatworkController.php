@@ -48,31 +48,18 @@ class ForwardChatworkController extends Controller
      */
     public function forwardMessage(Request $request, $token)
     {
-        error_log('hello');
-        error_log($request);
         $params = json_decode(json_encode($request->all()), true);
         $webhook = Webhook::enable()->where('token', $token)->first();
 
         if ($webhook) {
-            if ($webhook->bot->type === Bot::TYPE_SLACK) {
-                $forwardSlackService = new ForwardSlackService(
-                    $webhook,
-                    $params,
-                    $this->payloadHistoryRepository,
-                    $this->messageHistoryRepository
-                );
-                
-                $forwardSlackService->call();
-            } else {
-                $forwardChatworkService = new ForwardChatworkService(
-                    $webhook,
-                    $params,
-                    $this->payloadHistoryRepository,
-                    $this->messageHistoryRepository
-                );
+            $forwardSlackService = new ForwardSlackService(
+                $webhook,
+                $params,
+                $this->payloadHistoryRepository,
+                $this->messageHistoryRepository
+            );
 
-                $forwardChatworkService->call();
-            }
+            $forwardSlackService->call();
 
             return response()->json('Excuted successfully', 200);
         }
