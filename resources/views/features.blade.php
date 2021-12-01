@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <title>Chatwork forwarder</title>
+    <title>Slack forwarder</title>
 </head>
 
 <body>
@@ -35,7 +35,7 @@
                 <p><span>Made by </span><a href="https://research.sun-asterisk.com/en"><img src="{{asset('img/Sun-logo.png')}}" alt=""></a> <span>R&D Lab</span></p>
                 <p><a href="/features" target="_blank">Features</a></p>
                 <p>We &#9829; Open Source</p>
-                <p>This service is open-sourced at <a href="https://github.com/sun-asterisk-research/chatwork-forwarder"><img src="{{asset('img/github.png')}}" alt=""></a></p>
+                <p>This service is open-sourced at <a href="https://github.com/sun-asterisk-research/chatwork-forwarder/tree/slack"><img src="{{asset('img/github.png')}}" alt=""></a></p>
             </div>
         </div>
 

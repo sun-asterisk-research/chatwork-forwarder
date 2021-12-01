@@ -26,7 +26,7 @@ use App\Enums\WebhookStatus; ?>
                     <th class="webhook-description">Description</th>
                     <th>Slack Room</th>
                     <th>Slack Room ID</th>
-                    <th>Status</th>
+                    <th class="text-center">Status</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -42,7 +42,7 @@ use App\Enums\WebhookStatus; ?>
                             <td class="webhook-description">{{ $webhook->description }}</td>
                             <td>{{ $webhook->room_name }}</td>
                             <td>{{ $webhook->room_id }}</td>
-                            <td class="pl-20">
+                            <td class="text-center">
                                 @if($webhook->status === WebhookStatus::ENABLED)
                                     <div class="webhook-status label label-success">Enabled</div>
                                 @else

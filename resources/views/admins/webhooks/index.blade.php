@@ -40,7 +40,7 @@
 
 <div class="block full">
     <div class="block-title">
-        <h2><strong>Webhooks list</strong></h2> 
+        <h2><strong>Webhooks list</strong></h2>
     </div>
     <div class="table-responsive">
         <table  class="table table-vcenter table-striped">
@@ -50,8 +50,8 @@
                     <th>Name</th>
                     <th class="webhook-description">Description</th>
                     <th>User</th>
-                    <th>Chatwork Room</th>
-                    <th class="text-center">Chatwork Room ID</th>
+                    <th>Slack Channel/ DMs</th>
+                    <th class="text-center">Slack Channel/ DMs ID</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Actions</th>
                 </tr>
@@ -68,7 +68,7 @@
                             <td>{{ $webhook->user->name }}</td>
                             <td>{{ $webhook->room_name }}</td>
                             <td class="text-center">{{ $webhook->room_id }}</td>
-                            <td class="pl-20">
+                            <td class="text-center">
                                 @if($webhook->status === WebhookStatus::ENABLED)
                                     <div class="webhook-status label label-success">Enabled</div>
                                 @else

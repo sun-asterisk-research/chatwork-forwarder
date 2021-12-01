@@ -1,18 +1,18 @@
 ## Chatwork-forwarder
 
 ### About system
-Chatwork forwarder là hệ thống cho phép nhận payload từ service khác, sau đó dựa vào các config của
+Slack Forwarder là hệ thống cho phép nhận payload từ service khác, sau đó dựa vào các config của
 người dùng để tạo ra các message như mong muốn và gửi lên chatwork.
 
 ### Main features
-* Phân tích thống kê dữ liệu 
-* Tạo webhook phù hợp với mục đích sử dụng 
-* Tạo message theo từng điều kiện cụ thể 
+* Phân tích thống kê dữ liệu
+* Tạo webhook phù hợp với mục đích sử dụng
+* Tạo message theo từng điều kiện cụ thể
 * Sử dụng chatbot gửi message nhanh chóng lên chatwork.
 * Lưu trữ lịch sử payload đã gửi đến và message đã gửi đi
 
-### Local setup 
-    `$ composer install` 
+### Local setup
+    `$ composer install`
 * using npm
 
     `$ npm install`

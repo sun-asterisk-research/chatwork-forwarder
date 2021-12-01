@@ -1,11 +1,11 @@
-**Chatwork Forwarder** is Opensource was developed with Laravel framwork, which help your project solve the following probems.
+**Slack Forwarder** is Opensource was developed with Laravel framwork, which help your project solve the following probems.
 
 1. Send message to Chatwork (private or room)
 2. Receive payload from other service and extract data with users's conditions.
 3. Mapping data befor sending with user-friendly and easy to understand.
 4. Send multiple messages at the same time for multiple rooms or private, depending on the user's configuration.
 
-If your project is working with chatwork, you need to process the sending of the message when input data is received or simply happens every day when each member in the project sends a Pull Request they have to TO on the project box to request review merge Pull, this work is repetitive, both boring and time-consuming. Chatwork forwarder will help your project solve those problems extremely quickly, just need a few easy config steps.
+If your project is working with chatwork, you need to process the sending of the message when input data is received or simply happens every day when each member in the project sends a Pull Request they have to TO on the project box to request review merge Pull, this work is repetitive, both boring and time-consuming. Slack Forwarder will help your project solve those problems extremely quickly, just need a few easy config steps.
 
 Let's go!
 ## 1. Landing page and login

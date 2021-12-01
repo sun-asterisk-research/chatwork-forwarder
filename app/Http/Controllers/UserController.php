@@ -56,7 +56,7 @@ class UserController extends Controller
             $data = ['name' => $request->name, 'email' => $request->email, 'password' => $request->password];
             $email = $request->email;
             Mail::send('mail/create_user_mail', $data, function ($message) use ($email) {
-                $message->to($email)->subject('Welcome to Chatwork Forwarder Application');
+                $message->to($email)->subject('Welcome to Slack Forwarder Application');
             });
             return redirect()->route('users.edit', $user)
                 ->with('messageSuccess', [

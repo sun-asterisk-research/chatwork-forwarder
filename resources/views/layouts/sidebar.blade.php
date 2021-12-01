@@ -6,7 +6,7 @@
         <div class="sidebar-content">
             <div>
                 <a href="/dashboard">
-                    <img class="logo_admin" src="/img/logo.png" alt="avatar">
+                    <img class="logo_admin" src="{{ asset('img/landing/logo.png') }}" alt="avatar" style="padding: 20px">
                 </a>
             </div>
             <!-- Sidebar Navigation -->

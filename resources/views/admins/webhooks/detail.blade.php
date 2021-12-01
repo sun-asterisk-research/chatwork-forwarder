@@ -41,15 +41,15 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-4">
-                <label class="field-compulsory required">Chatwork bot</label>
+                <label class="field-compulsory required">Slack bot</label>
                 <input type="text" readonly value="{{ $bot->name }}" class="form-control">
             </div>
             <div class="col-xs-4">
-                <label class="field-compulsory required">Chatwork room</label>
+                <label class="field-compulsory required">Slack room</label>
                 <input type="text" readonly value="{{ $webhook->room_name }}" class="form-control">
             </div>
             <div class="col-xs-4">
-                <label class="field-compulsory required">Chatwork room id</label>
+                <label class="field-compulsory required">Slack room id</label>
                 <input type="text" readonly value="{{ $webhook->room_id }}" class="form-control">
             </div>
         </div>

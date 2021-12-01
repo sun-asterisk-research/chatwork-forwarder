@@ -31,12 +31,12 @@
                     @foreach($bots as $bot)
                         <tr>
                             <td>{{ Helper::indexNumber(app('request')->input('page'), config('paginate.perPage'), $loop->iteration) }}</td>
-                            <td class="pl-20">{{ $bot->name }}</td>
-                            <td class="pl-20">
+                            <td>{{ $bot->name }}</td>
+                            <td>
                                 @if($bot->type === \App\Models\Bot::TYPE_SUN_PROXY)
                                     <div class="webhook-status label label-success">Sun CW Proxy</div>
                                 @else
-                                    <div class="webhook-status label label-warning">Chatwork</div>
+                                    <div class="webhook-status label label-warning">Slack</div>
                                 @endif
                             </td>
                             <td class="text-center">

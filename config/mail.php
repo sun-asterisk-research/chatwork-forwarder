@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'admin@cw-forwarder.sun-asterisk.vn'),
-        'name' => env('MAIL_FROM_NAME', 'Chatwork Forwarder'),
+        'name' => env('MAIL_FROM_NAME', 'Slack Forwarder'),
     ],
 
     /*
