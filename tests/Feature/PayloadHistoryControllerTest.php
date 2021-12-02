@@ -255,7 +255,7 @@ class PayloadHistoryControllerTest extends TestCase
        $user = $payloadHistory->webhook->user;
        $this->actingAs($user);
 
-       $response = $this->delete(route('history.destroy', ['payloadHistory' => $payloadHistory->id, 'page' => 2]));
+       $response = $this->delete(route('history.destroy', ['history' => $payloadHistory->id, 'page' => 2]));
        $this->assertDatabaseMissing('payload_histories', ['id' => $payloadHistory->id, 'deleted_at' => NULL]);
        $response->assertRedirect(route('history.index', ['page' => 2]));
    }

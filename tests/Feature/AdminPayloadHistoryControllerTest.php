@@ -269,7 +269,7 @@ class AdminPayloadHistoryControllerTest extends TestCase
         $admin = factory(User::class)->create(['role' => 0]);
         $this->actingAs($admin);
 
-        $response = $this->delete(route('admin.history.destroy', ['payloadHistory' => $payloadHistory->id, 'page' => 2]));
+        $response = $this->delete(route('admin.history.destroy', ['history' => $payloadHistory->id, 'page' => 2]));
         $this->assertDatabaseMissing('payload_histories', [
             'id' => $payloadHistory->id,
             'params' => 'test remove payload history',
