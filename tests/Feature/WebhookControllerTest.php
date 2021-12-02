@@ -368,7 +368,7 @@ class WebhookControllerTest extends TestCase
         factory(Payload::class)->create(['webhook_id' => $webhook->id]);
 
         $this->actingAs($user);
-        $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
+        $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook->id]));
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(302);
         $response->assertSessionHas('messageFail', [
@@ -389,7 +389,7 @@ class WebhookControllerTest extends TestCase
         factory(Mapping::class)->create(['webhook_id' => $webhook->id]);
 
         $this->actingAs($user);
-        $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
+        $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook->id]));
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(302);
         $response->assertSessionHas('messageFail', [
@@ -410,7 +410,7 @@ class WebhookControllerTest extends TestCase
         factory(PayloadHistory::class)->create(['webhook_id' => $webhook->id]);
 
         $this->actingAs($user);
-        $response = $this->delete(route('webhooks.destroy', ['webhook_id' => $webhook->id]));
+        $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook->id]));
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(302);
         $response->assertSessionHas('messageFail', [
@@ -430,7 +430,7 @@ class WebhookControllerTest extends TestCase
         $webhook = factory(Webhook::class)->create(['user_id' => $user->id, 'name' => 'test remove webhook fail']);
 
         $this->actingAs($user);
-        $response = $this->delete(route('webhooks.destroy', ['webhook_id' => ($webhook->id + 99)]));
+        $response = $this->delete(route('webhooks.destroy', ['webhook' => ($webhook->id + 99)]));
         $this->assertDatabaseHas('webhooks', ['name' => 'test remove webhook fail']);
         $response->assertStatus(404);
     }
