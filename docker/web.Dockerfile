@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-WORKDIR /cw-forwarder
+WORKDIR /slack-forwarder
 
 ARG APP_URL
 
