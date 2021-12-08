@@ -17,10 +17,8 @@ function appendCode(url, status) {
 }
 
 $(document).ready(function () {
-    $('#cw_rooms').prop('disabled', true);
-
-    load_room_name('all');
-    load_room_id();
+    // load_room_name('all');
+    // load_room_id();
     load_script();
 
     function load_script()
@@ -61,11 +59,9 @@ $(document).ready(function () {
                             $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "'>" + value['name'] + "</option>");
                         }
                     });
-                    $('#cw_rooms').prop('disabled', false);
                 },
                 error: function () {
                     $('#cw_rooms').val(null).trigger('change');
-                    $('#cw_rooms').prop('disabled', true);
                     $('#cw_room_id').val('');
                 }
             });
@@ -93,15 +89,15 @@ $(document).ready(function () {
         }
     }
 
-    $('#cw_bots').change(function () {
-        $('#cw_rooms').select2('data', {id: '', text: 'Choose one...'});
-        var type_room = $('#type_room').val();
-        if ( type_room == ''){
-            load_room_name('group');
-        } else {
-            load_room_name(type_room);
-        }
-    });
+    // $('#cw_bots').change(function () {
+    //     $('#cw_rooms').select2('data', {id: '', text: 'Choose one...'});
+    //     var type_room = $('#type_room').val();
+    //     if ( type_room == ''){
+    //         load_room_name('group');
+    //     } else {
+    //         load_room_name(type_room);
+    //     }
+    // });
 
     $('#type_room').change(function () {
         var type_room = $('#type_room').val();
@@ -235,5 +231,14 @@ $(document).ready(function () {
         btnCopy.setAttribute('data-original-title', 'Copied!');
         $('[data-toggle="tooltip"], .enable-tooltip').tooltip({container: 'body', animation: false});
         $('#copyScript').mouseover();
+    });
+
+    $('#use_default').on('click', function (e) {
+        $('#use_default').attr('checked', !$('#use_default').attr('checked'));
+        if ($('#use_default').attr('checked')) {
+            $('#cw_bots').attr('disabled', true);
+        } else {
+            $('#cw_bots').attr('disabled', false);
+        }
     });
 });

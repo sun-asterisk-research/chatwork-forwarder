@@ -19,8 +19,10 @@ class WebhookController extends Controller
     private $webhookRepository;
     private $userRepository;
 
-    public function __construct(WebhookRepository $webhookRepository, UserRepository $userRepository)
-    {
+    public function __construct(
+        WebhookRepository $webhookRepository,
+        UserRepository $userRepository
+    ) {
         $this->webhookRepository = $webhookRepository;
         $this->userRepository = $userRepository;
     }
@@ -66,6 +68,9 @@ class WebhookController extends Controller
         $data['user_id'] = Auth::id();
 
         try {
+            if (isset($data['use_default']) && $data['use_default'] === Bot::USE_DEFAULT_SLACK_BOT) {
+                $data['bot_id'] = config('slack.slack_bot_id');
+            }
             $webhook = $this->webhookRepository->create($data);
 
             return redirect()->route('webhooks.edit', $webhook)
@@ -108,6 +113,9 @@ class WebhookController extends Controller
     {
         $this->authorize('update', $webhook);
         $data = $request->only(['name', 'status', 'description', 'bot_id', 'room_name', 'room_id']);
+        if ($request->input('use_default') === Bot::USE_DEFAULT_SLACK_BOT) {
+            $data['bot_id'] = config('sla.ck.slack_bot_id');
+        }
         try {
             if ($request->email) {
                 $user = $this->userRepository->findByEmail($request->email);

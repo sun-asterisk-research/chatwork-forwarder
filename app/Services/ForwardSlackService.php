@@ -280,7 +280,7 @@ class ForwardSlackService
                         // add to queue and excute this job after 5 minutes
                         SendMessageToSlack::dispatch($slack, $roomId, $messages, $payloadHistoryId)
                             ->onQueue('high')
-                            ->delay(now()->addMinutes(5));
+                            ->delay(now()->addSeconds(10));
                         break 2;
                     case SlackStatus::INVALID_AUTH:
                         // authorized
