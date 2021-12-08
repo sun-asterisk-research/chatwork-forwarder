@@ -92,44 +92,56 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-4">
+                <div class="form-check">
+                    <input class="form-check-input"
+                        type="checkbox"
+                        id="use_default"
+                        {{ $webhook->bot_id != config('slack.slack_bot_id') ? '' : 'checked' }}
+                        name="use_default">
+                    <label class="form-check-label" for="use_default">
+                        Use Slack Forwarder Bot
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-4">
                 <input type="hidden" name="id" value="{{ $webhook->id }}">
                 <label class="field-compulsory required">Slack bot</label>
+                @if ($webhook->bot_id != config('slack.slack_bot_id'))
                 <select id="cw_bots" name="bot_id" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
                     @foreach($bots as $bot)
                         <option value="{{ $bot->id }}" {{ $webhook->bot_id == $bot->id ? "selected" : "" }}>{{ $bot->name }}</option>
                     @endforeach
                 </select>
+                @else
+                <select id="cw_bots" name="bot_id" class="select-select2" disabled style="width: 100%;" data-placeholder="Choose one..">
+                    <option></option>
+                    @foreach($bots as $bot)
+                        <option value="{{ $bot->id }}" {{ $webhook->bot_id == $bot->id ? "selected" : "" }}>{{ $bot->name }}</option>
+                    @endforeach
+                </select>
+                @endif
                 @error('bot_id')
                 <div class="has-error">
                     <span class="help-block">{{ $message }}</span>
                 </div>
                 @enderror
             </div>
-            <div class="col-xs-1">
-                <label class="field-compulsory" for="type_rooms">Type room</label>
-                <select id="type_room" name="room_type" class="form-control" style="width: 100%;">
-                    <option value="all">All</option>
-                    <option value="group">Group</option>
-                    <option value="direct">Private</option>
-                </select>
-            </div>
             <div class="col-xs-4">
-                <input type="hidden" id="room_name" value="{{ $webhook->room_name }}">
-                <label class="field-compulsory required" for="cw_rooms">Slack room</label>
-                <select id="cw_rooms" name="room_name" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
-                    <option></option>
-                </select>
+                <label class="field-compulsory required" for="cw_rooms">Channel name</label>
+                <input type="text" id="cw_rooms" name="room_name" class="form-control" value="{{ $webhook->room_name }}" placeholder="Enter name">
                 @error('room_name')
                 <div class="has-error">
                     <span class="help-block">{{ $message }}</span>
                 </div>
                 @enderror
             </div>
-            <div class="col-xs-3">
-                <label class="field-compulsory required" for="cw_room_id">Slack room id</label>
+            <div class="col-xs-4">
+                <label class="field-compulsory required" for="cw_room_id">Channel ID</label>
                 <input type="hidden" id="room_id" value="{{ $webhook->room_id }}">
-                <input type="text" readonly id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
+                <input type="text" id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
                 @error('room_id')
                 <div class="has-error">
                     <span class="help-block">{{ $message }}</span>

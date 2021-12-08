@@ -75,7 +75,7 @@ class BotController extends Controller
 
         try {
             $bot = $this->botRepository->create($data);
-            return redirect()->route('bots.edit', $bot)
+            return redirect()->route('bots.index')
                 ->with('messageSuccess', [
                     'status' => 'Create success',
                     'message' => 'This bot successfully created',
