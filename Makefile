@@ -1,4 +1,4 @@
-REGISTRY_PATH ?= registry.gitlab.com/sun-asterisk-research/chatwork-forwarder
+REGISTRY_PATH ?= harbor.sun-asterisk.vn/rnd-internal/slack-forwarder
 TAG ?= latest
 
 LARAVEL_IMAGE=$(REGISTRY_PATH)/laravel-app:$(TAG)
