@@ -4077,3 +4077,21 @@ only screen and (min-device-pixel-ratio: 1.5) {
 .logo_admin {
   width: 200px;
 }
+
+.flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.notice {
+    font-size: 12px;
+    font-style: italic;
+    margin-bottom: 0;
+}

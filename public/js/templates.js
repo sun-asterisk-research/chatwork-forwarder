@@ -72,6 +72,7 @@ $(document).ready(function () {
         e.preventDefault();
         if (checkData()) {
             var _token = $('meta[name="csrf-token"]').attr('content');
+            var contentType = $("input[name='content_type']:checked").val();
             var content = $("textarea[name='content']").val();
             var params = $("textarea[name='params']").val();
             var name = $("input[name='name']").val();
@@ -92,6 +93,7 @@ $(document).ready(function () {
                     operators: operators,
                     fields: fields,
                     values: values,
+                    content_type: contentType,
                 },
                 success: function (id) {
                     window.location.replace("/templates/" + id + "/edit");
@@ -110,6 +112,7 @@ $(document).ready(function () {
         if (checkData() && checkDataCondition()) {
             var _token = $('meta[name="csrf-token"]').attr('content');
             var url = $("input[name='url']").val();
+            var contentType = $("input[name='content_type']:checked").val();
             var content = $("textarea[name='content']").val();
             var params = $("textarea[name='params']").val();
             var name = $("input[name='name']").val();
@@ -139,6 +142,7 @@ $(document).ready(function () {
                     id: template_id,
                     conditions: conditions,
                     ids: ids,
+                    content_type: contentType,
                 },
                 success: function (id) {
                     window.location.replace("/templates/" + id + "/edit");

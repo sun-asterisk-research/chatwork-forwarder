@@ -43,7 +43,7 @@
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory required">Payload params</label>
-                <textarea class="form-control" id="payload_params" rows="5" name="params" placeholder="Enter payload params">{{ $payload->params }}</textarea>
+                <textarea class="form-control" id="payload_params" rows="7" name="params" placeholder="Enter payload params">{{ $payload->params }}</textarea>
                 <div class="has-error">
                     <span class="help-block params"></span>
                 </div>
@@ -52,7 +52,7 @@
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory">Conditions</label>
-                <a href="" data-toggle="modal" data-target="#payloadExample"><i class="fa fa-info-circle"></i> example</a>
+                <a href="" data-toggle="modal" data-target="#payloadExample"><i class="fa fa-info-circle"></i> Example</a>
             </div>
             <input type="hidden" name="webhook_id" value="{{ $webhook->id }}">
             <input type="hidden" name="payload_id" value="{{ $payload->id }}">
@@ -97,9 +97,27 @@
         </div>
         <div class="form-group row">
             <div class="col-xs-12">
+                <label class="field-compulsory required">Content type</label>
+                <a href="" data-toggle="modal" data-target="#contentType"><i class="fa fa-question-circle"></i> What is this?</a>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="content_type" id="content_text" value="text" {{ $payload->content_type == 'text' ? 'checked' : ''}}>
+                        Text content
+                    </label>
+                    </div>
+                    <div class="radio">
+                    <label>
+                        <input type="radio" name="content_type" id="content_block" value="blocks" {{ $payload->content_type == 'blocks' ? 'checked' : ''}}>
+                        Block content
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-12">
                 <label class="field-compulsory required" for="webhook_description">Content</label>
-                <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> example</a>
-                <textarea class="form-control" id="payload_content" rows="5" name="content" placeholder="Enter Content message">{{ $payload->content }}</textarea>
+                <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> Example</a>
+                <textarea class="form-control" id="payload_content" rows="7" name="content" placeholder="Enter Content message">{{ $payload->content }}</textarea>
                 <div class="has-error">
                     <span class="help-block content"></span>
                 </div>
@@ -110,6 +128,7 @@
 </div>
 @include('payloads.condition-example')
 @include('payloads.content-example')
+@include('payloads.content-type')
 <!-- END Simple Editor Block -->
 @endsection
 @section('js')

@@ -39,7 +39,7 @@ use App\Enums\TemplateStatus;
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory required" for="name">Params</label>
-                <textarea id="params" name="params" class="form-control field" rows="4" value="{{ $template->params }}" placeholder="Enter params">{{ $template->params }}</textarea>
+                <textarea id="params" name="params" class="form-control field" rows="7" value="{{ $template->params }}" placeholder="Enter params">{{ $template->params }}</textarea>
                 <div class="has-error">
                     <span class="help-block params error-field"></span>
                 </div>
@@ -48,7 +48,7 @@ use App\Enums\TemplateStatus;
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory">Conditions</label>
-                <a href="" data-toggle="modal" data-target="#payloadExample"><i class="fa fa-info-circle"></i> example</a>
+                <a href="" data-toggle="modal" data-target="#payloadExample"><i class="fa fa-info-circle"></i> Example</a>
             </div>
             <div class="col-xs-12">
                 <div class="col-xs-12 mult-condition">
@@ -92,11 +92,31 @@ use App\Enums\TemplateStatus;
                 </div>
             </div>
         </div>
+
+        <div class="form-group row">
+            <div class="col-xs-12">
+                <label class="field-compulsory required">Content type</label>
+                <a href="" data-toggle="modal" data-target="#contentType"><i class="fa fa-question-circle"></i> What is this?</a>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="content_type" id="content_text" value="text" {{ $template->content_type == 'text' ? 'checked' : ''}}>
+                        Text content
+                    </label>
+                    </div>
+                    <div class="radio">
+                    <label>
+                        <input type="radio" name="content_type" id="content_block" value="blocks" {{ $template->content_type == 'blocks' ? 'checked' : ''}}>
+                        Block content
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group row">
             <div class="col-xs-12">
                 <label class="field-compulsory required" for="name">Content</label>
-                <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> example</a>
-                <textarea id="content" name="content" class="form-control field" rows="4" value="{{ $template->content }}" placeholder="Enter content">{{ $template->content }}</textarea>
+                <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> Example</a>
+                <textarea id="content" name="content" class="form-control field" rows="7" value="{{ $template->content }}" placeholder="Enter content">{{ $template->content }}</textarea>
                 <div class="has-error">
                     <span class="help-block content error-field"></span>
                 </div>
@@ -107,6 +127,7 @@ use App\Enums\TemplateStatus;
 </div>
 @include('payloads.condition-example')
 @include('payloads.content-example')
+@include('payloads.content-type')
 <!-- END Simple Editor Block -->
 @endsection
 @section('js')

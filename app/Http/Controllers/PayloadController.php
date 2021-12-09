@@ -49,7 +49,7 @@ class PayloadController extends Controller
         $webhook = Webhook::findOrFail($webhookId);
         $this->authorize('update', $webhook);
 
-        $data = $request->only(['content', 'params']);
+        $data = $request->only(['content_type', 'content', 'params']);
         $data['webhook_id'] = $webhook->id;
 
         DB::beginTransaction();
@@ -113,7 +113,7 @@ class PayloadController extends Controller
     {
         $this->authorize('update', [$payload, $webhook]);
         $conditions = $request->only('conditions');
-        $data = $request->only(['content', 'params']);
+        $data = $request->only(['content_type', 'content', 'params']);
         $ids = (array)$request->ids;
         DB::beginTransaction();
         try {

@@ -14,7 +14,7 @@
                     </div>
                     <div class="">
                         <label class="field-compulsory p-6 fl-left">Param</label>
-                        <textarea class="form-control" rows="10" readonly>{{ $template->params }}</textarea>
+                        <textarea class="form-control" rows="7" readonly>{{ $template->params }}</textarea>
                     </div>
                     <div class="">
                         <label class="field-compulsory p-6 fl-left">Content</label>

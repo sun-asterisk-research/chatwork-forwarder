@@ -73,19 +73,22 @@ class ForwardSlackService
 
         if ($filledPayloads) {
             // mapping data from params request into payload content
-            $messages = [];
+            $output = [];
             foreach ($filledPayloads as $payload) {
-                $message = $this->generateMessage($payload->content, $this->params);
-                if ($message) {
-                    array_push($messages, $message);
+                $data = [
+                    'message' => $this->generateMessage($payload->content, $this->params),
+                    'content_type' => $payload->content_type,
+                ];
+                if ($data['message']) {
+                    array_push($output, $data);
                 }
             }
 
-            if ($messages) {
+            if (count($output) > 0) {
                 $payloadHistory = $this->savePayloadHistory(PayloadHistoryStatus::SUCCESS);
                 // send messages to chatwork
                 $slack = ClientFactory::create($this->webhook->bot->bot_key);
-                $this->sendMessages($messages, $slack, $payloadHistory->id);
+                $this->sendMessages($output, $slack, $payloadHistory->id);
             }
         } else {
             $log = 'This payload does not match any conditions in this webhook.';
@@ -239,58 +242,57 @@ class ForwardSlackService
             return $message;
         }
 
-        return '';
+        return null;
     }
 
-    public function sendMessages($messages, Client $slack, $payloadHistoryId)
+    public function sendMessages($output, Client $slack, $payloadHistoryId)
     {
         $roomId = $this->webhook->room_id;
 
-        foreach ($messages as $key => $message) {
+        foreach ($output as $data) {
             try {
                 $slack->chatPostMessage([
                     'channel' => $roomId,
-                    'blocks' => $message,
+                    $data['content_type'] => $data['message'],
                     'link_names' => true,
                 ]);
-                array_splice($messages, $key, 1);
-                // save success message_history
-                $this->saveMessageHistory($message, MessageHistoryStatus::SUCCESS, $payloadHistoryId);
+                $this->saveMessageHistory($data['message'], MessageHistoryStatus::SUCCESS, $payloadHistoryId);
             } catch (SlackErrorResponse $error) {
                 switch ($error->getErrorCode()) {
-                    case SlackStatus::INVALID_BLOCKS:
-                        $slack->chatPostMessage([
-                            'channel' => $roomId,
-                            'text' => $message,
-                            'link_names' => true,
-                        ]);
-                        $this->saveMessageHistory($message, MessageHistoryStatus::SUCCESS, $payloadHistoryId);
-                        break ;
                     case SlackStatus::NO_PERMISSION:
-                        // permission denined
                         $this->saveMessageHistory(
-                            $message,
+                            $data['message'],
                             MessageHistoryStatus::FAILED,
                             $payloadHistoryId,
                             'Permission'
                         );
-                        break 2;
+                        break;
                     case SlackStatus::RATE_LIMITED:
-                        // limit request
-                        // add to queue and excute this job after 5 minutes
-                        SendMessageToSlack::dispatch($slack, $roomId, $messages, $payloadHistoryId)
-                            ->onQueue('high')
-                            ->delay(now()->addSeconds(10));
-                        break 2;
+                        SendMessageToSlack::dispatch(
+                            $this->webhook->bot,
+                            $roomId,
+                            $data,
+                            $payloadHistoryId
+                        )
+                        ->onQueue('high')
+                        ->delay(now()->addSeconds(10));
+                        break;
                     case SlackStatus::INVALID_AUTH:
-                        // authorized
                         $this->saveMessageHistory(
-                            $message,
+                            $data['message'],
                             MessageHistoryStatus::FAILED,
                             $payloadHistoryId,
                             'Unauthorized'
                         );
-                        break 2;
+                        break;
+                    default:
+                        $this->saveMessageHistory(
+                            $data['message'],
+                            MessageHistoryStatus::FAILED,
+                            $payloadHistoryId,
+                            $error->getMessage()
+                        );
+                        break;
                 }
             }
         }

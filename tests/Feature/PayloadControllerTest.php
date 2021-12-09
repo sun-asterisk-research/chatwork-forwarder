@@ -178,6 +178,7 @@ class PayloadControllerTest extends TestCase
 
         $response = $this->post(route('webhooks.payloads.store', $webhook), [
             'content' => 'Hi my name is {{name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
             'fields' => ['name', 'age'],
             'operators' => ['==', '>='],
@@ -202,6 +203,7 @@ class PayloadControllerTest extends TestCase
 
         $response = $this->post(route('webhooks.payloads.store', $webhook), [
             'content' => 'Hi my name is {{name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
             'fields' => ['name', 'age'],
             'operators' => ['==', '>='],
@@ -323,6 +325,7 @@ class PayloadControllerTest extends TestCase
 
         $response = $this->post(route('webhooks.payloads.store', -1), [
             'content' => 'sample content',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
             'fields' => ['name', 'age'],
             'operators' => ['==', '>='],
@@ -393,6 +396,7 @@ class PayloadControllerTest extends TestCase
         $this->actingAs($user);
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
             'content' => 'Hi my name is {{name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
         ]);
         $payload = Payload::find($payload->id);
@@ -418,6 +422,7 @@ class PayloadControllerTest extends TestCase
 
         $response = $this->put(route('webhooks.payloads.update', ['webhook' => $webhook, 'payload' => $payload]), [
             'content' => 'Hi my name is {{name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
         ]);
 
@@ -469,6 +474,7 @@ class PayloadControllerTest extends TestCase
         ]);
         $params = [
             'content' => 'New content',
+            'content_type' => 'text',
             'ids' => [$condition->id],
             'params' => '{"name": "rasmus", "age": "30"}',
             'fields' => ['age'],

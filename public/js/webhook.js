@@ -35,38 +35,38 @@ $(document).ready(function () {
             + " \n}"
         );
     }
-    function load_room_name(type) {
-        var room_name = document.getElementById("room_name");
-        var bot_id = $('#cw_bots').val();
-        $('#cw_room_id').val('');
+    // function load_room_name(type) {
+    //     var room_name = document.getElementById("room_name");
+    //     var bot_id = $('#cw_bots').val();
+    //     // $('#cw_room_id').val('');
 
-        if (bot_id) {
-            $.ajax({
-                type: 'GET',
-                url: '/rooms?type=' + type,
-                data: {
-                    '_token': $("input[name='_token']").val(),
-                    'bot_id': bot_id
-                },
-                success: function (data) {
-                    $('#cw_rooms').find('option').remove().end();
-                    $('#cw_rooms').append("<option></option>");
-                    $.each(data, function (index, value) {
-                        if (room_name != null && value['name'] == escapeHtml(room_name.value)) {
-                            $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "' selected='selected'>" + value['name'] + "</option>");
-                            $('#cw_rooms').select2('data', { id: value['name'], text: room_name.value });
-                        } else {
-                            $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "'>" + value['name'] + "</option>");
-                        }
-                    });
-                },
-                error: function () {
-                    $('#cw_rooms').val(null).trigger('change');
-                    $('#cw_room_id').val('');
-                }
-            });
-        }
-    }
+    //     if (bot_id) {
+    //         $.ajax({
+    //             type: 'GET',
+    //             url: '/rooms?type=' + type,
+    //             data: {
+    //                 '_token': $("input[name='_token']").val(),
+    //                 'bot_id': bot_id
+    //             },
+    //             success: function (data) {
+    //                 $('#cw_rooms').find('option').remove().end();
+    //                 $('#cw_rooms').append("<option></option>");
+    //                 $.each(data, function (index, value) {
+    //                     if (room_name != null && value['name'] == escapeHtml(room_name.value)) {
+    //                         $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "' selected='selected'>" + value['name'] + "</option>");
+    //                         $('#cw_rooms').select2('data', { id: value['name'], text: room_name.value });
+    //                     } else {
+    //                         $('#cw_rooms').append("<option cw-room-id='" + value['room_id'] + "' value='" + value['name'] + "'>" + value['name'] + "</option>");
+    //                     }
+    //                 });
+    //             },
+    //             error: function () {
+    //                 $('#cw_rooms').val(null).trigger('change');
+    //                 $('#cw_room_id').val('');
+    //             }
+    //         });
+    //     }
+    // }
 
     function escapeHtml(text) {
         var map = {
@@ -81,13 +81,13 @@ $(document).ready(function () {
         return text.replace(/[&<>"']/g, function (m) { return map[m]; });
     }
 
-    function load_room_id() {
-        var room_id = document.getElementById("room_id");
+    // function load_room_id() {
+    //     var room_id = document.getElementById("room_id");
 
-        if (room_id != null) {
-          $('#cw_room_id').val(room_id.value);
-        }
-    }
+    //     if (room_id != null) {
+    //       $('#cw_room_id').val(room_id.value);
+    //     }
+    // }
 
     // $('#cw_bots').change(function () {
     //     $('#cw_rooms').select2('data', {id: '', text: 'Choose one...'});
@@ -99,15 +99,15 @@ $(document).ready(function () {
     //     }
     // });
 
-    $('#type_room').change(function () {
-        var type_room = $('#type_room').val();
-        load_room_name(type_room);
-    });
+    // $('#type_room').change(function () {
+    //     var type_room = $('#type_room').val();
+    //     // load_room_name(type_room);
+    // });
 
-    $('#cw_rooms').change(function () {
-        room_id = $(this).find(':selected').attr('cw-room-id');
-        $('#cw_room_id').val(room_id);
-    });
+    // $('#cw_rooms').change(function () {
+    //     room_id = $(this).find(':selected').attr('cw-room-id');
+    //     $('#cw_room_id').val(room_id);
+    // });
 
     $('body').on('click', '.btn-enable-wh', function() {
         var webhook_id = $(this).data('id');

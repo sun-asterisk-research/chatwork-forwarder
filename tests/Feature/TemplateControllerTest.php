@@ -66,6 +66,7 @@ class TemplateControllerTest extends TestCase
         $params = [
             'name' => 'Test',
             'content' => 'Hi my name is {{name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
         ];
 
@@ -86,6 +87,7 @@ class TemplateControllerTest extends TestCase
         $params = [
             'name' => 'Test',
             'content' => 'Hi my name is {{name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
         ];
         $this->actingAs($user);
@@ -307,6 +309,7 @@ class TemplateControllerTest extends TestCase
             'id' => $template->id,
             'name' => $template->name,
             'content' => 'Hi my name is {{$params.name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
         ]);
         $result = Template::find($template->id);
@@ -336,6 +339,7 @@ class TemplateControllerTest extends TestCase
             'id' => $template->id,
             'name' => 'Test',
             'content' => 'Hi my name is {{$params.name}}',
+            'content_type' => 'text',
             'params' => '{"name": "rasmus", "age": "30"}',
         ]);
 

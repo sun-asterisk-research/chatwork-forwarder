@@ -71,7 +71,7 @@
 }
 
 .detail-screen-modal {
-  top: calc(20% - 100px);
+  top: 50px;
   left: calc(20% - 300px);
 }
 

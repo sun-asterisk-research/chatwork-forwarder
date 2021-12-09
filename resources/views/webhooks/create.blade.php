@@ -56,7 +56,7 @@
         </div>
 
         <div class="form-group">
-            <div class="col-xs-4">
+            <div class="col-xs-12">
                 <div class="form-check">
                     @if (old('bot_id'))
                         <input class="form-check-input" type="checkbox" id="use_default" name="use_default">
@@ -64,15 +64,17 @@
                         <input class="form-check-input" type="checkbox" id="use_default" checked name="use_default">
                     @endif
                     <label class="form-check-label" for="use_default">
-                        Use Slack Forwarder Bot
+                        Use Slack Forwarder's Bot
                     </label>
+                    <p class="notice">* You will need to add Slack Fowarder App to your channel</p>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-xs-4">
-                <label class="field-compulsory required" for="webhook_bot_id">Slack bot</label>
+                <label class="field-compulsory required" for="webhook_bot_id">Select your Slack bot</label>
+                <a href="" data-toggle="modal" data-target="#permission" style="margin-left: 1rem;"><i class="fa fa-info-circle"></i> Notice</a>
                 @if (!old('bot_id'))
                     <select id="cw_bots" name="bot_id" class="select-select2" disabled style="width: 100%;" data-placeholder="Choose one..">
                         <option></option>
@@ -105,6 +107,7 @@
             </div>
             <div class="col-xs-4">
                 <label class="field-compulsory required" for="cw_room_id">Channel ID</label>
+                <a href="" data-toggle="modal" data-target="#channelId" style="margin-left: 1rem;"><i class="fa fa-info-circle"></i> Notice</a>
                 <input type="text" id="cw_room_id" name="room_id" class="form-control" value="{{ old('room_id') }}" placeholder="Channel/ DMs ID">
                 @error('room_id')
                     <div class="has-error">
@@ -115,6 +118,8 @@
         </div>
     {{ Form::close() }}
     @include('modals.cancel_modal')
+    @include('webhooks.notice')
+    @include('webhooks.channel_id')
     <!-- END Simple Editor Content -->
 </div>
 <!-- END Simple Editor Block -->
