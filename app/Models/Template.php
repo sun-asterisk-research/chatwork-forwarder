@@ -9,9 +9,14 @@ class Template extends Model
 {
     use SoftDeletes;
 
+    const TYPE_TEXT = 'text';
+    const TYPE_BLOCKS = 'blocks';
+    const TYPE = ['text', 'blocks'];
+
     protected $fillable = [
         'user_id',
         'name',
+        'content_type',
         'content',
         'params',
         'status',

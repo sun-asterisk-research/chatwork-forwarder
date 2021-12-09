@@ -4,8 +4,6 @@ namespace Tests\Unit\Models;
 
 use Tests\TestCase;
 use App\Models\Payload;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\morphMany;
 
@@ -20,6 +18,7 @@ class PayloadTest extends TestCase
     {
         $fillable = [
             'webhook_id',
+            'content_type',
             'content',
             'params',
         ];

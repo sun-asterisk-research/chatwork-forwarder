@@ -1,5 +1,12 @@
 <?php use App\Enums\TemplateStatus; ?>
-
+<style>
+    label {
+        margin-bottom: 0;
+    }
+    .mrb {
+        margin-bottom: 8px;
+    }
+</style>
 <div class="modal fade detail-screen-modal" id="detail-{{ $template->id }}" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,20 +15,20 @@
             </div>
             <div class="modal-body">
                 <div class="form-group detail-template-modal">
-                    <div class="">
+                    <div class="mrb">
                         <label class="field-compulsory p-6 fl-left">Name</label>
                         <input type="text" class="form-control" value="{{ $template->name }}" readonly>
                     </div>
-                    <div class="">
+                    <div class="mrb">
                         <label class="field-compulsory p-6 fl-left">Param</label>
-                        <textarea class="form-control" rows="10" readonly>{{ $template->params }}</textarea>
+                        <textarea class="form-control" rows="7" readonly>{{ $template->params }}</textarea>
                     </div>
                     @if(count($template->conditions) > 0)
                         <div class="row pdl-15">
                             <label class="field-compulsory p-6 fl-left">Condition</label>
                         </div>
                         @for($i = 0; $i < count($template->conditions); $i++)
-                        <div class="row">
+                        <div class="row mrb">
                             <div class="col-md-5">
                                 <input class="form-control field-condition" id="field{{ $i }}" value="{{ $template->conditions[$i]->field }}"
                                     data-id="{{ $template->conditions[$i]->id }}" name="field[]" onchange="setChangeStatus(true)">
@@ -39,8 +46,11 @@
                         </div>
                         @endfor
                     @endif
-
-                    <div class="">
+                    <div class="mrb">
+                        <label class="field-compulsory p-6 fl-left">Content type</label>
+                        <input type="text" class="form-control" value="{{ $template->content_type }}" readonly>
+                    </div>
+                    <div class="mrb">
                         <label class="field-compulsory p-6 fl-left">Content</label>
                         <textarea class="form-control" rows="3" readonly>{{ $template->content }}</textarea>
                     </div>

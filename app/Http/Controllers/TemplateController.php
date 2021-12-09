@@ -53,7 +53,7 @@ class TemplateController extends Controller
      */
     public function store(TemplateCreateRequest $request)
     {
-        $data = $request->only(['name', 'content', 'params']);
+        $data = $request->only(['name', 'content_type', 'content', 'params']);
         $data['user_id'] = Auth::id();
 
         DB::beginTransaction();
@@ -116,6 +116,7 @@ class TemplateController extends Controller
         $this->authorize('update', $template);
         $data = $request->only([
             'name',
+            'content_type',
             'content',
             'params',
         ]);

@@ -91,7 +91,7 @@
             <h2><strong>Chatbot</strong></h2>
         </div>
         <div class="form-group row">
-            <div class="col-xs-4">
+            <div class="col-xs-12">
                 <div class="form-check">
                     <input class="form-check-input"
                         type="checkbox"
@@ -99,15 +99,17 @@
                         {{ $webhook->bot_id != config('slack.slack_bot_id') ? '' : 'checked' }}
                         name="use_default">
                     <label class="form-check-label" for="use_default">
-                        Use Slack Forwarder Bot
+                        Use Slack Forwarder's Bot
                     </label>
+                    <p class="notice">* You will need to add Slack Fowarder App to your channel</p>
                 </div>
             </div>
         </div>
         <div class="form-group row">
             <div class="col-xs-4">
                 <input type="hidden" name="id" value="{{ $webhook->id }}">
-                <label class="field-compulsory required">Slack bot</label>
+                <label class="field-compulsory required">Select your Slack bot</label>
+                <a href="" data-toggle="modal" data-target="#permission" style="margin-left: 1rem;"><i class="fa fa-info-circle"></i> Notice</a>
                 @if ($webhook->bot_id != config('slack.slack_bot_id'))
                 <select id="cw_bots" name="bot_id" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
                     <option></option>
@@ -140,8 +142,8 @@
             </div>
             <div class="col-xs-4">
                 <label class="field-compulsory required" for="cw_room_id">Channel ID</label>
-                <input type="hidden" id="room_id" value="{{ $webhook->room_id }}">
-                <input type="text" id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID">
+                <a href="" data-toggle="modal" data-target="#channelId" style="margin-left: 1rem;"><i class="fa fa-info-circle"></i> Notice</a>
+                <input type="text" id="cw_room_id" name="room_id" class="form-control" placeholder="Room ID" value="{{ $webhook->room_id }}">
                 @error('room_id')
                 <div class="has-error">
                     <span class="help-block">{{ $message }}</span>
@@ -155,9 +157,11 @@
     <br/>
     <div class="block">
         <!-- Simple Editor Title -->
-        <div class="block-title">
+        <div class="block-title flex justify-between">
             <h2><strong>Payloads</strong></h2>
-            <a href="{{ route('webhooks.payloads.create', $webhook->id) }}" class="btn-pull-right btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
+            <a href="{{ route('webhooks.payloads.create', $webhook->id) }}" class="btn btn-md btn-primary" style="margin: 5px 15px 5px 0">
+                <i class="fa fa-plus-circle"></i> Create
+            </a>
         </div>
 
         @if (count($payloads) <= 0)
@@ -224,7 +228,7 @@
     </div>
     <br>
     <div class="block">
-        <div class="block-title">
+        <div class="block-title flex justify-between">
             <h2><strong>Mappings</strong></h2>
             <span class="upload-file">
             <a href="{{ route('webhooks.mappings.create', $webhook) }}" class="btn btn-md btn-primary"><i class="fa fa-plus-circle"></i> Create</a>
@@ -312,6 +316,8 @@
 </div>
 
 @include('webhooks.intergrate-form-manual')
+@include('webhooks.notice')
+@include('webhooks.channel_id')
 @endsection
 
 
@@ -323,7 +329,11 @@
 
 <style type="text/css">
     .upload-file {
-        margin-left: 74% !important;
-        margin-bottom: 5px !important;
+        display: flex;
+        align-items: center;
+        margin: 5px 15px 5px 0;
+    }
+    .upload-file a, .upload-file button {
+        margin-left: 5px;
     }
 </style>

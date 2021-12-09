@@ -200,12 +200,14 @@ $(document).ready(function () {
         e.preventDefault();
         if (checkData()) {
             var _token = $('meta[name="csrf-token"]').attr('content');
+            var contentType = $("input[name='content_type']:checked").val();
             var content = $("textarea[name='content']").val();
             var params = $("textarea[name='params']").val();
             var webhook_id = $("input[name='webhook_id']").val();
             var fields = getValues($("input[name^='field[]']"));
             var operators = getValues($("select[name^='operator[]']"));
             var values = getValues($("input[name^='value[]']"));
+
 
             $.ajax({
                 url: "/webhooks/" + webhook_id + "/payloads",
@@ -217,6 +219,7 @@ $(document).ready(function () {
                     fields: fields,
                     operators: operators,
                     values: values,
+                    content_type: contentType,
                 },
                 success: function (id) {
                     window.location.replace("/webhooks/" + webhook_id + "/payloads/" + id + "/edit");
@@ -234,6 +237,7 @@ $(document).ready(function () {
         e.preventDefault();
         if (checkData()) {
             var _token = $('meta[name="csrf-token"]').attr("content");
+            var contentType = $("input[name='content_type']:checked").val();
             var content = $("textarea[name='content']").val();
             var params = $("textarea[name='params']").val();
             var webhook_id = $("input[name='webhook_id']").val();
@@ -262,6 +266,7 @@ $(document).ready(function () {
                     fields: fields,
                     conditions: conditions,
                     ids: ids,
+                    content_type: contentType,
                 },
                 success: function (id) {
                     window.location.replace("/webhooks/" + webhook_id + "/payloads/" + id + "/edit");
