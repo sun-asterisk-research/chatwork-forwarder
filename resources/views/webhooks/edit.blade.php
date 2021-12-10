@@ -33,6 +33,7 @@
                 <input type="text" id="webhookUrl" class="form-control" value="{{ $url }}" readonly>
                 <a class="input-group-addon" id="copyUrl" ><i class="fa fa-clipboard"></i></a>
             </div>
+            <span class="notice">* Please keep this webhook url secure</span>
         </div>
         <div class="col-xs-6">
             <label class="field-compulsory">Change Owner Webhook</label>
