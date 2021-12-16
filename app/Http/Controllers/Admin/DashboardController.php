@@ -61,6 +61,7 @@ class DashboardController extends Controller
             'messageFailedChart' => $messageFailedChart,
             'messageSuccessChart' => $messageSuccessChart,
         ];
+
         return view(
             'admins.dashboard',
             [

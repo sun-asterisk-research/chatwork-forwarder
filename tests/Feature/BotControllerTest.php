@@ -96,7 +96,7 @@ class BotControllerTest extends TestCase
         $this->actingAs($user);
         $response = $this->post(route('bots.store'), $params);
 
-        $response->assertRedirect('bots/' . Bot::first()->id . '/edit');
+        $response->assertRedirect('bots');
         $this->assertEquals(1, Bot::all()->count());
     }
 

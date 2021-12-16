@@ -21,6 +21,7 @@ class TemplateTest extends TestCase
         $fillable = [
             'user_id',
             'name',
+            'content_type',
             'content',
             'params',
             'status',

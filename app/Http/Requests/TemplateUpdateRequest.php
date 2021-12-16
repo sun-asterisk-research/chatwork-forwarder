@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Payload;
 use App\Rules\ContentMatchPayloadParams;
 use Illuminate\Foundation\Http\FormRequest;
 use Auth;
@@ -38,6 +39,7 @@ class TemplateUpdateRequest extends FormRequest
             ],
             'content' => ['required', new ContentMatchPayloadParams($this->params)],
             'params' => 'required',
+            'content_type' => 'required|in:'.implode(',', Payload::TYPE),
         ];
     }
 
@@ -49,6 +51,8 @@ class TemplateUpdateRequest extends FormRequest
             'name.min' => 'Name must be at least 2 characters.',
             'name.max' => 'Name is too long (maximum is 50 characters)',
             'name.unique' => 'Name has already been used by another template',
+            'content_type.required' => 'Please select content type',
+            'content_type.in' => 'Invalid content type',
             'content.required' => 'Please enter content',
             'params.required' => 'Please enter template params',
             'status.required' => 'Please enter status',

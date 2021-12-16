@@ -42,6 +42,10 @@ body {
     padding: 4px 48px !important;
     cursor: pointer;
     width: auto !important;
+    text-decoration: none !important;
+}
+.top-header__btn:hover, .top-header__btn:visited {
+    color: #5F8BFF;
 }
 .feature {
     line-height: 0;

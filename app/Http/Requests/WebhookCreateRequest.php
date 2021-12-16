@@ -25,8 +25,9 @@ class WebhookCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:200|unique:webhooks,name',
-            'description' => 'max:1000|',
-            'bot_id' => 'required',
+            'bot_id' => 'required_without:use_default',
+            'use_default' => 'required_if:bot_id,null|in:on',
+            'description' => 'max:1000',
             'room_name' => 'required',
             'room_id' => 'required',
         ];
@@ -39,8 +40,10 @@ class WebhookCreateRequest extends FormRequest
             'name.min' => 'Name is too short (minimum is 3 characters)',
             'name.max' => 'Name is too long (maximum is 200 characters)',
             'name.unique' => 'This webhook name has already been used by another webhook',
+            'use_default.required_if' => 'Default option is required',
+            'use_default.in' => 'Invalid default option',
             'description.max' => 'Description is too long (maximum is 1000 characters)',
-            'bot_id.required' => 'Please choose chatbot',
+            'bot_id.required_without' => 'Please choose chatbot',
             'room_name.required' => 'Please choose room',
             'room_id.required' => 'Please enter room id',
         ];

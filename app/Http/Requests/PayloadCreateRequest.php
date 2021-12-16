@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Payload;
 use App\Rules\ConditionFieldMatchPayloadParams;
 use App\Rules\ContentMatchPayloadParams;
 use Illuminate\Foundation\Http\FormRequest;
@@ -29,6 +30,7 @@ class PayloadCreateRequest extends FormRequest
             'content' => ['required', new ContentMatchPayloadParams($this->params)],
             'params' => 'required',
             'fields' => new ConditionFieldMatchPayloadParams($this->params),
+            'content_type' => 'required|in:'.implode(',', Payload::TYPE),
         ];
     }
 
@@ -37,6 +39,8 @@ class PayloadCreateRequest extends FormRequest
         return [
             'content.required' => 'Please enter content',
             'params.required' => 'Please enter payload params to validate the conditions',
+            'content_type.required' => 'Please select content type',
+            'content_type.in' => 'Invalid content type',
         ];
     }
 }

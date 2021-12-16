@@ -12,6 +12,7 @@ class Bot extends Model
     public const TYPE_CHATWORK = 'chatwork';
     public const TYPE_SUN_PROXY = 'sun_proxy';
     public const TYPE_SLACK = 'slack';
+    public const USE_DEFAULT_SLACK_BOT = 'on';
 
 
     protected $fillable = [

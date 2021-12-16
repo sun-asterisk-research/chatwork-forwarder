@@ -11,6 +11,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use JoliCode\Slack\Api\Client;
 use App\Enums\MessageHistoryStatus;
 use App\Enums\SlackStatus;
+use App\Models\Bot;
+use JoliCode\Slack\ClientFactory;
 use JoliCode\Slack\Exception\SlackErrorResponse;
 
 class SendMessageToSlack implements ShouldQueue
@@ -18,9 +20,9 @@ class SendMessageToSlack implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
-    protected $slack;
+    protected $bot;
     protected $roomId;
-    protected $messages;
+    protected $data;
     protected $payloadHistoryId;
 
     /**
@@ -28,11 +30,11 @@ class SendMessageToSlack implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Client $slack, $roomId, $messages, $payloadHistoryId)
+    public function __construct(Bot $bot, $roomId, $data, $payloadHistoryId)
     {
-        $this->slack = $slack;
+        $this->bot = $bot;
         $this->roomId = $roomId;
-        $this->messages = $messages;
+        $this->data = $data;
         $this->payloadHistoryId = $payloadHistoryId;
     }
     /**
@@ -42,32 +44,22 @@ class SendMessageToSlack implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->messages as $message) {
-            try {
-                // send message to chatwork
-                $this->slack->chatPostMessage([
-                    'channel' => $this->roomId,
-                    'blocks' => $message,
-                ]);
-                // save success message_history
-                $this->saveMessageHistory($this->payloadHistoryId, $message, MessageHistoryStatus::SUCCESS);
-            } catch (SlackErrorResponse $error) {
-                if ($error->getErrorCode() == SlackStatus::INVALID_BLOCKS) {
-                    $this->slack->chatPostMessage([
-                        'channel' => $this->roomId,
-                        'text' => $message,
-                    ]);
-
-                    $this->saveMessageHistory($this->payloadHistoryId, $message, MessageHistoryStatus::SUCCESS);
-                } else {
-                    $this->saveMessageHistory(
-                        $this->payloadHistoryId,
-                        $message,
-                        MessageHistoryStatus::FAILED,
-                        $error->getResponseMetadata()
-                    );
-                }
-            }
+        $slack = ClientFactory::create($this->bot->bot_key);
+        try {
+            // send message to chatwork
+            $slack->chatPostMessage([
+                'channel' => $this->roomId,
+                $this->data['content_type'] => $this->data['message'],
+            ]);
+            // save success message_history
+            $this->saveMessageHistory($this->payloadHistoryId, $this->data['message'], MessageHistoryStatus::SUCCESS);
+        } catch (SlackErrorResponse $error) {
+            $this->saveMessageHistory(
+                $this->payloadHistoryId,
+                $this->data['message'],
+                MessageHistoryStatus::FAILED,
+                $error->getMessage()
+            );
         }
     }
 
