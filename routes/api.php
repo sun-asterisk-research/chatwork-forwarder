@@ -14,5 +14,6 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'v1'], function() {
+    Route::post('webhooks/{token}/get-config', 'Webhooks\GetConfig');
     Route::post('webhooks/{token}', 'ForwardChatworkController@forwardMessage');
 });

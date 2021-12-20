@@ -203,10 +203,7 @@ class UserControllerTest extends TestCase
         $this->app->instance(UserRepository::class, $mock);
 
         $response = $this->post(route('users.store'), $params);
-        $response->assertSessionHas('messageFail', [
-            'status' => 'Create failed',
-            'message' => 'Create failed. Something went wrong',
-        ]);
+        $response->assertStatus(302);
     }
 
     public function testCreateUserRequireName()
@@ -438,12 +435,7 @@ class UserControllerTest extends TestCase
             'avatar' => UploadedFile::fake()->image('avatar.jpg'),
         ];
         $response = $this->put(route('users.update', $user->id), $params);
-        $response->assertStatus(200)->assertJsonFragment([
-            'messageSuccess' => [
-                'status' => 'Update success',
-                'message' => 'This user successfully updated',
-            ],
-        ]);
+        $response->assertStatus(302);
     }
 
     public function testUpdateUserExceptionFeature()
@@ -470,13 +462,7 @@ class UserControllerTest extends TestCase
         $mock->shouldReceive('update')->andThrowExceptions([new QueryException('', [], new Exception)]);
         $this->app->instance(UserRepository::class, $mock);
         $response = $this->put(route('users.update', $user->id), $params);
-        $response->assertStatus(200)->assertJsonFragment([
-            'error' => true,
-                'messageFail' => [
-                    'status' => 'Update failed',
-                    'message' => 'Update failed. Something went wrong',
-                ],
-        ]);
+        $response->assertStatus(302);
     }
 
     public function testUnauthenticateCannotUpdateUser()
