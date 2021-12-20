@@ -41,6 +41,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::resource('bots', 'BotController')->except('show');
     Route::put('webhooks/change_status', 'WebhookController@changeStatus');
+    Route::post('/webhooks/{webhook}/migrate-data', 'Webhooks\MigrateData')->name('webhook.start-migrate');
+    Route::get('/webhooks/{webhook}/migrate-data', 'Webhooks\MigrateDataForm')->name('webhook.migrate');
     Route::resource('webhooks', 'WebhookController');
     Route::resource('history', 'PayloadHistoryController')->only(['show', 'index', 'destroy']);
     Route::post('history/recheck', 'PayloadHistoryController@recheck')->name('history.recheck');
