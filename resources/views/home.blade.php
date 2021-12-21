@@ -25,9 +25,9 @@
                 <button data-toggle="modal" href='#modal-login' class="top-header__btn">Login</button>
             @else
             @admin
-                <a href="admin/dashboard" class="top-header__btn">Go to app</a>
+                <a href="/admin/dashboard" class="top-header__btn">Go to app</a>
             @else
-                <a href="admin/dashboard" class="top-header__btn">Go to app</a>
+                <a href="/dashboard" class="top-header__btn">Go to app</a>
             @endadmin
             @endif
         </div>
