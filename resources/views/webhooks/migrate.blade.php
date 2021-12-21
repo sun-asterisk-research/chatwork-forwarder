@@ -23,7 +23,7 @@
     {{ Form::open(['url' => route('webhook.start-migrate', ['webhook' => $webhook->id]), 'method' => 'post', 'class' => 'form-horizontal form-bordered webhook-form']) }}
         <div class="form-group row">
             <div class="col-xs-12">
-                <p class="notice">* This feature will migrate your webhook config from Chatwork Forwarder to Slack Forwarder</p>
+                <p class="notice">* This feature will migrate your webhook config from Chatwork Forwarder to Slack Forwarder. However you will need to manually re-format your message content.</p>
             </div>
             <div class="col-xs-12 mt-15">
                 <label class="field-compulsory required" for="url">Chatwork Forwarder Webhook</label>
