@@ -47,6 +47,14 @@
             </div>
         </div>
         <div class="mt-15 col-xs-12">
+            <label class="field-compulsory">Migrate data from Chatwork Forwarder</label>
+            <div>
+                <a href="{{ route('webhook.migrate', $webhook->id) }}" class="btn btn-md btn-primary" style="margin: 5px 15px 5px 0">
+                    <i class="fa fa-refresh" aria-hidden="true"></i> Migrate
+                </a>
+            </div>
+        </div>
+        <div class="mt-15 col-xs-12">
             <label class="field-compulsory">Google form script :
                 <span class="fill" onclick="appendCode('{{$url}}', true)" data-toggle="tooltip" data-placement="top" title="Generate google script include form data">
                     Include form data
