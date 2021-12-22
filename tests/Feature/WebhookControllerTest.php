@@ -336,7 +336,7 @@ class WebhookControllerTest extends TestCase
 
         $this->actingAs($user);
         $response = $this->delete(route('webhooks.destroy', ['webhook' => $webhook]));
-        $response->assertStatus(403);
+        $response->assertStatus(302);
     }
 
     /**
