@@ -32,12 +32,12 @@
                 <div>
                     <h4>Step 3: Set up file Code.gs and add Triggers</h4>
                     <ol>
-                        <li>From within your response spreadsheet, select the menu item <strong>Tools</strong> > <strong>Script editor</strong>. <strong>Google Apps Script Dashboard</strong> will open.</li>
-                        <li>Copy the script function and paste it into file Code.gs</li>
-                        <li>Click Run <i class="fa fa-play" aria-hidden="true"></i> and Authorization this function.</li>
-                        <li>Select the menu item <strong>Edit</strong> > <strong>Current project's Triggers</strong>. <strong>Google App Script</strong> will open.</li>
-                        <li>Click <strong>create a new trigger</strong> and choose <strong>Sellect event type</strong> is "On form submit".</li>
-                        <li>Click <strong>Save</strong>.</li>
+                        <li>From within your response spreadsheet, select the menu item <strong>Extensions</strong> > <strong>Apps Scripts</strong>. <strong>Google Apps Script Dashboard</strong> will open.</li>
+                        <li>Copy the script function and paste it into the last line of file Code.gs (or Mã.gs if you are using Vietnamese)</li>
+                        <li>Select the menu item <strong>Triggers</strong> > <strong>Current project's Triggers</strong>. <strong>Google App Script</strong> will open.</li>
+                        <li>Click <strong>+ Add Trigger</strong>.
+                        <li>Set following option: <strong>Choose which function to run</strong> is "onFormSubmitWithSlack" and <strong> Sellect event type</strong> is "On form submit".</li>
+                        <li>Click <strong>Save</strong> and authorize the trigger.</li>
                     </ol>
                 </div>
             </div>
