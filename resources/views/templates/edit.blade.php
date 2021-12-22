@@ -116,7 +116,8 @@ use App\Enums\TemplateStatus;
             <div class="col-xs-12">
                 <label class="field-compulsory required" for="name">Content</label>
                 <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> Example</a>
-                <textarea id="content" name="content" class="form-control field" rows="7" value="{{ $template->content }}" placeholder="Enter content">{{ $template->content }}</textarea>
+                <p class="notice">* You can use syntax <strong><@memberId></strong> to mention people on Slack</p>
+                <textarea id="content" name="content" class="form-control field mt-15" rows="7" value="{{ $template->content }}" placeholder="Enter content">{{ $template->content }}</textarea>
                 <div class="has-error">
                     <span class="help-block content error-field"></span>
                 </div>
