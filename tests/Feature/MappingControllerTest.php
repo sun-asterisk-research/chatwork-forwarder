@@ -165,7 +165,7 @@ class MappingControllerTest extends TestCase
         $this->actingAs($admin);
         $response = $this->get(route('webhooks.mappings.create', $webhook));
 
-        $response->assertStatus(403);
+        $response->assertStatus(200);
     }
 
     /**
