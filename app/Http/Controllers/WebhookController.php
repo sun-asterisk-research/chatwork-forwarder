@@ -114,7 +114,7 @@ class WebhookController extends Controller
         $this->authorize('update', $webhook);
         $data = $request->only(['name', 'status', 'description', 'bot_id', 'room_name', 'room_id']);
         if ($request->input('use_default') === Bot::USE_DEFAULT_SLACK_BOT) {
-            $data['bot_id'] = config('sla.ck.slack_bot_id');
+            $data['bot_id'] = config('s.lack.slack_bot_id');
         }
         try {
             if ($request->email) {

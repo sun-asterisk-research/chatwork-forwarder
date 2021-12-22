@@ -3,7 +3,7 @@ function appendCode(url, status) {
     if (status) {
         payload = "\n \t \t'payload': JSON.stringify(event.namedValues),";
     }
-    $("#webhookScript").val("function onFormSubmit (event) \n {"
+    $("#webhookScript").val("function onFormSubmitWithSlack (event) \n {"
         + " \n \t let options = {"
         + " \n \t \t'method': 'post',"
         + " \n \t \t'contentType' : 'application/json',"
@@ -24,13 +24,15 @@ $(document).ready(function () {
     function load_script()
     {
         var url = $('#webhookUrl').val();
-        $("#webhookScript").val("function onFormSubmit (event) \n {"
+        payload = "\n \t \t'payload': JSON.stringify(event.namedValues),";
+        $("#webhookScript").val("function onFormSubmitWithSlack (event) \n {"
             + " \n \t let options = {"
             + " \n \t \t'method': 'post',"
             + " \n \t \t'contentType' : 'application/json',"
+            + payload
             + " \n \t \t'muteHttpExceptions': false"
             + " \n \t}"
-            + " \n \tlet url = '" + url +"';"
+            + " \n \tlet url = '" + url + "';"
             + " \n \tlet response = UrlFetchApp.fetch(url, options);"
             + " \n}"
         );

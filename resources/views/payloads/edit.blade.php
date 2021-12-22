@@ -107,7 +107,8 @@
         <div class="col-xs-12">
             <label class="field-compulsory required" for="webhook_description">Content</label>
             <a href="" data-toggle="modal" data-target="#contentExample"><i class="fa fa-info-circle"></i> Example</a>
-            <textarea class="form-control" rows="7" name="content" placeholder="Enter Content message">{{ $payload->content }}</textarea>
+            <p class="notice">* You can use syntax <strong><@memberId></strong> to mention people on Slack</p>
+            <textarea class="form-control mt-15" rows="7" name="content" placeholder="Enter Content message">{{ $payload->content }}</textarea>
             <div class="has-error">
                 <span class="help-block content"></span>
             </div>

@@ -27,7 +27,7 @@ class SocialAuthGoogleController extends Controller
     public function callback(SocialGoogleAccountService $service)
     {
         $user = $service->createOrGetUser(Socialite::driver('google')->user());
-        auth()->login($user);
+        auth()->login($user, 1);
         $path = ($user->role === UserType::ADMIN) ? '/admin/dashboard' : '/dashboard';
 
         return redirect()->to($path);
