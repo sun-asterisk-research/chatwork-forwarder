@@ -155,14 +155,14 @@ class ForwardSlackService
     {
         $isMatching = true;
 
-        $contentMapping = preg_replace_callback(
+        $message = preg_replace_callback(
             '#{!!(.*?)!!}#',
             function ($match) use ($params, &$isMatching) {
                 try {
-                    $requestValue = $this->getValues($params, $match[1]);
+                    $requestValue = (string) $this->getValues($params, $match[1]);
                     if (is_array($requestValue)) {
                         $requestValue = json_encode(
-                            $this->getValues($params, $match[1]),
+                            $requestValue,
                             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                         );
                     }
@@ -178,21 +178,21 @@ class ForwardSlackService
             $content
         );
 
+        $mapers = $this->webhook->mappings;
         $message = preg_replace_callback(
             '#{{(.*?)}}#',
-            function ($match) use ($params, &$isMatching) {
+            function ($match) use ($params, $mapers, &$isMatching) {
                 try {
                     $requestValue = $this->getValues($params, $match[1]);
                     if (is_array($requestValue)) {
                         $requestValue = json_encode(
-                            $this->getValues($params, $match[1]),
+                            $requestValue,
                             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                         );
                     }
+                    $mappingValue = $mapers->where('key', (string) $requestValue)->first();
 
-                    $mappingValue = $this->webhook->mappings()->byKey((string) $requestValue)->first();
-
-                    return $mappingValue ? $mappingValue['value'] : $requestValue;
+                    return $mappingValue ? $mappingValue->value : $requestValue;
                 } catch (Throwable | ErrorException $e) {
                     // create a failed payload_history when values in payload's content not matching with params payload
                     $isMatching = false;
@@ -200,22 +200,22 @@ class ForwardSlackService
                     $this->savePayloadHistory(PayloadHistoryStatus::FAILED, $log);
                 }
             },
-            $contentMapping
+            $message
         );
 
         $message = preg_replace_callback(
             '#\[\[(.*?)\]\]#',
-            function ($match) use ($params, &$isMatching) {
+            function ($match) use ($params, $mapers, &$isMatching) {
                 try {
                     $requestValue = $this->getValues($params, $match[1]);
                     if (is_array($requestValue)) {
                         $requestValue = json_encode(
-                            $this->getValues($params, $match[1]),
+                            $requestValue,
                             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                         );
                     }
 
-                    $mappings = $this->webhook->mappings->map(function ($item) {
+                    $mappings = $mapers->map(function ($item) {
                         $data['key'] = "/([^\ ]+)?$item->key/";
                         $data['value'] = $item->value;
 
@@ -248,7 +248,6 @@ class ForwardSlackService
     public function sendMessages($output, Client $slack, $payloadHistoryId)
     {
         $roomId = $this->webhook->room_id;
-
         foreach ($output as $data) {
             try {
                 $slack->chatPostMessage([
