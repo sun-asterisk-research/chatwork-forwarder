@@ -114,8 +114,9 @@ class WebhookController extends Controller
         $this->authorize('update', $webhook);
         $data = $request->only(['name', 'status', 'description', 'bot_id', 'room_name', 'room_id']);
         if ($request->input('use_default') === Bot::USE_DEFAULT_SLACK_BOT) {
-            $data['bot_id'] = config('s.lack.slack_bot_id');
+            $data['bot_id'] = config('slack.slack_bot_id');
         }
+
         try {
             if ($request->email) {
                 $user = $this->userRepository->findByEmail($request->email);
@@ -128,6 +129,7 @@ class WebhookController extends Controller
                     ]);
             } else {
                 $webhook = $this->webhookRepository->update($webhook->id, $data);
+
                 return redirect()->route('webhooks.edit', $webhook)
                     ->with('messageSuccess', [
                         'status' => 'Update success',
@@ -135,6 +137,7 @@ class WebhookController extends Controller
                     ]);
             }
         } catch (QueryException $exception) {
+            logger($exception);
             return redirect()->back()->with('messageFail', [
                 'status' => 'Update failed',
                 'message' => 'Update failed. Something went wrong',
