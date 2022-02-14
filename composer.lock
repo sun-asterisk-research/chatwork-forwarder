@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7975657bc70c04242b0b249ec4fb99d",
+    "content-hash": "162cd6263e610371d8cef5966d134479",
     "packages": [
         {
             "name": "bensampo/laravel-enum",
@@ -4818,25 +4818,25 @@
         },
         {
             "name": "rap2hpoutre/laravel-log-viewer",
-            "version": "v1.7.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rap2hpoutre/laravel-log-viewer.git",
-                "reference": "27392d29234b6ff38a456454558f4bcc40cc837a"
+                "reference": "199b4f21004c8f0c00fbc9222e0cedf1341b5e81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rap2hpoutre/laravel-log-viewer/zipball/27392d29234b6ff38a456454558f4bcc40cc837a",
-                "reference": "27392d29234b6ff38a456454558f4bcc40cc837a",
+                "url": "https://api.github.com/repos/rap2hpoutre/laravel-log-viewer/zipball/199b4f21004c8f0c00fbc9222e0cedf1341b5e81",
+                "reference": "199b4f21004c8f0c00fbc9222e0cedf1341b5e81",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "4.2.*|5.*|^6.0|^7.0|^8.0",
+                "illuminate/support": "4.2.*|5.*|^6.0|^7.0|^8.0|^9.0",
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "orchestra/testbench": "3.7.*",
-                "phpunit/phpunit": "^7"
+                "orchestra/testbench": "3.7.*|^7.0",
+                "phpunit/phpunit": "^7|^9.5.10"
             },
             "type": "laravel-package",
             "extra": {
@@ -4847,12 +4847,12 @@
                 }
             },
             "autoload": {
-                "classmap": [
-                    "src/controllers"
-                ],
                 "psr-0": {
                     "Rap2hpoutre\\LaravelLogViewer\\": "src/"
-                }
+                },
+                "classmap": [
+                    "src/controllers"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -4875,9 +4875,9 @@
             ],
             "support": {
                 "issues": "https://github.com/rap2hpoutre/laravel-log-viewer/issues",
-                "source": "https://github.com/rap2hpoutre/laravel-log-viewer/tree/master"
+                "source": "https://github.com/rap2hpoutre/laravel-log-viewer/tree/v2.1.0"
             },
-            "time": "2020-09-08T12:21:27+00:00"
+            "time": "2022-02-10T07:16:16+00:00"
         },
         {
             "name": "s-ichikawa/laravel-sendgrid-driver",
