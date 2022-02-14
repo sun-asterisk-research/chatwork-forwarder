@@ -79,6 +79,7 @@ class WebhookController extends Controller
                     'message' => 'This webhook successfully created',
                 ]);
         } catch (QueryException $exception) {
+            logger($exception);
             return redirect()->back()->with('messageFail', [
                 'status' => 'Create failed',
                 'message' => 'Create failed. Something went wrong',
