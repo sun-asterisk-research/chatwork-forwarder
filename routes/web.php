@@ -25,6 +25,7 @@ Route::namespace('Auth')->group(function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
+        Route::get('/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
         Route::resource('users', 'UserController');
         Route::group(['namespace' => 'Admin'], function () {
             Route::get('webhooks', 'WebhookController@index')->name('admin.webhooks.index');
