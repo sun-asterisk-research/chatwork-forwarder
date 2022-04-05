@@ -167,7 +167,7 @@ class ForwardSlackService
                         );
                     }
 
-                    return $requestValue;
+                    return str_replace('"', '\"', $requestValue);
                 } catch (Throwable | ErrorException $e) {
                     // create a failed payload_history when values in payload's content not matching with params payload
                     $isMatching = false;
@@ -192,7 +192,9 @@ class ForwardSlackService
                     }
                     $mappingValue = $mapers->where('key', (string) $requestValue)->first();
 
-                    return $mappingValue ? $mappingValue->value : $requestValue;
+                    return $mappingValue
+                        ? str_replace('"', '\"', $mappingValue->value)
+                        : str_replace('"', '\"', $requestValue);
                 } catch (Throwable | ErrorException $e) {
                     // create a failed payload_history when values in payload's content not matching with params payload
                     $isMatching = false;
@@ -227,7 +229,9 @@ class ForwardSlackService
                         $requestValue
                     );
 
-                    return $mappingValues ? $mappingValues : $requestValue;
+                    return $mappingValues
+                        ? str_replace('"', '\"', $mappingValues)
+                        : str_replace('"', '\"', $requestValue);
                 } catch (Throwable | ErrorException $e) {
                     // create a failed payload_history when values in payload's content not matching with params payload
                     $isMatching = false;
