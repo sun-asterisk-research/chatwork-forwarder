@@ -16,14 +16,17 @@ class PayloadHistoryRepository extends BaseRepository implements PayloadHistoryR
 
     public function find($id)
     {
-        return $this->model->with('webhook')->find($id);
+        return $this->model->with('webhook')
+            ->with('latestMessageHistory')
+            ->find($id);
     }
 
     public function getAllByUserAndSearch($perPage, $searchParams)
     {
         $query = PayloadHistory::whereHas('webhook', function ($wh) {
             $wh->where('user_id', Auth::id());
-        })->orderBy('payload_histories.created_at', 'desc');
+        })->orderBy('payload_histories.created_at', 'desc')
+        ->with('latestMessageHistory');
         if ($searchParams) {
             $searchParams = $this->handleSearchParams(['webhook', 'status'], $searchParams);
 
@@ -35,10 +38,11 @@ class PayloadHistoryRepository extends BaseRepository implements PayloadHistoryR
 
     public function getAllAndSearch($perPage, $searchParams)
     {
-        $query = PayloadHistory::orderBy('payload_histories.created_at', 'desc');
+        $query = PayloadHistory::orderBy('payload_histories.created_at', 'desc')
+            ->with('latestMessageHistory');
         if ($searchParams) {
             $searchParams = $this->handleSearchParams(['webhook', 'status'], $searchParams);
-            
+
             return $query->search($searchParams, $perPage);
         } else {
             return $query->paginate($perPage);
