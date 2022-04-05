@@ -66,7 +66,10 @@
                             {{ $payloadHistory->webhook->name }}
                         </td>
                         <td>
-                            @if($payloadHistory->status === PayloadHistoryStatus::SUCCESS)
+                            @if(
+                                isset($payloadHistory->latestMessageHistory)
+                                && $payloadHistory->latestMessageHistory->status === PayloadHistoryStatus::SUCCESS
+                            )
                                 <div class="label label-success">Success</div>
                             @else
                                 <div class="label label-danger">Failed</div>

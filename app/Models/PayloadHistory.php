@@ -28,6 +28,11 @@ class PayloadHistory extends Model
         return $this->hasMany(MessageHistory::class);
     }
 
+    public function latestMessageHistory()
+    {
+        return $this->hasOne(MessageHistory::class)->latest();
+    }
+
     public function scopeSearch($query, $searchParams, $perPage)
     {
         $status = PayloadHistoryStatus::toArray();
